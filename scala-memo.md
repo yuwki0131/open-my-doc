@@ -4,17 +4,38 @@
 
 Scala用のpurely functional programmingのためのライブラリ
 
-[Scalaz](https://github.com/scalaz/scalaz)
+[Scalaz - Github](https://github.com/scalaz/scalaz)
 
-## 参考文献とか
+[scalaz by scalaz - github.io](http://scalaz.github.io/scalaz/)
 
-[argonaut](https://github.com/argonaut-io/argonaut)
+[独習 Scalaz](http://eed3si9n.com/learning-scalaz/ja/)
+
+* まだ読んでない&内容的には偏りがあるらしい(Scalazについて万遍なく解説しているわけではない)。
+
+[Scalaz slideshare](https://www.slideshare.net/kmizushima/scalaz)
+
+* kmizuさんの解説。2011年と古いけど、分かりやすい。
+
+### Scalaz文献集
+
+[Scalazの使い方 - リクルートから](https://tech.recruit-mp.co.jp/server-side/post-2540/)
+
+
+## Scalaz系ライブラリ
+
+[Argonaut](https://github.com/argonaut-io/argonaut)
 
 * scalazのjsonパーサライブラリ、使えるか?
 
-[shapeless](https://github.com/milessabin/shapeless)
+[Shapeless](https://github.com/milessabin/shapeless)
 
 * generic programming library, scalazよりヤバいらしい
+
+[Monocle](https://github.com/julien-truffaut/Monocle)
+
+* Lense
+
+## 参考文献とか
 
 [Scala 2.8 言語仕様書(日本語訳)](http://www.scala-lang.org/docu/files/LangSpec2.8-ja_JP.pdf)
 
