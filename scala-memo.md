@@ -1,5 +1,9 @@
 # Scala関連のメモ
 
+## Scala
+
+[Effective Scala - by Twitter](http://twitter.github.io/effectivescala/index-ja.html)
+
 ## Scalaz
 
 Scala用のpurely functional programmingのためのライブラリ
