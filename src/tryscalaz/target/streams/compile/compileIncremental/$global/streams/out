@@ -2,36 +2,28 @@
 [debug] [naha] Initial source changes: 
 [debug] [naha] 	removed:Set()
 [debug] [naha] 	added: Set()
-[debug] [naha] 	modified: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
+[debug] [naha] 	modified: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex2.scala)
 [debug] [naha] Invalidated products: Set()
 [debug] [naha] External API changes: API Changes: Set()
 [debug] [naha] Modified binary dependencies: Set()
-[debug] [naha] Initial directly invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
+[debug] [naha] Initial directly invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex2.scala)
 [debug] [naha] 
 [debug] [naha] Sources indirectly invalidated by:
 [debug] [naha] 	product: Set()
 [debug] [naha] 	binary dep: Set()
 [debug] [naha] 	external source: Set()
-[debug] All initially invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
-[debug] [naha] Initial set of included nodes: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
-[debug] [naha] Recompiling all 1 sources: invalidated sources (1) exceeded 50.0% of all sources
+[debug] All initially invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex2.scala)
+[debug] [naha] Initial set of included nodes: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex2.scala)
 [info] Compiling 1 Scala source to /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/classes...
 [debug] Getting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.4
 [debug] Getting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.4
-[debug] Running cached compiler 491db97, interfacing (CompilerInterface) with Scala compiler version 2.12.4
+[debug] Running cached compiler 15931632, interfacing (CompilerInterface) with Scala compiler version 2.12.4
 [debug] Calling Scala compiler with arguments  (CompilerInterface):
 [debug] 	-bootclasspath
 [debug] 	/usr/lib/jvm/java-8-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-8-oracle/jre/classes:/home/yuwki0131/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.4.jar
 [debug] 	-classpath
 [debug] 	/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/classes:/home/yuwki0131/.ivy2/cache/org.scalaz/scalaz-core_2.12/bundles/scalaz-core_2.12-7.3.0-M18.jar
-[debug] Scala compilation took 6.278533657 s
-[debug] [naha] Invalidating /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala...
-[debug] [naha] Invalidating (transitively) by inheritance from /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala...
-[debug] [naha] Initial set of included nodes: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
-[debug] [naha] Invalidated by transitive inheritance dependency: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala)
-[debug] [naha] The /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/Hello.scala source file has the following regular definitions changed:
-[debug] [naha] 	methodA, foCutting5twitter, notify, predicate, wait, methodB, $asInstanceOf, equals, foCutting5, Greeting, asInstanceOf, executionStart, railsways, methodC, synchronized, foCutting, $isInstanceOf, main, notifyAll, isInstanceOf, foCutting4, optiononly, ==, clone, Hello, foCutting3, futureoption, $init$, greeting, toString, args, !=, foCuttingsz, getClass, FutureOptionCutting, foCutting2, ne, eq, delayedInit, ##, finalize, hashCode.
-[debug] [naha] All member reference dependencies will be considered within this context.
+[debug] Scala compilation took 6.23180409 s
 [debug] [naha] New invalidations:
 [debug] [naha] 	Set()
 [debug] [naha] Initial set of included nodes: Set()

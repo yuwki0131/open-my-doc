@@ -1,5 +1,5 @@
 // package example
-
+/*
 import scalaz._
 import Scalaz._
 import scala.concurrent._
@@ -8,8 +8,6 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 
 // println(classOf[String].getMethods.toSeq.map(_.getName).mkString("\n"))
-
-
 
 // future option cutting
 object FutureOptionCutting {
@@ -25,6 +23,10 @@ object FutureOptionCutting {
   def methodC(): EitherT[Future, Int, Int] = {
     EitherT.right( Future { 3 } )
   }
+
+  // def futureoption(result: Future[Int]): EitherT[Future, String, Int] = {
+  //   result match
+  // }
 
   def foCuttingsz = {
     val result = for {
@@ -175,3 +177,4 @@ object FutureOptionCutting {
 // trait Greeting {
 //   lazy val greeting: String = "hello"
 // }
+ */
