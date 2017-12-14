@@ -11,4 +11,5 @@ lazy val root = (project in file(".")).
     libraryDependencies += scalaTest % Test
   )
 
-libraryDependencies += "org.scalaz" % "scalaz-core_2.12" % "7.3.0-M18"
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.17"
+libraryDependencies += "org.scalaz" %% "scalaz-effect" % "7.2.17"

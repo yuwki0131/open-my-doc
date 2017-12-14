@@ -16,29 +16,89 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[info] Resolving org.scalaz#scalaz-core_2.12;7.3.0-M18 ...
-[debug] sbt-chain: Checking cache for: dependency: org.scalaz#scalaz-core_2.12;7.3.0-M18 {compile=[default(compile)]}
-[debug] sbt-chain: module revision found in cache: org.scalaz#scalaz-core_2.12;7.3.0-M18
-[debug] 	found org.scalaz#scalaz-core_2.12;7.3.0-M18 in sbt-chain
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[info] Resolving org.scalaz#scalaz-core_2.12;7.2.17 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scalaz#scalaz-core_2.12;7.2.17 {compile=[default(compile)]}
+[info] Resolving org.scalaz#scalaz-core_2.12;7.2.17 ...
+[debug] sbt-chain-delegate: Checking cache for: dependency: org.scalaz#scalaz-core_2.12;7.2.17 {compile=[default(compile)]}
+[debug] 		tried /home/yuwki0131/.ivy2/local/org.scalaz/scalaz-core_2.12/7.2.17/ivys/ivy.xml
+[debug] 	local: no ivy file found for org.scalaz#scalaz-core_2.12;7.2.17
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom
+[debug] 	public: found md file for org.scalaz#scalaz-core_2.12;7.2.17
+[debug] 		=> https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom (7.2.17)
+[debug] downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.pom
+[debug] 	[SUCCESSFUL ] org.scalaz#scalaz-core_2.12;7.2.17!scalaz-core_2.12.pom(pom.original) (665ms)
+[debug] 		tried /home/yuwki0131/.ivy2/local/org.scalaz/scalaz-core_2.12/7.2.17/bundles/scalaz-core_2.12.jar
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar
+[debug] 	found org.scalaz#scalaz-core_2.12;7.2.17 in public
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[info] Resolving org.scalaz#scalaz-effect_2.12;7.2.17 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scalaz#scalaz-effect_2.12;7.2.17 {compile=[default(compile)]}
+[info] Resolving org.scalaz#scalaz-effect_2.12;7.2.17 ...
+[debug] sbt-chain-delegate: Checking cache for: dependency: org.scalaz#scalaz-effect_2.12;7.2.17 {compile=[default(compile)]}
+[debug] 		tried /home/yuwki0131/.ivy2/local/org.scalaz/scalaz-effect_2.12/7.2.17/ivys/ivy.xml
+[debug] 	local: no ivy file found for org.scalaz#scalaz-effect_2.12;7.2.17
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom
+[debug] 	public: found md file for org.scalaz#scalaz-effect_2.12;7.2.17
+[debug] 		=> https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom (7.2.17)
+[debug] downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.pom
+[debug] 	[SUCCESSFUL ] org.scalaz#scalaz-effect_2.12;7.2.17!scalaz-effect_2.12.pom(pom.original) (648ms)
+[debug] 		tried /home/yuwki0131/.ivy2/local/org.scalaz/scalaz-effect_2.12/7.2.17/bundles/scalaz-effect_2.12.jar
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar
+[debug] 	found org.scalaz#scalaz-effect_2.12;7.2.17 in public
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] resolving dependencies for configuration 'runtime'
@@ -52,25 +112,55 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] resolving dependencies for configuration 'test'
@@ -87,27 +177,59 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalatest#scalatest_2.12;3.0.3 [test->default(compile)]
@@ -390,7 +512,7 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
@@ -399,20 +521,54 @@
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] == resolving dependencies for com.example#hello_2.12;0.1.0-SNAPSHOT [optional]
@@ -433,7 +589,7 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
@@ -442,20 +598,54 @@
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] == resolving dependencies for com.example#hello_2.12;0.1.0-SNAPSHOT [optional]
@@ -480,7 +670,7 @@
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->runtime]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->compile]
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scala-lang#scala-library;2.12.4 [compile->master]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->default(compile)]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->default(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
@@ -493,20 +683,58 @@
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
 [debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->runtime]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
-[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.3.0-M18->org.scala-lang#scala-library;2.12.4 [runtime->compile]
-[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.3.0-M18 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-core_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->default(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]} => dependency: org.scala-lang#scala-compiler;2.12.4 {scala-tool=[default, optional(default)]}
+[debug] dependency descriptor has been mediated: MergedDescriptors(dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)]},dependency: org.scala-lang#scala-library;2.12.4 {compile=[default(compile)]}) => dependency: org.scala-lang#scala-library;2.12.4 {scala-tool=[default, optional(default)], compile=[default(compile)]}
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->runtime]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scala-lang#scala-library;2.12.4 [runtime->compile]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scalaz#scalaz-effect_2.12;7.2.17->org.scalaz#scalaz-core_2.12;7.2.17 [runtime->compile]
+[debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalaz#scalaz-effect_2.12;7.2.17 [compile->master]
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] dependency descriptor has been mediated: dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.scala-lang#scala-library;2.12.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
 [debug] == resolving dependencies com.example#hello_2.12;0.1.0-SNAPSHOT->org.scalatest#scalatest_2.12;3.0.3 [test->default(compile)]
@@ -924,7 +1152,18 @@
 [debug] 	resolved ivy file produced in cache
 [debug] :: downloading artifacts ::
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-library;2.12.4!scala-library.jar
-[debug] 	[NOT REQUIRED] org.scalaz#scalaz-core_2.12;7.3.0-M18!scalaz-core_2.12.jar(bundle)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.17/scalaz-core_2.12-7.2.17.jar
+[info] 	[SUCCESSFUL ] org.scalaz#scalaz-core_2.12;7.2.17!scalaz-core_2.12.jar(bundle) (2647ms)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalaz/scalaz-effect_2.12/7.2.17/scalaz-effect_2.12-7.2.17.jar
+[info] 	[SUCCESSFUL ] org.scalaz#scalaz-effect_2.12;7.2.17!scalaz-effect_2.12.jar(bundle) (833ms)
 [debug] 	[NOT REQUIRED] org.scalatest#scalatest_2.12;3.0.3!scalatest_2.12.jar(bundle)
 [debug] 	[NOT REQUIRED] org.scalactic#scalactic_2.12;3.0.3!scalactic_2.12.jar(bundle)
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-reflect;2.12.4!scala-reflect.jar
@@ -933,7 +1172,7 @@
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.12.4!scala-compiler.jar
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.12;1.0.6!scala-xml_2.12.jar(bundle)
 [debug] 	[NOT REQUIRED] jline#jline;2.14.5!jline.jar
-[debug] :: resolution report :: resolve 676ms :: artifacts dl 45ms
+[debug] :: resolution report :: resolve 3838ms :: artifacts dl 3512ms
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT compile produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-compile.xml
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT runtime produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-runtime.xml
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT test produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-test.xml
@@ -947,5 +1186,5 @@
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT docs produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-docs.xml
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT pom produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-pom.xml
 [debug] 	report for com.example#hello_2.12;0.1.0-SNAPSHOT scala-tool produced in /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/resolution-cache/reports/com.example-hello_2.12-scala-tool.xml
-[debug] 	resolve done (676ms resolve - 45ms download)
+[debug] 	resolve done (3838ms resolve - 3512ms download)
 [info] Done updating.

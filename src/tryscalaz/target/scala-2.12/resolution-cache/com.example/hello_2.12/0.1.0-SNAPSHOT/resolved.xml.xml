@@ -4,7 +4,7 @@
 		module="hello_2.12"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20171125212012"
+		publication="20171214201151"
 	>
 		<description>
 		Hello
@@ -35,6 +35,7 @@
 		<dependency org="org.scala-lang" name="scala-compiler" rev="2.12.4" conf="scala-tool->default,optional(default)"/>
 		<dependency org="org.scala-lang" name="scala-library" rev="2.12.4" conf="scala-tool->default,optional(default);compile->default(compile)"/>
 		<dependency org="org.scalatest" name="scalatest_2.12" rev="3.0.3" conf="test->default(compile)"/>
-		<dependency org="org.scalaz" name="scalaz-core_2.12" rev="7.3.0-M18" conf="compile->default(compile)"/>
+		<dependency org="org.scalaz" name="scalaz-core_2.12" rev="7.2.17" conf="compile->default(compile)"/>
+		<dependency org="org.scalaz" name="scalaz-effect_2.12" rev="7.2.17" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>
