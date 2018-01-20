@@ -2,6 +2,7 @@
 * Scala向け
 * そういう傾向があるという話。
 * 同じ関数型言語でも結構言語によって慣習が違う。
+  (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違う)
 
 ## なぜ、関数型プログラミングをするのか?
 
@@ -31,12 +32,14 @@
 * map { a => a }の←これ
 * 関数を渡す
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
+  * 関数のポインタと違い、データを保持することができる。
 
-## レキシカルスコープ
+## レキシカルスコープ/静的スコープ
 この時、aは、
 ```
 { a => { (a) => a }}
 ```
+* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い
 
 ## 再帰
 * あんまり使わないが、たまに使う。
@@ -61,8 +64,15 @@
 * 標準のArrayListとLinkedListがある。
 * 関数型のLinkedList(主に単方向連結リスト)は特殊な性質がある。
 
-## リスト操作関数
+* 例えば
+  case class AbcRow(id: Long, name: String, abc: String)
+  からidとnameを抽出する
+
+### コレクションメソッド
 * map, filter, foldあたりが王道。flatMap, flatten
+
+    [ScalaのSeqリファレンス](https://qiita.com/f81@github/items/75c616a527cf5c039676)
+
 * 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
@@ -73,6 +83,8 @@
 
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
+
+### implicitクラス(既存の型を拡張する。)
 
 ### implicitな型パラメータ
 
