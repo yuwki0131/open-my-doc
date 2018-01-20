@@ -1,16 +1,49 @@
 # Scalaと関数型プログラミングとは まとめ
-* Scala向け
+* Javaエンジニア用Scalaユーザ向け
 * そういう傾向があるという話。
 * 同じ関数型言語でも結構言語によって慣習が違う。
-  (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違う)
+  (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 
 ## なぜ、関数型プログラミングをするのか?
 
 ### デザインパターン
+の多くが不要になる。
+
+#### Gofのデザインパターン
+
 * Strategy
-* TemplateMethod
+  アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
+  https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3
+  => Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
+* Template Method
+  上に同じ
+* Factory Method
+  部分適用(Partial Application)が使える。
+  https://www.ibm.com/developerworks/jp/java/library/j-ft10/
+* Visitor
+  代数的データ型 + パターンマッチを使う。
+* Composite
+  上に同じ
+* Interpreter
+  上に同じ
+* Singletonパターン
+  classやtraitではなくobjectで定義 or Singletonアノテーション
+  この辺は(多分?)Javaと一緒
+
+#### Gofのデザインパターン以外
+
+* Null Object
+  オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。(参照)
+* Balking
+  ガード節とも。これのScala版のいい方法がわからない。あえて言うなら、for-yield式がそれに相当。
+* Immutable object
+  積極的にmutableにしなければ、オブジェクトは全てimmutable
+* Future
+  ScalaのFuture
 
 オブジェクト指向プログラミングにおけるデザインパターンのいくつかが不要になる(標準で使えるようになる)
+
+[デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
 
 ### immutable
 * 再代入を行わない
@@ -26,13 +59,19 @@
 ### その他
 * そもそも静的に型付されるかどうかはあんまり関係ないですよ。。。
 
+## ポイント
+* 関数型プログラミングはデータ構造と関数を分ける傾向がある。
+* Scalaは再帰のサポートが難しい。
+
 ## 無名関数(ラムダ抽象)/高階関数
 * 大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない
 * 第一級オブジェクトとしての関数(データとして扱う事が出来る関数)
+* オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照
 * map { a => a }の←これ
-* 関数を渡す
+* 関数を渡す、値として保持することができる。
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
   * 関数のポインタと違い、データを保持することができる。
+  * JavaのStrategyパターンと違い、インターフェースを必要としない。
 
 ## レキシカルスコープ/静的スコープ
 この時、aは、
@@ -51,13 +90,13 @@
 ## 代数的データ型
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
-  * 実装とは 独立した
-  * 静的型付の関数型言語だと、ここからFunctorや
-    * ちなみにClojureだとimmutableHashmapやリストを使うことが多い
 * オブジェクトが破壊されないことの保証
   * 一つはval(Javaで言うところのfinalを付ける)によるデータ型
   * またははimmutableな標準型、immutableなhashmap、list、etc...
   * 最後の一つはTupleによるプログラミング、否、case classによるデータ定義
+* case classには、`final`を付けることが必須
+  なぜ、final case classを付けないと行けないのかは以下を参照。
+  https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes
 
 ## リスト
 * ScalaだとSeqで書くのがマナーらしい
@@ -66,7 +105,7 @@
 
 * 例えば
   case class AbcRow(id: Long, name: String, abc: String)
-  からidとnameを抽出する
+  のSeq[AbcRow]からidとnameを抽出する
 
 ### コレクションメソッド
 * map, filter, foldあたりが王道。flatMap, flatten
@@ -78,15 +117,18 @@
 
 ## Future, for式
 
+## 関数合成
+
 ## 型まわりの話
 * 複雑な型を定義してもあんまり意味ないという側面はある。
-
+* 特に普段の業務で使いまくるのかは疑問
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
 
 ### implicitクラス(既存の型を拡張する。)
 
 ### implicitな型パラメータ
+* 社内だとFutureが
 
 ### 構造的部分型
 
@@ -96,7 +138,7 @@
 * 継続(continuation)
 * プログラムの融合変換(program fusion, deforestation)
 * なんとかモルフィズム(正確にはRecursion Schemeという。catamorphism, anamorphism, hylomorphism ...)
-* モナドまわり
+* モナド、コモナド(特に普段は意識する必要はない)
 * 抽象解釈(abstract interpretation)
 * コンビネータロジック、ラムダ計算、圏論
 * 証明、定理証明支援系
@@ -109,3 +151,7 @@ https://qiita.com/kmizu/items/10940b4c46876ae8a12d
 
 ## 参考文献
 * path-dependent type: https://53ningen.com/path-dependent-types/
+* [Scalaに関して知っておくべきたった一つの重要な事](http://kmizu.hatenablog.com/entry/20120504/1336087466)
+* [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://xuwei-k.hatenablog.com/entry/20141207/1417940174)
+* [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
+* [Scala COLLECTIONS 性能特性](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
