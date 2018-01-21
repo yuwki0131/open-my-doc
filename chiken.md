@@ -4,4 +4,4 @@
 * play-tips.md: playframeworkを使う時のtips集
 * slick-tips.md: Slickドハマりポイント集
 * jaxon.md: Jaxsonについて
-* coding-style.md: コーディングスタイルポイント集
+* style.md: コーディングスタイルポイント集

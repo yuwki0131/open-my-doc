@@ -15,6 +15,7 @@
   アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
   https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3
   => Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
+  または型クラスを定義する。
 * Template Method
   上に同じ
 * Factory Method
@@ -105,7 +106,7 @@
 
 * 例えば
   case class AbcRow(id: Long, name: String, abc: String)
-  のSeq[AbcRow]からidとnameを抽出する
+  のSeq[AbcRow] からidとnameを抽出する
 
 ### コレクションメソッド
 * map, filter, foldあたりが王道。flatMap, flatten
@@ -125,7 +126,9 @@
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
 
-### implicitクラス(既存の型を拡張する。)
+### 暗黙の型変換(implicit conversion)
+
+### 拡張メソッド(implicit class / 既存の型を拡張する)
 
 ### implicitな型パラメータ
 * 社内だとFutureが
@@ -155,3 +158,4 @@ https://qiita.com/kmizu/items/10940b4c46876ae8a12d
 * [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://xuwei-k.hatenablog.com/entry/20141207/1417940174)
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
 * [Scala COLLECTIONS 性能特性](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
+* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
