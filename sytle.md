@@ -28,6 +28,9 @@ https://qiita.com/kenfdev/items/139d170d5918c971e18b#implicits
 
 ## 上記以外に 追加した方が良さそうなコーディングルール
 
+## 複雑な機能を使用しない
+http://postd.cc/5-years-of-scala-and-counting-debunking-some-myths-about-the-language-and-its-environment/
+
 # コーディングスタイルの自動フォーマット
 ## [Scalastyle - Scala style checker](http://www.scalastyle.org/)
 * ただのフォーマットチェッカなので、手で作業しないといけない。
