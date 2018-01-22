@@ -4,8 +4,10 @@
 * 同じ関数型言語でも結構言語によって慣習が違う。
   (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
-  https://twitter.com/esumii/status/638588331459153920
+  [Twitter](https://twitter.com/esumii/status/638588331459153920)
 * というわけで関数型プログラミングっぽい話をします。
+* 以下に書いてある事に関しても基本的に話しません。内容が重複するため。
+  [Scala研修テキスト - dwango on GitHub](https://dwango.github.io/scala_text/)
 
 ## なぜ、関数型プログラミングをするのか?
 
@@ -35,6 +37,7 @@
   この辺は(多分?)Javaと一緒
 
 #### Gofのデザインパターン以外
+  [デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
 
 * Null Object
   オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。(参照)
@@ -44,10 +47,6 @@
   積極的にmutableにしなければ、オブジェクトは全てimmutable
 * Future
   ScalaのFuture
-
-オブジェクト指向プログラミングにおけるデザインパターンのいくつかが不要になる(標準で使えるようになる)
-
-[デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
 
 ### immutable
 * 「状態」が変わらない
@@ -61,15 +60,23 @@
   * (注)別に関数型プログラミングだからというわけではない。Javaなど他の言語でもある程度同じことが可能。
     * 但し、Javaは破壊的な変更をしていないことの保証のサポートが弱い(finalを使えばその限りではない)
     * Scalaではimmutableなデータ型やTuple、case classなどを使っている限りでは変更されていないことを保証する仕組みが多数
+* オブジェクトが破壊されないことの保証
+  * 一つはval(Javaで言うところのfinalを付ける)によるデータ型
+  * またははimmutableな標準型、immutableなhashmap、list、etc...
+  * 最後の一つはTupleによるプログラミング、否、case classによるデータ定義
 
-### 副作用が(他の関数型言語よりも少ない)
+
+### 副作用が他の関数型言語以外の言語よりも少ない傾向にある
 * 割と少ないか少なくなるように意識した言語設計(変数の破壊的代入を前提としないような書き方)
 
 ## これから説明する内容
 プログラム全体の設計の話というよりは細かいテクニカルな話が中心になります。
+仕事で使いまくるテクニックというよりは、ネット上のソースコードを読む時の手がかりや参考になる内容、調べる為(ググるため)の用語、
+または、言語に由来する変なバグを仕込まない為の知識の紹介を目的にしています。
+
 * replの紹介
 * 関数型プログラミングなので、当然関数の使い方をメインに説明します。
-    (再帰、無名関数、静的スコープ、高階関数、合成関数、名前渡し)
+  (再帰、無名関数、静的スコープ、高階関数、合成関数、名前渡し)
 * 関数型プログラミングで頻繁に用いられるデータ型である代数的データ型
 * 業務でよく使われるOption/Either/Future及びfor式について
 * Scalaは静的型付言語なので、型の話をします。
@@ -77,9 +84,28 @@
 * 一番最後に、今回は詳細は話しませんが、関数型プログラミングまわりの技術について紹介します。
 
 ## (まずはじめに)replによるローカル実行テスト
-TODO: 以下のセクションを書く
-* シンタックスの動作確認や型の確認ができる。
+* repl: Read Eval Print Loop
+* ミニマムなコードで、シンタックスの動作確認や型の確認ができる。
 * Scalaのスモールサイズの文法を学ぶのにはうってつけ
+以下のコマンドで実行出来る。
+```
+sbt console
+```
+
+後は以下のようにインタラクティブにScalaのコードを打ち込んで行けば即座に実行結果が得られる。
+(電卓的にも使える)
+```
+scala> 1 + 1
+res0: Int = 2
+
+scala>
+```
+
+型を調べたい時は、`:t`のコマンドを使う。
+```
+scala> :t 1.0
+Double
+```
 
 ## 再帰
 * 再帰(recursion)とは自分自身を自分自身の中に持つような構造。
@@ -116,27 +142,164 @@ TODO: 以下のセクションを書く
   (TODO: サンプルを入れる)
 
 ## 無名関数(ラムダ抽象)
-TODO: 以下のセクションを書く
-* 大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない
-* 第一級オブジェクトとしての関数(データとして扱う事が出来る関数)
-* オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照
-* map { a => a }の←これ
-* 関数を渡す、値として保持することができる。
+```
+scala> val f = ((a: Int) => a + 1)
+f: Int => Int = $$Lambda$4017/598382925@72f0dff7
+
+scala> f(1)
+res19: Int = 2
+
+scala> f(2)
+res20: Int = 3
+```
+
+* おなじみの無名関数。
+* 大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない(方がいい)(※個人の意見です)。
+* 第一級オブジェクトとしての関数(データとして扱う事が出来る関数): 関数を渡す、値として保持することができる。
+* オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照。
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
-  * 関数のポインタと違い、データを保持することができる。
+  * 関数のポインタと違い、データ(値)を保持することができる。
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
 
-## レキシカルスコープ/静的スコープ
-TODO: 以下のセクションを書く
-この時、aは、
+## レキシカルスコープ(静的スコープ)
+* "Scope"とは範囲のことです。
+* Scalaの変数の有効範囲は、レキシカルスコーピングによって決定される。
+* 変数の値を取り出す時、(Scalaの)レキシカルスコープでは、ネストした変数定義において最も内側で定義された変数を参照する。
+
+例えば、以下の２つの例。
 ```
-{ a => { (a) => a }}
+scala> {val a = 1; ((a:Int) => ((a:Int) => a)(3))(2) }
+res5: Int = 3
 ```
-* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い
+または、
+```
+scala> {val a = 1; {val a = 2; {val a = 3; a} } }
+res11: Int = 3
+```
+
+この時、aは、最も内側にあるaは、ネストしている中で最も手前で定義された変数(引数)aの値を参照する。
+次の例では、最も内側のスコープを抜けているので上記とは別の値を見に行く。
+```
+scala> {val a = 1; ((a:Int) => {((a:Int) => a)(3); a})(2) }
+res10: Int = 2
+```
+または、
+```
+scala> {val a = 1; {val a = 2; {val a = 3;}; a} }
+res14: Int = 2
+```
+
+* ブロックから抜けだした関数オブジェクトは、レキシカルスコーピングによって保持した変数の参照を保持し続ける。
+  このような関数オブジェクトの事をクロージャ(Closure)という。
+
+例えば以下では、関数オブジェクトがaseqという変数名が保持しているリストの参照を持つ。
+```
+scala> val haveSeq = {val aseq = Seq(1, 2, 3, 4, 5); ((index: Int) => aseq(index)) }
+haveSeq: Int => Int = $$Lambda$4005/1227571506@23364fcf
+
+scala> haveSeq(1)
+res8: Int = 2
+
+scala> haveSeq(2)
+res9: Int = 3
+```
+一番外側で定義された変数haveSeqは、ブロック内部で生成された関数オブジェクト(クロージャ)を束縛している。
+この関数オブジェクトに引数を与える事で、aseqに束縛されたリスト(Seq)の値を見る事が可能になる。
+
+* 上記のような書き方により、JavaやScalaで指定するprivateよりも更に細かいスコープ(変数の有効範囲)の制御が可能になる。
+
+例えば、以下のように2つの関数からのみ参照可能なHashmapを定義できる。
+```
+scala> val (f, g) = { val hmap = Map("ab"-> 1, "ac" -> 2);
+     | (((s: String) => hmap(s)), ((s: String) => hmap("a"++s))) }
+f: String => Int = $$Lambda$4011/179665104@2da7b9bf
+g: String => Int = $$Lambda$4012/49123780@295afa48
+
+scala> f("b")
+java.util.NoSuchElementException: key not found: b
+  at scala.collection.immutable.Map$Map2.apply(Map.scala:129)
+  at .$anonfun$x$1$1(<console>:12)
+  at .$anonfun$x$1$1$adapted(<console>:12)
+  ... 36 elided
+
+scala> g("b")
+res17: Int = 1
+
+scala> f("ac")
+res18: Int = 2
+```
+
+* 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数のような物も(機能的には)作れる。
+
+* ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
+  このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
+  (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
+
+* レキシカルスコープの仕組み自体は、Scalaだけでなく、JavaScriptやTypeScript(たぶん)、Ruby(たぶん)、Pythonでも共通。
+* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い。
+* 社内だとFutureのExecutionContextが典型的。
 
 ## 高階関数
 
 ## 関数合成
+* 2つの関数を合成します。
+* 数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
+* compose/andThenを使う。
+* 例えば以下の場合、
+
+```
+val withComma = ((ls: Seq[String]) => ls.mkString(","))
+val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
+val multiply20 = ((ls: Seq[Int]) => ls.map (_ * 20).map(_.toString))
+```
+Stingのリストの要素を20倍してカンマ区切りの文字列にしたい。。。
+```
+val ls = Seq(" 20", " 30 ", "40 ", "50")
+```
+しかもなんか変な空白入ってる。。。
+```
+scala> withComma(multiply20(trimString(ls)))
+res31: String = 400,600,800,1000
+```
+括弧が多い。。。
+```
+scala> (withComma compose multiply20 compose trimString)(ls)
+res32: String = 400,600,800,1000
+```
+さらにこれを関数化したい。。。
+```
+scala> val multiply20withComma = withComma compose multiply20 compose trimString
+multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$605/1525241607@1f18de49
+
+scala> multiply20withComma(ls)
+res33: String = 400,600,800,1000
+```
+composeだとわかりにくい? => そこでandThen
+
+* composeとandThenは順序が逆。
+composeの場合
+```
+scala> (((s:String) => s.toInt) compose ((x:Int)=> x.toString))(20)
+res24: Int = 20
+```
+andThenの場合
+```
+scala> (((x:Int)=> x.toString) andThen ((s:String) => s.toInt))(20)
+res22: Int = 20
+```
+
+* andThenを使って前述のコードを書き直す。
+
+```
+scala> val multiply20withComma = trimString andThen multiply20 andThen withComma
+multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$4021/295193997@7d9759a
+
+scala> multiply20withComma(ls)
+res34: String = 400,600,800,1000
+```
+処理の順番が明確になり、多少は分かりやすくなった。andThenは、fluent interfaceかも知れない。。。
+
+* 使いすぎると分かりづらくなる事も多いが、Scalazだと頻繁に使われていたりする。
 
 ## コンビネータ
 
@@ -147,10 +310,8 @@ TODO: 以下のセクションを書く
 ## 代数的データ型
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
-* オブジェクトが破壊されないことの保証
-  * 一つはval(Javaで言うところのfinalを付ける)によるデータ型
-  * またははimmutableな標準型、immutableなhashmap、list、etc...
-  * 最後の一つはTupleによるプログラミング、否、case classによるデータ定義
+* 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
+  [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
 * case classには、`final`を付けることが必須
   なぜ、final case classを付けないと行けないのかは以下を参照。
   https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes
@@ -172,7 +333,7 @@ TODO: 以下のセクションを書く
 * 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
-## Future, for式
+## Option, Either, Future, for式
 
 ## 型まわりの話
 * 複雑な型を定義してもあんまり意味ないという側面はある。
@@ -185,7 +346,6 @@ TODO: 以下のセクションを書く
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
 
 ### implicitな型パラメータ
-* 社内だとFutureが
 
 ### 構造的部分型
 
@@ -218,7 +378,9 @@ Scalaの新しいコンパイラ。
 * 依存型(dependent type) (dependent type/path-dependent type/dependent method type/dependent object type)
 
 ## 参考文献
-* path-dependent type: https://53ningen.com/path-dependent-types/
+* [関数合成のススメ 〜 オブジェクト指向プログラマへ捧げる関数型言語への導入その1](http://yuroyoro.hatenablog.com/entry/20120203/1328248662)
+* [Scalaの経路依存型（path-dependent type）とは？](https://53ningen.com/path-dependent-types/)
+* [Scala2.10.0のDependent method typesと型クラスを組み合わせた『The Magnet Pattern』がヤバい件](http://yuroyoro.hatenablog.com/entry/2013/01/23/192244)
 * [Scalaに関して知っておくべきたった一つの重要な事](http://kmizu.hatenablog.com/entry/20120504/1336087466)
 * [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://xuwei-k.hatenablog.com/entry/20141207/1417940174)
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
