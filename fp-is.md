@@ -5,6 +5,8 @@
   (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
   [Twitter](https://twitter.com/esumii/status/638588331459153920)
+* Scala以外だと、Haskell, OCaml, StandardML, F#, Clean(ConcurrentClean), Erlang, Elixir, Scheme, Clojure他多数。
+* フロントエンド専用だとElm, PureScriptなどもある。
 * というわけで関数型プログラミングっぽい話をします。
 * 以下に書いてある事に関しても基本的に話しません。内容が重複するため。
   [Scala研修テキスト - dwango on GitHub](https://dwango.github.io/scala_text/)
@@ -123,21 +125,75 @@ Double
   * Quicksort(あるいは、関数型プログラミングにおける偽のQuicksort)
     (TODO: 偽のQuicksortの例を書く)
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
-  (TODO: 木構造による再帰の例を書く)
+```
+sealed trait Tree[+A]
+case class Leaf[A](value: A) extends Tree[A]
+case class Node[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
+  case Leaf(a) => a
+  case Node(l, r) => f(sum(l, f), sum(r, f))
+}
+
+```
+
+```
+scala> val d = Node(Node(Leaf(10), Leaf(20)), Leaf(1))
+d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
+
+scala> sum(d, (a:Int, b:Int) => a + b)
+res36: Int = 31
+```
 
 * 末尾最適化
   * Scalaの再帰はをする場合としない場合がある。
     * 末尾再帰形式になっていない場合は、末尾最適化が行われない。
-      (TODO: 末尾再帰でない関数の例)
+```
+def fact1(n: Int): Int = if (n < 1){
+  1
+} else {
+  n * fact(n - 1)
+}
+```
     * 自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合
-      (TODO: 自分自身を呼び出す末尾再帰の例)
+      計算結果を保持する変数を一つ追加する。
+```
+def fact2(n: Int, a: Int): Int = if (n < 1){
+  a
+} else {
+  fact2(n - 1, n * a)
+}
+```
+初期値を付けて、こんなふうに呼び出す。
+```
+scala> fact2(10, 1)
+res39: Int = 3628800
+```
+        * 末尾再帰では基本的に綺麗なプログラムを書こうと考えない事がポイント(末尾再帰の時点で大して綺麗に書けてない)。
+        * whileループを無理矢理、再帰に書き換えるような勢いが大切。
+        * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
     * 相互再帰では末尾最適化をしない。
       (TODO: 相互再帰の例)
+```
+def odd(n: Int): Boolean = if (n = 1) {
+  true
+} else {
+  even(n - 1)
+}
+
+def even(n: Int): Boolean = if (n = 0) {
+  true
+} else {
+  odd(n - 1)
+}
+```
+[スタックレスScala](http://halcat.org/scala/stackless/index.html)
 
 * Trampolineで末尾最適化をする。
   (TODO: Trampolineで末尾再帰の例を入れる)
 * なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書けるが、
   可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
+* 関数全体で見ると、参照透過な関数になっていればOKと考えるのもアリ。
 * ちなみにFutureで再帰する場合
   (TODO: サンプルを入れる)
 
