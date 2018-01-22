@@ -125,6 +125,7 @@ Double
   * Quicksort(あるいは、関数型プログラミングにおける偽のQuicksort)
     (TODO: 偽のQuicksortの例を書く)
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
+
 ```
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
@@ -144,10 +145,10 @@ d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 scala> sum(d, (a:Int, b:Int) => a + b)
 res36: Int = 31
 ```
-
 * 末尾最適化
   * Scalaの再帰はをする場合としない場合がある。
     * 末尾再帰形式になっていない場合は、末尾最適化が行われない。
+
 ```
 def fact1(n: Int): Int = if (n < 1){
   1
@@ -157,6 +158,7 @@ def fact1(n: Int): Int = if (n < 1){
 ```
     * 自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合
       計算結果を保持する変数を一つ追加する。
+
 ```
 def fact2(n: Int, a: Int): Int = if (n < 1){
   a
@@ -164,7 +166,9 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
   fact2(n - 1, n * a)
 }
 ```
+
 初期値を付けて、こんなふうに呼び出す。
+
 ```
 scala> fact2(10, 1)
 res39: Int = 3628800
@@ -174,6 +178,7 @@ res39: Int = 3628800
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
     * 相互再帰では末尾最適化をしない。
       (TODO: 相互再帰の例)
+
 ```
 def odd(n: Int): Boolean = if (n = 1) {
   true
