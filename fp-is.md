@@ -173,11 +173,13 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
 scala> fact2(10, 1)
 res39: Int = 3628800
 ```
+
         * 末尾再帰では基本的に綺麗なプログラムを書こうと考えない事がポイント(末尾再帰の時点で大して綺麗に書けてない)。
         * whileループを無理矢理、再帰に書き換えるような勢いが大切。
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
     * 相互再帰では末尾最適化をしない。
       (TODO: 相互再帰の例)
+
 
 ```
 def odd(n: Int): Boolean = if (n = 1) {
@@ -192,6 +194,7 @@ def even(n: Int): Boolean = if (n = 0) {
   odd(n - 1)
 }
 ```
+
 [スタックレスScala](http://halcat.org/scala/stackless/index.html)
 
 * Trampolineで末尾最適化をする。
@@ -366,6 +369,9 @@ res34: String = 400,600,800,1000
 
 ## 部分関数
 
+## 部分適用/カリー化
+* 部分適用とカリー化は間違えやすいことで有名。
+
 ## 名前渡し
 
 ## 代数的データ型
@@ -395,6 +401,28 @@ res34: String = 400,600,800,1000
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
 ## Option, Either, Future, for式
+* Option - nullを型レベルで表現する。
+  Optionはnullableな場合に使用する。
+
+https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms
+http://yuroyoro.hatenablog.com/entry/20100719/1279519961
+catingとかいう魔境
+https://stackoverflow.com/questions/40308075/scala-what-is-opt-keyword
+opt、某企業の事ではない。
+
+* Either - エラーの制御をする
+  Rightは、Leftは、
+
+* Future(Success/Failure) - 非同期プログラミング
+  例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
+
+### for式
+```
+for {
+  a <- abcDao.find(id)
+  b <- abcDao.find(a)
+} yeild f(a, b)
+```
 
 ## 型まわりの話
 * 複雑な型を定義してもあんまり意味ないという側面はある。
@@ -404,15 +432,42 @@ res34: String = 400,600,800,1000
 
 ### 暗黙の型変換(implicit conversion)
 
+* [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
+* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
+
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
 
 ### implicitな型パラメータ
 
 ### 構造的部分型
+* 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
+```
+class A:
+    def func1:
+        〜
+
+class B:
+    def func1:
+        〜
+
+def func2(objX):
+  objX.func1()
+
+func2(A())
+func2(B())
+
+```
+となるような、一般的な`func2`を定義する。`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
+型を付ける。
 
 ### 型クラス
 
 ## 余談
+### if-internal-external-conversion
+if(a) f(1) else f(2)
+f(if (a) 1 else 2)
+
+
 ### Scalaにおける小括弧の()と中括弧の{}違い
 小括弧は式を、中括弧はブロックを表す。
 * [Scalaにおける括弧()と中括弧{}の違い](http://xuwei-k.hatenablog.com/entry/20130221/1361466879)
@@ -446,4 +501,7 @@ Scalaの新しいコンパイラ。
 * [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://xuwei-k.hatenablog.com/entry/20141207/1417940174)
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
 * [Scala COLLECTIONS 性能特性](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
-* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
+
+## 読み物
+* [関数型言語でのデザイン手法 - togetter](https://togetter.com/li/25283)
+* [オブジェクト指向設計の原則と関数型プログラミング](https://www.infoq.com/jp/news/2014/03/oo-functional-programming)
