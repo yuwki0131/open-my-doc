@@ -249,6 +249,7 @@ res20: Int = 3
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
   * 関数のポインタと違い、データ(値)を保持することができる。
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
+  (TODO: 説明を書く)
 
 ## レキシカルスコープ(Lexical scope, 静的スコープ)
 * "Scope"とは範囲のこと。"Lexical"とはLiterallyくらいの意味で深い意味はない。
@@ -372,6 +373,7 @@ res59: Any = 2
 consでリストを構築する。空リストはemptyFで表現する。
 
 ## 高階関数(High-order function)
+  (TODO: 説明を書く)
 * 関数オブジェクトは値として他の関数に渡したり、
 
 ## 関数合成
@@ -432,15 +434,20 @@ res34: String = 400,600,800,1000
 * Playのアクション合成(action composition)などでも登場する。
 
 ## コンビネータ(Combinator)
+  (TODO: 説明を書く)
 
 ## 部分関数(Partial function)
+  (TODO: 説明を書く)
 
 ## 部分適用/カリー化(Partial apply/curring)
+  (TODO: 説明を書く)
 * 部分適用とカリー化は間違えやすいことで有名。
 
 ## 名前渡し(Call-by-name)
+  (TODO: 説明を書く)
 
 ## 代数的データ型(Algebraic data type)
+  (TODO: 説明を書く)
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
 * 代数的データ型とパターンマッチにより、コード
@@ -450,6 +457,7 @@ res34: String = 400,600,800,1000
   * なぜ、final case classを付けないと行けないのかは以下を参照。
     * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 * Option型の例
+  (TODO: 説明を書く)
 
 ## パターンマッチ
 * [Scalaのパターンマッチ - Qiita ](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
@@ -458,8 +466,10 @@ res34: String = 400,600,800,1000
 * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
 * if-else式と比較して、データ構造に対する網羅的なマッチが可能。網羅的でない場合は警告がでる。(但し、エラーにはならない)
+  (TODO: 説明を書く)
 
 ## リスト
+  (TODO: 説明を書く)
 * ScalaだとSeqで書くのがマナーらしい。
 * 標準のArrayListとLinkedListがある。
 * 関数型のLinkedList(主に単方向連結リスト)は特殊な性質がある。
@@ -470,9 +480,11 @@ res34: String = 400,600,800,1000
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
 ### コレクションメソッド
+  (TODO: 説明を書く)
 * map, filter, foldあたりが王道。flatMap, flatten
 
 ## Option, Either, Future, 例外, for式
+  (TODO: 説明を書く)
 * Option - nullを型レベルで表現する。
   * Optionはnullableな場合に使用する。
   * head, getは使わない。=> headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
@@ -487,21 +499,26 @@ https://stackoverflow.com/questions/40308075/scala-what-is-opt-keyword
 opt、某企業の事ではない。
 
 * Either - エラーの制御をする
+  (TODO: 説明を書く)
   Rightは、Leftは、
   * PlayframeworkだとActionFunctionなどで使用される。
   * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
 
 * Future(Success/Failure) - 非同期プログラミング
+  (TODO: 説明を書く)
   * 例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
   * JavaScriptで言う所のコールバック関数
 
 * 例外
+  (TODO: 例外の説明を書く)
   * Javaと違い、非チェック例外。
   * try-catchの場合はNonFatalでキャッチする。
 
 ### for式
 * for式は、map/flatMapに変換される。
+(TODO: for式の説明を書く)
 http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
+以下のfor式があった時、コンパイル時に次のように、map/flatMapに展開される。
 ```
 for {
   a <- abcDao.find(id)
@@ -514,6 +531,7 @@ for {
 * implicit conversion, implicit class, implicit parameterがある。
 
 ### 暗黙の型変換(implicit conversion)
+(TODO: 暗黙の型変換が何であるかについて記述する)
 * 暗黙の型変換は推奨されていない/しない人が多い。
 * 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
   * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
@@ -523,9 +541,11 @@ for {
   * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
+  (TODO: 説明を書く)
 * 継承せずに(?)既存の型を拡張する。
 
 ### 暗黙のパラメータ(implicit parameter)
+  (TODO: 説明を書く)
 
 ## 型関連
 * 複雑な型を定義してもあんまり意味ないという側面はある。
@@ -554,6 +574,7 @@ for {
   * あるオブジェクトがどのような振る舞いをするかまとめた物。
   * 但し、Javaで言う所のinterfaceとは違い、後付で実装することができ、拡張に対して、開かれている。
   * https://togetter.com/li/1113557
+  * 実装方法については、拡張メソッドを参照。
 
 ### Any, AnyRef, AnyVal
 * Anyは、全ての型の親クラス。
@@ -616,9 +637,6 @@ http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
   * Dotty向けの型システム。Scala3以降の話なので今回は言及しない。
 
 ## 余談
-### if-internal-external-conversion
-if(a) f(1) else f(2)
-f(if (a) 1 else 2)
 
 ### Symbol
 * ScalaにもRubyと同じようなSymbolがある。先頭にquoteを付ける。
@@ -644,6 +662,7 @@ Scalaの新しいコンパイラ。
 * [SCALA CHEATSHEET SCALACHEAT](https://docs.scala-lang.org/cheatsheets/index.html)
 
 ## やらない関数型言語まわりのトピック
+* 評価戦略
 * 継続(continuation)
 * プログラムの融合変換(program fusion, deforestation)
 * なんとかモルフィズム(正確にはRecursion Schemeという。catamorphism, anamorphism, hylomorphism ...)
