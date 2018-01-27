@@ -316,6 +316,12 @@ res18: Int = 2
   このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
   (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
 
+val x = 1
+locally {
+  import p.X.x
+  x
+}
+
 ## 高階関数
 * 関数オブジェクトは値として他の関数に渡したり、
 
@@ -389,7 +395,7 @@ res34: String = 400,600,800,1000
 
 ## 名前渡し
 
-## 代数的データ型
+## 代数的データ型(Algebraic data type)
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
 * 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
@@ -424,9 +430,10 @@ res34: String = 400,600,800,1000
 * 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
-## Option, Either, Future, for式
+## Option, Either, Future, 例外, for式
 * Option - nullを型レベルで表現する。
   Optionはnullableな場合に使用する。
+* https://dwango.github.io/scala_text/error-handling.html
 
 https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms
 http://yuroyoro.hatenablog.com/entry/20100719/1279519961
@@ -440,7 +447,12 @@ opt、某企業の事ではない。
 * Future(Success/Failure) - 非同期プログラミング
   例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
 
+* NonFatal
+
 ### for式
+* for式は、map/flatMapに変換される。
+http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
+
 ```
 for {
   a <- abcDao.find(id)
@@ -449,21 +461,21 @@ for {
 ```
 
 ## Scalaの3つのimplicit
-
 * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 * implicit conversion, implicit class, implicit parameterがある。
-* このうち、implicit conversionは、推奨されていない。
 
 ### 暗黙の型変換(implicit conversion)
-* 暗黙の型変換は推奨されていない。
-* [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
-* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
-* [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
+* 暗黙の型変換は推奨されていない/しない人が多い。
+* 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
+  * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
+* implicit conversionに対する否定的なコメントは以下を参照。
+  * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
+  * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
+  * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
 
 ### implicitな型パラメータ
-*
 
 ## 型まわりの話
 * 複雑な型を定義してもあんまり意味ないという側面はある。
@@ -495,11 +507,23 @@ func2(B())
 注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
 例えば、idとnameを持つようなRow。
 ```
-case class AbcRow(id: Long, name: String, ...)
+case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
 ```
 このRowのリストから、idとnameのタプルのリストを抽出したい。。。
-
-* これ以外だとローンパターンなどがある。
+以下のような関数を定義する。
+```
+def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, String)] =
+    rows.map { row => (row.id, row.name) }
+```
+以下のように実行する。
+```
+scala> val row = Seq(AbcRow(1, "a", "paramA", "paramB"), AbcRow(2, "b", "paramA", "paramB"), AbcRow(3, "c", "paramA", "paramB"));
+row: Seq[AbcRow] = List(AbcRow(1,a,paramA,paramB), AbcRow(2,b,paramA,paramB), AbcRow(3,c,paramA,paramB))
+scala> getIdName(row)
+res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
+```
+* 条件を満たす型(データ型)を定義しておき、テンプレートを書く。
+* これ以外だとローンパターンなど。
 
 ### 型クラス
 
@@ -519,6 +543,9 @@ f(if (a) 1 else 2)
 ### Dotty
 Scalaの新しいコンパイラ。
 * [Dottyによる変更点と使い方 - 水底](https://qiita.com/kmizu/items/10940b4c46876ae8a12d)
+
+### 便利なチートシート
+* [SCALA CHEATSHEET SCALACHEAT](https://docs.scala-lang.org/cheatsheets/index.html)
 
 ## やらない関数型言語まわりのトピック
 * 継続(continuation)
