@@ -67,13 +67,13 @@
   * またははimmutableな標準型、immutableなhashmap、list、etc...
   * 最後の一つはTupleによるプログラミング、否、case classによるデータ定義
 
-
 ### 副作用が他の関数型言語以外の言語よりも少ない傾向にある
 * 割と少ないか少なくなるように意識した言語設計(変数の破壊的代入を前提としないような書き方)
 
 ## これから説明する内容
 プログラム全体の設計の話というよりは細かいテクニカルな話が中心になります。
-仕事で使いまくるテクニックというよりは、ネット上のソースコードを読む時の手がかりや参考になる内容、調べる為(ググるため)の用語、
+仕事で使いまくるテクニックというよりは、ネット上のソースコードを読む時の手がかりや参考になる内容、
+調べる為(ググるため)の用語、関数型プログラミングにおける基礎的な用語、
 または、言語に由来する変なバグを仕込まない為の知識の紹介を目的にしています。
 
 * replの紹介
@@ -95,7 +95,7 @@ sbt console
 ```
 
 後は以下のようにインタラクティブにScalaのコードを打ち込んで行けば即座に実行結果が得られる。
-(電卓的にも使える)
+(電卓にも使える)
 ```
 scala> 1 + 1
 res0: Int = 2
@@ -108,6 +108,16 @@ scala>
 scala> :t 1.0
 Double
 ```
+
+## 関数型プログラミング言語の用語
+
+* 変数へ代入することを*束縛(bind/binding)*という習慣がある。
+  * 「変数aに値を束縛する」という言い方をする。
+  * 数理論理学の用語に由来している。
+  * [自由変数と束縛変数 - Wikipedia](https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0)
+  * 特に、ローカルで定義され代入された変数は束縛変数、グローバル変数などローカルで定義されていない変数の事を自由変数と言ったりする。
+    (後述するレキシカルスコープ参照)
+* プログラムの実行、特にプログラム中の部分的な式を実行することを*評価(evaluate)*という。
 
 ## 再帰
 * 再帰(recursion)とは自分自身を自分自身の中に持つような構造。
@@ -144,6 +154,12 @@ d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 
 scala> sum(d, (a:Int, b:Int) => a + b)
 res36: Int = 31
+
+scala> val e = Node(Node(Leaf("a"), Leaf("b")), Leaf("c"))
+e: Node[String] = Node(Node(Leaf(a),Leaf(b)),Leaf(c))
+
+scala> sum(e, (a: String, b: String) => "(" ++ a ++ " " ++ b ++ ")")
+res44: String = ((a b) c)
 ```
 * 末尾最適化
   * Scalaの再帰はをする場合としない場合がある。
@@ -158,29 +174,21 @@ def fact1(n: Int): Int = if (n < 1){
 ```
     * 自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合
       計算結果を保持する変数を一つ追加する。
-
 ```
 def fact2(n: Int, a: Int): Int = if (n < 1){
   a
 } else {
   fact2(n - 1, n * a)
 }
-```
 
-初期値を付けて、こんなふうに呼び出す。
-
-```
 scala> fact2(10, 1)
 res39: Int = 3628800
 ```
-
         * 末尾再帰では基本的に綺麗なプログラムを書こうと考えない事がポイント(末尾再帰の時点で大して綺麗に書けてない)。
         * whileループを無理矢理、再帰に書き換えるような勢いが大切。
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
-    * 相互再帰では末尾最適化をしない。
-      (TODO: 相互再帰の例)
-
-
+    * Scalaでは相互再帰では末尾最適化をしない。
+      * 例えば以下のようなプログラム、
 ```
 def odd(n: Int): Boolean = if (n = 1) {
   true
@@ -195,15 +203,16 @@ def even(n: Int): Boolean = if (n = 0) {
 }
 ```
 
+は、oddとevenを相互に呼び出し、自分自身の末尾で関数を
+
+
 [スタックレスScala](http://halcat.org/scala/stackless/index.html)
 
 * Trampolineで末尾最適化をする。
   (TODO: Trampolineで末尾再帰の例を入れる)
-* なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書けるが、
+* なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書ける(はずだ)が、
   可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
-* 関数全体で見ると、参照透過な関数になっていればOKと考えるのもアリ。
-* ちなみにFutureで再帰する場合
-  (TODO: サンプルを入れる)
+* 関数全体で見ると、参照透過な関数になっていればOKという考え方。
 
 ## 無名関数(ラムダ抽象)
 ```
@@ -220,14 +229,16 @@ res20: Int = 3
 * おなじみの無名関数。
 * 大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない(方がいい)(※個人の意見です)。
 * 第一級オブジェクトとしての関数(データとして扱う事が出来る関数): 関数を渡す、値として保持することができる。
+* 無名関数の式が評価されると、**関数オブジェクト**が生成される。
 * オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照。
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
   * 関数のポインタと違い、データ(値)を保持することができる。
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
 
-## レキシカルスコープ(静的スコープ)
-* "Scope"とは範囲のことです。
-* Scalaの変数の有効範囲は、レキシカルスコーピングによって決定される。
+## レキシカルスコープ(Lexical Scope, 静的スコープ)
+* "Scope"とは範囲のこと。"Lexical"とはLiterallyくらいの意味で深い意味はない。
+* レキシカルスコープとは、静的にどの変数がどのタイミングで代入された
+* Scalaの変数(valや引数)の有効範囲は、レキシカルスコーピングによって決定される。
 * 変数の値を取り出す時、(Scalaの)レキシカルスコープでは、ネストした変数定義において最も内側で定義された変数を参照する。
 
 例えば、以下の２つの例。
@@ -240,7 +251,6 @@ res5: Int = 3
 scala> {val a = 1; {val a = 2; {val a = 3; a} } }
 res11: Int = 3
 ```
-
 この時、aは、最も内側にあるaは、ネストしている中で最も手前で定義された変数(引数)aの値を参照する。
 次の例では、最も内側のスコープを抜けているので上記とは別の値を見に行く。
 ```
@@ -249,12 +259,19 @@ res10: Int = 2
 ```
 または、
 ```
-scala> {val a = 1; {val a = 2; {val a = 3;}; a} }
+scala> {val a = 1; {val a = 2; {val a = 3;} a} }
 res14: Int = 2
 ```
+* レキシカルスコープの仕組み自体は、Scalaだけでなく、JavaScriptやTypeScript(たぶん)、Ruby(たぶん)、Pythonでも共通。
+* 但し、JavaScriptにはFunctionスコープというのがあるので注意。
+* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い。
+  現代で実用的な動的スコープがメインの言語はEmacs Lispくらい。。。
+* implicit parameterは、社内だとFutureのExecutionContextがよく使われる。
 
+## クロージャ(Closure)
 * ブロックから抜けだした関数オブジェクトは、レキシカルスコーピングによって保持した変数の参照を保持し続ける。
   このような関数オブジェクトの事をクロージャ(Closure)という。
+* プログラミング言語のClojureの事ではない。
 
 例えば以下では、関数オブジェクトがaseqという変数名が保持しているリストの参照を持つ。
 ```
@@ -299,11 +316,8 @@ res18: Int = 2
   このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
   (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
 
-* レキシカルスコープの仕組み自体は、Scalaだけでなく、JavaScriptやTypeScript(たぶん)、Ruby(たぶん)、Pythonでも共通。
-* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い。
-* 社内だとFutureのExecutionContextが典型的。
-
 ## 高階関数
+* 関数オブジェクトは値として他の関数に渡したり、
 
 ## 関数合成
 * 2つの関数を合成します。
@@ -364,6 +378,7 @@ res34: String = 400,600,800,1000
 処理の順番が明確になり、多少は分かりやすくなった。andThenは、fluent interfaceかも知れない。。。
 
 * 使いすぎると分かりづらくなる事も多いが、Scalazだと頻繁に使われていたりする。
+* Playのアクション合成(action composition)などでも登場する。
 
 ## コンビネータ
 
@@ -383,10 +398,19 @@ res34: String = 400,600,800,1000
   なぜ、final case classを付けないと行けないのかは以下を参照。
   https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes
 
+## パターンマッチ
+
+[Scalaのパターンマッチ - Qiita ](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
+
 ## リスト
 * ScalaだとSeqで書くのがマナーらしい
 * 標準のArrayListとLinkedListがある。
 * 関数型のLinkedList(主に単方向連結リスト)は特殊な性質がある。
+
+* Scalaのリストのパターンマッチ
+```
+
+```
 
 * 例えば
   case class AbcRow(id: Long, name: String, abc: String)
@@ -395,7 +419,7 @@ res34: String = 400,600,800,1000
 ### コレクションメソッド
 * map, filter, foldあたりが王道。flatMap, flatten
 
-    [ScalaのSeqリファレンス](https://qiita.com/f81@github/items/75c616a527cf5c039676)
+    [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 
 * 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
@@ -424,20 +448,28 @@ for {
 } yeild f(a, b)
 ```
 
+## Scalaの3つのimplicit
+
+* [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
+* implicit conversion, implicit class, implicit parameterがある。
+* このうち、implicit conversionは、推奨されていない。
+
+### 暗黙の型変換(implicit conversion)
+* 暗黙の型変換は推奨されていない。
+* [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
+* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
+* [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
+
+### 拡張メソッド(implicit class / 既存の型を拡張する)
+
+### implicitな型パラメータ
+*
+
 ## 型まわりの話
 * 複雑な型を定義してもあんまり意味ないという側面はある。
 * 特に普段の業務で使いまくるのかは疑問
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
-
-### 暗黙の型変換(implicit conversion)
-
-* [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
-* [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
-
-### 拡張メソッド(implicit class / 既存の型を拡張する)
-
-### implicitな型パラメータ
 
 ### 構造的部分型
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
@@ -452,13 +484,22 @@ class B:
 
 def func2(objX):
   objX.func1()
+  〜
 
 func2(A())
 func2(B())
-
 ```
-となるような、一般的な`func2`を定義する。`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
-型を付ける。
+
+となるような、一般的な`func2`を定義できる。`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
+勿論、class Aやclass Bの定義を変更することなしに。
+注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
+例えば、idとnameを持つようなRow。
+```
+case class AbcRow(id: Long, name: String, ...)
+```
+このRowのリストから、idとnameのタプルのリストを抽出したい。。。
+
+* これ以外だとローンパターンなどがある。
 
 ### 型クラス
 
@@ -466,7 +507,6 @@ func2(B())
 ### if-internal-external-conversion
 if(a) f(1) else f(2)
 f(if (a) 1 else 2)
-
 
 ### Scalaにおける小括弧の()と中括弧の{}違い
 小括弧は式を、中括弧はブロックを表す。
