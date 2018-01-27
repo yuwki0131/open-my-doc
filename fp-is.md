@@ -529,7 +529,6 @@ for {
 
 ## 型関連
 * 複雑な型を定義してもあんまり意味ないという側面はある。
-* 特に普段の業務で使いまくるのかは疑問
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
 * 型パラメータ: Javaで言う所のジェネリクス。
@@ -544,9 +543,20 @@ for {
     * 構造的部分型を参照。
 * 型エイリアス: 型に別名を付けることができる。型定義の長さが絶望的に長くなった時に有効。
   * `type String3 = (String, String, String)`
+* 型コンストラクタ: 型を引数にとり別の型を生成する型。
+  * プログラミングでよく目にするものとしては、Option, Either, Futureなどが典型的。
+  * 型パラメータが引数にとる。
+  * Option[+A]という型コンストラクタに対して、Option[String]という型を定義する時などに使われる。
+  * 他の関数型言語だとFunctorなどがよく出てくる。
+
+* 型クラス: "既存の型に後付けするタイプのインターフェース"(次の記事から引用)
+   * [型クラスの雰囲気をつかんでScala標準ライブラリの型クラスを使ってみる回 - 水底](http://amaya382.hatenablog.jp/entry/2017/05/13/195913)
+  * あるオブジェクトがどのような振る舞いをするかまとめた物。
+  * 但し、Javaで言う所のinterfaceとは違い、後付で実装することができ、拡張に対して、開かれている。
+  * https://togetter.com/li/1113557
 
 ### Any, AnyRef, AnyVal
-* Anyは、全ての型の親クラス
+* Anyは、全ての型の親クラス。
 * AnyValは、定数系の型のすべての親クラス。
 * AnyRefは、参照型となる型のすべての親クラス。
 * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
@@ -591,8 +601,6 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ```
 * 条件を満たす型(データ型)を定義しておき、テンプレートを書く。
 * これ以外だとローンパターンなど。
-
-### 型クラス
 
 ### Scalaの3つのdependent * type
 http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
@@ -660,3 +668,5 @@ Scalaの新しいコンパイラ。
 ## 読み物
 * [関数型言語でのデザイン手法 - togetter](https://togetter.com/li/25283)
 * [オブジェクト指向設計の原則と関数型プログラミング](https://www.infoq.com/jp/news/2014/03/oo-functional-programming)
+* [Scalaで型レベルプログラミング(日本語訳)](https://github.com/yuroyoro/Japanese_Translations_of_Scala_Articles/tree/master/source/ja/type_level_programming_in_scala)
+  * 4章まで(?)(2018/01/27現在)
