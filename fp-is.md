@@ -534,9 +534,22 @@ for {
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
 * 型パラメータ: Javaで言う所のジェネリクス。
   * `trait A[B] { def b():B; }`の`B`
-  * 型パラメータに様々な制約を付ける事で、インターフェースなしに
+  * 型パラメータで指定できる共変、反変、非変については、[型パラメータと変位指定 - ドワンゴの研修テキスト](https://dwango.github.io/scala_text/type-parameter.html) を参照。以下、自分用のメモ。
+    * 共変(`[+B]`): A extends Bの時のみ、val a:G[B] = b:G[A]が可。
+    * 反変(`[-B]`): A extends Bの時のみ、val a:G[A] = b:G[B]が可。
+    * 非変(`[B]`): A = Bの時のみ、val a:G[A] = b:G[B]が可。
+    * 上界(`[B <: A]`): BがAを継承の性質。
+    * 下界(`[B >: A]`): BがAのスーパークラスである性質。
+  * 型パラメータに様々な制約を付ける事で、クラス、インターフェースなしにジェネリックな関数を定義することが可能。
+    * 構造的部分型を参照。
 * 型エイリアス: 型に別名を付けることができる。型定義の長さが絶望的に長くなった時に有効。
   * `type String3 = (String, String, String)`
+
+### Any, AnyRef, AnyVal
+* Anyは、全ての型の親クラス
+* AnyValは、定数系の型のすべての親クラス。
+* AnyRefは、参照型となる型のすべての親クラス。
+* [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
 
 ### 構造的部分型
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
@@ -598,6 +611,14 @@ http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
 ### if-internal-external-conversion
 if(a) f(1) else f(2)
 f(if (a) 1 else 2)
+
+### Symbol
+* ScalaにもRubyと同じようなSymbolがある。先頭にquoteを付ける。
+```
+scala> 'sym
+'sym
+res2: Symbol = 'sym
+```
 
 ### Scalaにおける小括弧の()と中括弧の{}違い
 小括弧は式を、中括弧はブロックを表す。
