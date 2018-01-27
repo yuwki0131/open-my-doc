@@ -2,14 +2,14 @@
 * Javaエンジニア用Scalaユーザ向け
 * そういう傾向があるという話。
 * 同じ関数型言語でも結構言語によって慣習が違う。
-  (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
+  * (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
-  [Twitter](https://twitter.com/esumii/status/638588331459153920)
+  * [Twitterより](https://twitter.com/esumii/status/638588331459153920)
 * Scala以外だと、Haskell, OCaml, StandardML, F#, Clean(ConcurrentClean), Erlang, Elixir, Scheme, Clojure他多数。
 * フロントエンド専用だとElm, PureScriptなどもある。
 * というわけで関数型プログラミングっぽい話をします。
 * 以下に書いてある事に関しても基本的に話しません。内容が重複するため。
-  [Scala研修テキスト - dwango on GitHub](https://dwango.github.io/scala_text/)
+  * [Scala研修テキスト - dwango on GitHub](https://dwango.github.io/scala_text/)
 
 ## なぜ、関数型プログラミングをするのか?
 
@@ -19,36 +19,33 @@
 #### Gofのデザインパターン
 
 * Strategy
-  アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
-  https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3
-  => Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
-  または型クラスを定義する。
+  * アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
+  * [Strategy パターン - Wikipedia](https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)
+  * => Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
+  * または型クラスを定義する。
 * Template Method
-  上に同じ
+  * 上に同じ
 * Factory Method
-  部分適用(Partial Application)が使える。
-  https://www.ibm.com/developerworks/jp/java/library/j-ft10/
+  * 部分適用(Partial Application)が使える。
+  * https://www.ibm.com/developerworks/jp/java/library/j-ft10/
 * Visitor
-  代数的データ型 + パターンマッチ(+ 再帰)を使う。
+  * 代数的データ型 + パターンマッチ(+ 再帰)を使う。
 * Composite
-  上に同じ
+  * 上に同じ
 * Interpreter
-  上に同じ
-* Singletonパターン
-  classやtraitではなくobjectで定義 or Singletonアノテーション
-  この辺は(多分?)Javaと一緒
+  * 上に同じ
 
 #### Gofのデザインパターン以外
   [デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
 
 * Null Object
-  オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。(参照)
+  * オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。(参照)
 * Balking
-  ガード節とも。これのScala版のいい方法がわからない。あえて言うなら、for-yield式がそれに相当。
+  * ガード節とも。これのScala版のいい方法がわからない。あえて言うなら、for-yield式がそれに相当。
 * Immutable object
-  積極的にmutableにしなければ、オブジェクトは全てimmutable
+  * 積極的にmutableにしなければ、オブジェクトは全てimmutable
 * Future
-  ScalaのFuture
+  * ScalaのFuture
 
 ### immutable
 * 「状態」が変わらない
@@ -57,7 +54,7 @@
 * データ構造を破壊しないことで、思考コスト、オブジェクトがどこで書き換えられるかの調査コストが減る。
   * どこでデータが書き換えられるかを考える必要が無くなる。
   * 関数の入力と出力のみに注目すればいい。
-    (参照透過性: 引数に同じ値を与えれば同じ戻り値を得ることができる関数を参照透過な関数という)
+    * (参照透過性: 引数に同じ値を与えれば同じ戻り値を得ることができる関数を参照透過な関数という)
   * 入力に対して、想定した出力が得られれば、正しい関数であると言える。(プロパティベースのテスト(関数に対するユニットテスト))
   * (注)別に関数型プログラミングだからというわけではない。Javaなど他の言語でもある程度同じことが可能。
     * 但し、Javaは破壊的な変更をしていないことの保証のサポートが弱い(finalを使えばその限りではない)
@@ -72,13 +69,14 @@
 
 ## これから説明する内容
 プログラム全体の設計の話というよりは細かいテクニカルな話が中心になります。
+
 仕事で使いまくるテクニックというよりは、ネット上のソースコードを読む時の手がかりや参考になる内容、
 調べる為(ググるため)の用語、関数型プログラミングにおける基礎的な用語、
 または、言語に由来する変なバグを仕込まない為の知識の紹介を目的にしています。
 
 * replの紹介
 * 関数型プログラミングなので、当然関数の使い方をメインに説明します。
-  (再帰、無名関数、静的スコープ、高階関数、合成関数、名前渡し)
+  * (再帰、無名関数、静的スコープ、高階関数、合成関数、名前渡し)
 * 関数型プログラミングで頻繁に用いられるデータ型である代数的データ型
 * 業務でよく使われるOption/Either/Future及びfor式について
 * Scalaは静的型付言語なので、型の話をします。
@@ -89,11 +87,11 @@
 * repl: Read Eval Print Loop
 * ミニマムなコードで、シンタックスの動作確認や型の確認ができる。
 * Scalaのスモールサイズの文法を学ぶのにはうってつけ
+
 以下のコマンドで実行出来る。
 ```
 sbt console
 ```
-
 後は以下のようにインタラクティブにScalaのコードを打ち込んで行けば即座に実行結果が得られる。
 (電卓にも使える)
 ```
@@ -108,6 +106,11 @@ scala>
 scala> :t 1.0
 Double
 ```
+メソッドを調べる。`クラス名.getClass.getMethods.map(_.getName)`
+```
+scala> Ordering.getClass.getMethods.map(_.getName)
+res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrdering, ordered, Tuple9, Tuple8, Tuple7, Tuple6, Iterable, Option, by, fromLessThan, apply, wait, wait, wait, equals, toString, hashCode, getClass, notify, notifyAll)
+```
 
 ## 関数型プログラミング言語の用語
 
@@ -116,23 +119,35 @@ Double
   * 数理論理学の用語に由来している。
   * [自由変数と束縛変数 - Wikipedia](https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0)
   * 特に、ローカルで定義され代入された変数は束縛変数、グローバル変数などローカルで定義されていない変数の事を自由変数と言ったりする。
-    (後述するレキシカルスコープ参照)
+    * (後述するレキシカルスコープ参照)
 * プログラムの実行、特にプログラム中の部分的な式を実行することを*評価(evaluate)*という。
 
 ## 再帰
 * 再帰(recursion)とは自分自身を自分自身の中に持つような構造。
-  再帰的なデータ構造や、再帰呼出しなど。
-  [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
+  * プログラミングでは、再帰的なデータ構造や、再帰呼出しなどがある。
+  * [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
 * Scalaでのループはコレクション関数を使用することが(多分)殆どなので、再帰呼出しは、あまり使わないが、たまに使う。
-  (コレクション関数は後述)
+  * (コレクション関数は後述)
 * リスト(構造)についても使えるが、コレクション関数を使用すればいい場合が多い(要出典)ので殆ど使わないはず。
 * 木構造のような再帰的なデータ型がある場合や分割統治法を使ったアルゴリズムの場合は、使うとわかりやすいコードが書ける。
   * 分割統治法
-    大きな問題を小さな部分問題に分割し、個々の小さな部分問題を解決しながら、
-    その部分問題の解答結果のマージを繰り返し、最終的に元の問題を解くようなアルゴリズム。
-    [分割統治法 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%88%86%E5%89%B2%E7%B5%B1%E6%B2%BB%E6%B3%95)
-    以下の例のQuicksortが典型例。
+    * 大きな問題を小さな部分問題に分割し、個々の小さな部分問題を解決しながら、
+      その部分問題の解答結果のマージを繰り返し、最終的に元の問題を解くようなアルゴリズム。
+    * [分割統治法 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%88%86%E5%89%B2%E7%B5%B1%E6%B2%BB%E6%B3%95)
+    * 次のQuicksortが典型例。
   * Quicksort(あるいは、関数型プログラミングにおける偽のQuicksort)
+    * Javaでクイックソート:
+      [【Java】クイックソートのアルゴリズムのテスト - Qiita](https://qiita.com/gigegige/items/4817c27314a2393eb02d)
+    * 関数型プログラミングでは偽のクィックソートというのがある。
+
+```
+def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
+    case Nil => Nil
+    case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
+}
+scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
+res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
+```
     (TODO: 偽のQuicksortの例を書く)
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
 
@@ -146,9 +161,6 @@ def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
   case Node(l, r) => f(sum(l, f), sum(r, f))
 }
 
-```
-
-```
 scala> val d = Node(Node(Leaf(10), Leaf(20)), Leaf(1))
 d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 
