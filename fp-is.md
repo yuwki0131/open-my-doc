@@ -114,16 +114,16 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
 
 ## 関数型プログラミング言語の用語
 
-* 変数へ代入することを*束縛(bind/binding)*という習慣がある。
+* 変数へ代入することを**束縛(bind/binding)**という習慣がある。
   * 「変数aに値を束縛する」という言い方をする。
   * 数理論理学の用語に由来している。
   * [自由変数と束縛変数 - Wikipedia](https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0)
   * 特に、ローカルで定義され代入された変数は束縛変数、グローバル変数などローカルで定義されていない変数の事を自由変数と言ったりする。
     * (後述するレキシカルスコープ参照)
-* プログラムの実行、特にプログラム中の部分的な式を実行することを*評価(evaluate)*という。
+* プログラムの実行、特にプログラム中の部分的な式を実行することを**評価(evaluate)**という。
 
-## 再帰
-* 再帰(recursion)とは自分自身を自分自身の中に持つような構造。
+## 再帰(Recursion)
+* 再帰とは自分自身を自分自身の中に持つような構造。
   * プログラミングでは、再帰的なデータ構造や、再帰呼出しなどがある。
   * [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
 * Scalaでのループはコレクション関数を使用することが(多分)殆どなので、再帰呼出しは、あまり使わないが、たまに使う。
@@ -151,7 +151,6 @@ scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
 ```
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
-
 ```
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
@@ -241,9 +240,7 @@ res19: Int = 2
 scala> f(2)
 res20: Int = 3
 ```
-
-* おなじみの無名関数。
-* 大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない(方がいい)(※個人の意見です)。
+* おなじみの無名関数。大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない(方がいい)(※個人の意見です)。
 * 第一級オブジェクトとしての関数(データとして扱う事が出来る関数): 関数を渡す、値として保持することができる。
 * 無名関数の式が評価されると、**関数オブジェクト**が生成される。
 * オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照。
@@ -251,7 +248,7 @@ res20: Int = 3
   * 関数のポインタと違い、データ(値)を保持することができる。
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
 
-## レキシカルスコープ(Lexical Scope, 静的スコープ)
+## レキシカルスコープ(Lexical scope, 静的スコープ)
 * "Scope"とは範囲のこと。"Lexical"とはLiterallyくらいの意味で深い意味はない。
 * レキシカルスコープとは、静的にどの変数がどのタイミングで代入された
 * Scalaの変数(valや引数)の有効範囲は、レキシカルスコーピングによって決定される。
@@ -329,8 +326,15 @@ res18: Int = 2
 * 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数のような物も(機能的には)作れる。
 
 * ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
-  このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
-  (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
+  * このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
+  * (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
+
+* クロージャを使うことで計算を遅延させることが可能。典型的な使用例がFutureによるコールバック。
+  * `dao.findById(id)`がFutureを返す時、mapに渡された`row =>`以降は、Futureの結果が返ってくるまで実行されない。
+```
+dao.findById(id).map { row => row.name }
+```
+  * クロージャの性質を利用して遅延評価を手で作る事が出来る。
 
 val x = 1
 locally {
@@ -338,15 +342,40 @@ locally {
   x
 }
 
-## 高階関数
+* クロージャでリスト構造を作る。
+  * ルール: データ構造やクラスは使わない。
+  * 単方向連結リストリスト(いわゆるLinkedList)
+  * 関数型プログラミングにおける大道芸の一つ。
+  * 以下例。
+```
+scala> val cons = (x: Int, xs: Int => Any) => ((i: Int) => if (i == 0) x else xs(i - 1))
+cons: (Int, Int => Any) => Int => Any = $$Lambda$3648/212142471@1c3cc65d
+
+scala> val emptyF = (x: Int) => null
+emptyF: Int => Int = $$Lambda$3649/558084802@db6ad80
+
+scala> val ls = cons(4, cons(3, cons(2, emptyF)))
+ls: Int => Any = $$Lambda$3650/2033873015@4f08ca31
+
+scala> ls(1)
+res57: Any = 3
+
+scala> ls(3)
+res58: Any = null
+
+scala> ls(2)
+res59: Any = 2
+```
+関数がAny型を返す、リストの上限を超えた時nullを返すのは、簡単のため。
+consでリストを構築する。空リストはemptyFで表現する。
+
+## 高階関数(High-order function)
 * 関数オブジェクトは値として他の関数に渡したり、
 
 ## 関数合成
-* 2つの関数を合成します。
-* 数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
-* compose/andThenを使う。
+* 2つの関数を合成する。数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
+* 合成関数用の関数として、compose/andThenが用意されている。
 * 例えば以下の場合、
-
 ```
 val withComma = ((ls: Seq[String]) => ls.mkString(","))
 val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
@@ -387,9 +416,7 @@ andThenの場合
 scala> (((x:Int)=> x.toString) andThen ((s:String) => s.toInt))(20)
 res22: Int = 20
 ```
-
 * andThenを使って前述のコードを書き直す。
-
 ```
 scala> val multiply20withComma = trimString andThen multiply20 andThen withComma
 multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$4021/295193997@7d9759a
@@ -402,53 +429,53 @@ res34: String = 400,600,800,1000
 * 使いすぎると分かりづらくなる事も多いが、Scalazだと頻繁に使われていたりする。
 * Playのアクション合成(action composition)などでも登場する。
 
-## コンビネータ
+## コンビネータ(Combinator)
 
-## 部分関数
+## 部分関数(Partial function)
 
-## 部分適用/カリー化
+## 部分適用/カリー化(Partial apply/curring)
 * 部分適用とカリー化は間違えやすいことで有名。
 
-## 名前渡し
+## 名前渡し(Call-by-name)
 
 ## 代数的データ型(Algebraic data type)
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
+* 代数的データ型とパターンマッチにより、コード
 * 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
   [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
-* case classには、`final`を付けることが必須
+* case classには、`final`を付けることが推奨される。
   なぜ、final case classを付けないと行けないのかは以下を参照。
   https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes
+* Option型の例
 
 ## パターンマッチ
-
-[Scalaのパターンマッチ - Qiita ](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
+* [Scalaのパターンマッチ - Qiita ](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
+* Scalaでは、リテラル(定数)、型によるマッチ、正規表現、構造に関するマッチなどが可能。
+* データ構造(リストやタプル、case classなど)を構造的に分解して変数に代入できる。
+* オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
+  * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
+* if-else式と比較して、データ構造に対する網羅的なマッチが可能。網羅的でない場合は警告がでる。(但し、エラーにはならない)
 
 ## リスト
-* ScalaだとSeqで書くのがマナーらしい
+* ScalaだとSeqで書くのがマナーらしい。
 * 標準のArrayListとLinkedListがある。
 * 関数型のLinkedList(主に単方向連結リスト)は特殊な性質がある。
-
-* Scalaのリストのパターンマッチ
-```
-
-```
-
-* 例えば
-  case class AbcRow(id: Long, name: String, abc: String)
-  のSeq[AbcRow] からidとnameを抽出する
+* mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。
+  * 前述のquicksortの例を参照。
+* [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
+* 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
+  * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
 ### コレクションメソッド
 * map, filter, foldあたりが王道。flatMap, flatten
 
-    [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
-
-* 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
-  * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
-
 ## Option, Either, Future, 例外, for式
 * Option - nullを型レベルで表現する。
-  Optionはnullableな場合に使用する。
+  * Optionはnullableな場合に使用する。
+  * head, getは使わない。=> headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
+  * 意味のないマジックナンバーを埋め込まない。
+
 * https://dwango.github.io/scala_text/error-handling.html
 
 https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms
@@ -459,16 +486,20 @@ opt、某企業の事ではない。
 
 * Either - エラーの制御をする
   Rightは、Leftは、
+  * PlayframeworkだとActionFunctionなどで使用される。
+  * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
 
 * Future(Success/Failure) - 非同期プログラミング
-  例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
+  * 例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
+  * JavaScriptで言う所のコールバック関数
 
-* NonFatal
+* 例外
+  * Javaと違い、非チェック例外。
+  * try-catchの場合はNonFatalでキャッチする。
 
 ### for式
 * for式は、map/flatMapに変換される。
 http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
-
 ```
 for {
   a <- abcDao.find(id)
@@ -490,14 +521,20 @@ for {
   * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
+* 継承せずに(?)既存の型を拡張する。
 
-### implicitな型パラメータ
+### 暗黙のパラメータ(implicit parameter)
 
 ## 型関連
 * 複雑な型を定義してもあんまり意味ないという側面はある。
 * 特に普段の業務で使いまくるのかは疑問
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
+* 型パラメータ: Javaで言う所のジェネリクス。
+  * `trait A[B] { def b():B; }`の`B`
+  * 型パラメータに様々な制約を付ける事で、インターフェースなしに
+* 型エイリアス: 型に別名を付けることができる。型定義の長さが絶望的に長くなった時に有効。
+  * `type String3 = (String, String, String)`
 
 ### 構造的部分型
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
@@ -517,7 +554,6 @@ def func2(objX):
 func2(A())
 func2(B())
 ```
-
 となるような、一般的な`func2`を定義できる。`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
 勿論、class Aやclass Bの定義を変更することなしに。
 注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
@@ -546,15 +582,15 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ### Scalaの3つのdependent * type
 http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
 * Scalaのdependent * type (関数型言語で言われる所の依存型とは違う(らしい))
-  * path-dependent type
-    * 生成された経路によって、同じpackageの同一オブジェクト(クラス)の型の場合でも、別々の型とみなされる。
-    * [What is meant by Scala's path-dependent types? - StackOverFlow](https://stackoverflow.com/questions/2693067/what-is-meant-by-scalas-path-dependent-types)
-  * dependent method type
-    * [Scala dependent method types ? - Gist](https://gist.github.com/xuwei-k/1306328/82530a4d2451b68a17f7c03448d6ab88da0bc575)
-  * dependent object type
-    * [Dependent Object Types (DOT)](https://github.com/namin/dot)
-      * "The DOT calculus proposes a new type-theoretic foundation for languages like Scala."
-      * Dotty向けの型システム。Scala3以降の話なので今回は言及しない。
+* path-dependent type
+  * 生成された経路によって、同じpackageの同一オブジェクト(クラス)の型の場合でも、別々の型とみなされる。
+  * [What is meant by Scala's path-dependent types? - StackOverFlow](https://stackoverflow.com/questions/2693067/what-is-meant-by-scalas-path-dependent-types)
+* dependent method type
+  * [Scala dependent method types ? - Gist](https://gist.github.com/xuwei-k/1306328/82530a4d2451b68a17f7c03448d6ab88da0bc575)
+* dependent object type
+  * [Dependent Object Types (DOT)](https://github.com/namin/dot)
+    * "The DOT calculus proposes a new type-theoretic foundation for languages like Scala."
+  * Dotty向けの型システム。Scala3以降の話なので今回は言及しない。
 
 ## 余談
 ### if-internal-external-conversion
