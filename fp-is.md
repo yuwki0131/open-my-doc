@@ -139,16 +139,17 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
     * Javaでクイックソート:
       [【Java】クイックソートのアルゴリズムのテスト - Qiita](https://qiita.com/gigegige/items/4817c27314a2393eb02d)
     * 関数型プログラミングでは偽のクィックソートというのがある。
-
 ```
 def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case Nil => Nil
     case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
 }
+```
+
+```
 scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
 ```
-    (TODO: 偽のQuicksortの例を書く)
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
 
 ```
@@ -160,7 +161,9 @@ def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
   case Leaf(a) => a
   case Node(l, r) => f(sum(l, f), sum(r, f))
 }
+```
 
+```
 scala> val d = Node(Node(Leaf(10), Leaf(20)), Leaf(1))
 d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 
@@ -192,7 +195,9 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
 } else {
   fact2(n - 1, n * a)
 }
+```
 
+```
 scala> fact2(10, 1)
 res39: Int = 3628800
 ```
@@ -215,7 +220,7 @@ def even(n: Int): Boolean = if (n = 0) {
 }
 ```
 
-は、oddとevenを相互に呼び出し、自分自身の末尾で関数を
+は、oddとevenを相互に呼び出し、自分自身の末尾で関数を呼び出す。
 
 
 [スタックレスScala](http://halcat.org/scala/stackless/index.html)
