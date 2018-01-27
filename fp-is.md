@@ -1,6 +1,6 @@
 # Scalaと関数型プログラミングとは まとめ
 
-**編集途中のドキュメント**
+*編集途中のドキュメント*
 
 2018/01/27版
 
@@ -144,7 +144,7 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
     * Javaでクイックソート:
       [【Java】クイックソートのアルゴリズムのテスト - Qiita](https://qiita.com/gigegige/items/4817c27314a2393eb02d)
     * 関数型プログラミングでは偽のクィックソートというのがある。
-```
+```scala
 def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case Nil => Nil
     case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
