@@ -145,7 +145,6 @@ def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
 }
 ```
-
 ```
 scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
@@ -161,7 +160,6 @@ def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
   case Node(l, r) => f(sum(l, f), sum(r, f))
 }
 ```
-
 ```
 scala> val d = Node(Node(Leaf(10), Leaf(20)), Leaf(1))
 d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
@@ -195,7 +193,6 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
   fact2(n - 1, n * a)
 }
 ```
-
 ```
 scala> fact2(10, 1)
 res39: Int = 3628800
@@ -205,6 +202,7 @@ res39: Int = 3628800
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
     * Scalaでは相互再帰では末尾最適化をしない。
       * 例えば以下のようなプログラム、
+
 ```
 def odd(n: Int): Boolean = if (n = 1) {
   true
@@ -218,7 +216,6 @@ def even(n: Int): Boolean = if (n = 0) {
   odd(n - 1)
 }
 ```
-
 は、oddとevenを相互に呼び出し、自分自身の末尾で関数を呼び出す。
 
 [スタックレスScala](http://halcat.org/scala/stackless/index.html)
@@ -444,9 +441,9 @@ res34: String = 400,600,800,1000
 * 代数的データ型とパターンマッチにより、コード
 * 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
   [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
-* case classには、`final`を付けることが推奨される。
-  なぜ、final case classを付けないと行けないのかは以下を参照。
-  https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes
+* case classには、`final`を付けること推奨。
+  * なぜ、final case classを付けないと行けないのかは以下を参照。
+    * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 * Option型の例
 
 ## パターンマッチ
