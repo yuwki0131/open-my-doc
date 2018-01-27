@@ -222,7 +222,6 @@ def even(n: Int): Boolean = if (n = 0) {
 
 は、oddとevenを相互に呼び出し、自分自身の末尾で関数を呼び出す。
 
-
 [スタックレスScala](http://halcat.org/scala/stackless/index.html)
 
 * Trampolineで末尾最適化をする。
@@ -494,7 +493,7 @@ for {
 
 ### implicitな型パラメータ
 
-## 型まわりの話
+## 型関連
 * 複雑な型を定義してもあんまり意味ないという側面はある。
 * 特に普段の業務で使いまくるのかは疑問
 * 気を抜いているとAnyに推論されるらしい。
@@ -544,6 +543,19 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 
 ### 型クラス
 
+### Scalaの3つのdependent * type
+http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
+* Scalaのdependent * type (関数型言語で言われる所の依存型とは違う(らしい))
+  * path-dependent type
+    * 生成された経路によって、同じpackageの同一オブジェクト(クラス)の型の場合でも、別々の型とみなされる。
+    * [What is meant by Scala's path-dependent types? - StackOverFlow](https://stackoverflow.com/questions/2693067/what-is-meant-by-scalas-path-dependent-types)
+  * dependent method type
+    * [Scala dependent method types ? - Gist](https://gist.github.com/xuwei-k/1306328/82530a4d2451b68a17f7c03448d6ab88da0bc575)
+  * dependent object type
+    * [Dependent Object Types (DOT)](https://github.com/namin/dot)
+      * "The DOT calculus proposes a new type-theoretic foundation for languages like Scala."
+      * Dotty向けの型システム。Scala3以降の話なので今回は言及しない。
+
 ## 余談
 ### if-internal-external-conversion
 if(a) f(1) else f(2)
@@ -575,7 +587,7 @@ Scalaの新しいコンパイラ。
 * 証明、定理証明支援系
 * プログラム意味論
 * 型システム
-* 依存型(dependent type) (dependent type/path-dependent type/dependent method type/dependent object type)
+* 依存型(dependent type)
 
 ## 参考文献
 * [関数合成のススメ 〜 オブジェクト指向プログラマへ捧げる関数型言語への導入その1](http://yuroyoro.hatenablog.com/entry/20120203/1328248662)
