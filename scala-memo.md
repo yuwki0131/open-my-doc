@@ -4,6 +4,10 @@
 
 [Effective Scala - by Twitter](http://twitter.github.io/effectivescala/index-ja.html)
 
+## Playframework
+* [Play Framework 2 - 画面表示時に繰り返し処理の中で生成しているセレクトボックスの初期選択値を指定したい(28048)｜teratail](https://teratail.com/questions/28048)
+* [playframework - Play framework, scala forms set default value - Stack Overflow](https://stackoverflow.com/questions/26359353/play-framework-scala-forms-set-default-value)
+
 ## Scalaz
 
 Scala用のpurely functional programmingのためのライブラリ
@@ -24,6 +28,12 @@ Scala用のpurely functional programmingのためのライブラリ
 
 [Scalazの使い方 - リクルートから](https://tech.recruit-mp.co.jp/server-side/post-2540/)
 
+
+## Future/Either
+* [Future Either and monad transformers] (http://justinhj.github.io/2017/06/02/future-either-and-monad-transformers.html)
+
+## Recursion Scheme
+* [slamdata/matryoshka: Generalized recursion schemes and traversals for Scala.](https://github.com/slamdata/matryoshka)
 
 ## Scalaz系ライブラリ
 
