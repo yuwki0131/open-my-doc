@@ -181,7 +181,6 @@ res44: String = ((a b) c)
 * 末尾最適化
   * Scalaの再帰はをする場合としない場合がある。
     * 末尾再帰形式になっていない場合は、末尾最適化が行われない。
-
 ```
 def fact1(n: Int): Int = if (n < 1){
   1
@@ -190,7 +189,7 @@ def fact1(n: Int): Int = if (n < 1){
 }
 ```
     * 自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合
-      計算結果を保持する変数を一つ追加する。
+      計算結果を保持する変数(アキュームレータ)を一つ追加する。
 ```
 def fact2(n: Int, a: Int): Int = if (n < 1){
   a
@@ -207,7 +206,6 @@ res39: Int = 3628800
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用を引き回すスタイル)
     * Scalaでは相互再帰では末尾最適化をしない。
       * 例えば以下のようなプログラム、
-
 ```
 def odd(n: Int): Boolean = if (n = 1) {
   true
@@ -227,8 +225,12 @@ def even(n: Int): Boolean = if (n = 0) {
 * Trampolineで末尾最適化をする。
   (TODO: Trampolineで末尾再帰の例を入れる)
 * なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書ける(はずだ)が、
-  可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
-* 関数全体で見ると、参照透過な関数になっていればOKという考え方。
+  * 可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
+  * 関数全体で見ると、参照透過な関数になっていればOKという考え方(もアリ)。
+  * だだし、関数型プログラミングでのループは、再帰やfor/whileのような構文ではなく、
+    mapやfilterといったリスト(コレクション)関数を使うのが一般的。
+    大半のループはコレクション関数で記述した方が、可読性が高く、メンテナンスもしやすい簡潔なコードが書ける。
+    * コレクション関数に関しては後述。
 
 ## 無名関数(ラムダ抽象)
 ```
@@ -451,9 +453,8 @@ res34: String = 400,600,800,1000
   (TODO: 説明を書く)
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
-* 代数的データ型とパターンマッチにより、コード
 * 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
-  [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
+  * [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
 * case classには、`final`を付けること推奨。
   * なぜ、final case classを付けないと行けないのかは以下を参照。
     * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
@@ -466,8 +467,45 @@ res34: String = 400,600,800,1000
 * データ構造(リストやタプル、case classなど)を構造的に分解して変数に代入できる。
 * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
-* if-else式と比較して、データ構造に対する網羅的なマッチが可能。網羅的でない場合は警告がでる。(但し、エラーにはならない)
-  (TODO: 説明を書く)
+* if-else式と比較して、データ構造に対する網羅的なマッチが可能。
+  網羅的でない場合は警告がでる。(但し、エラーにはならない)
+  **パターン漏れが防げるので積極的に活用していきたい。**
+* リストに対するパターンマッチ
+  * 例えば、以下のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
+```
+if (ls.isEmpty) 1 else ls.head
+```
+は、リスト`ls`についてのパターンマッチ、
+```
+ls match { case Nil => 1; case x::xs => x }
+```
+と書き直せる。コードが長くなった時に、else節で、ls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
+考慮する必要が無くなる。
+* Optionに対するパターンマッチ
+  * 例えば、次のようなケースも、リストと同様に書き直せる。
+```
+if (x.isEmpty) "hogehoge" else x.get.toString
+```
+存在するパターンを以下のように、列挙する。
+```
+x match { case None => "hogehoge"; case Some(x) => x.toString }
+```
+* パターンマッチの場合、構造のチェックと同時に、データ型から値の取り出し、変数への束縛まで行う。
+* ただし、以下のような書き方をした場合、パターンマッチの本来の意味はなくなる(ただのif-else式と基本的に同じ意味しかなくなる)。
+```
+x match {
+ case _ if x.isEmpty => "hogehoge"
+ case _ => x.get.toString
+}
+```
+* パターンマッチでのifによる条件追加は以下のようなケースだと有効。
+```
+x match {
+ case Some(x) if x == "a" => "hogehoge"
+ case Some(x) => "fugafuga"
+ case None => "piyopiyo"
+}
+```
 
 ## リスト
   (TODO: 説明を書く)
