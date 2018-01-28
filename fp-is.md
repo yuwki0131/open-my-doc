@@ -443,10 +443,14 @@ res34: String = 400,600,800,1000
 
 ## 部分関数(Partial function)
   (TODO: 説明を書く)
+http://tanakh.jp/posts/2011-12-25-partial-function-considered-harmful.html
+http://yuroyoro.hatenablog.com/entry/20100705/1278328898
 
 ## 部分適用/カリー化(Partial apply/curring)
   (TODO: 説明を書く)
 * 部分適用とカリー化は間違えやすいことで有名。
+* 部分適用は、必要な引数の一部まで渡す。
+* カリー化は、複数引数の関数を1引数の関数の
 
 ## 名前渡し(Call-by-name)
   (TODO: 説明を書く)
