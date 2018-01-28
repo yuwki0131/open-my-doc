@@ -689,8 +689,12 @@ Scalaの新しいコンパイラ。
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
 * [Scala COLLECTIONS 性能特性](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
 
+## 練習問題的なやつ
+* [S-99: Ninety-Nine Scala Problems](http://aperiodic.net/phil/scala/s-99/)
+
 ## 読み物
 * [関数型言語でのデザイン手法 - togetter](https://togetter.com/li/25283)
 * [オブジェクト指向設計の原則と関数型プログラミング](https://www.infoq.com/jp/news/2014/03/oo-functional-programming)
 * [Scalaで型レベルプログラミング(日本語訳)](https://github.com/yuroyoro/Japanese_Translations_of_Scala_Articles/tree/master/source/ja/type_level_programming_in_scala)
   * 4章まで(?)(2018/01/27現在)
+* [Scalaは関数型プログラミング言語ではない](http://delihiros.hatenablog.jp/entry/2012/05/01/032433)
