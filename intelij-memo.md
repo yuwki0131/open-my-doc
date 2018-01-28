@@ -1,3 +1,0 @@
-# intelij-memo
-
-* sbt
