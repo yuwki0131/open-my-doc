@@ -127,6 +127,12 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
     * (後述するレキシカルスコープ参照)
 * プログラムの実行、特にプログラム中の部分的な式を実行することを**評価(evaluate)**という。
 
+* (関数型プログラミング関係ない)オブジェクト指向用語:レシーバ
+  * オブジェクト指向において、メッセージを受け取るオブジェクトの事をレシーバという。
+  * あるオブジェクトのメソッドを呼び出す時、そのオブジェクトに対しメッセージ送るとみなす為、レシーバと呼ばれる。
+    * [オブジェクト指向プログラミング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0)
+  * value.methodA()のvalueの事。
+
 ## 再帰(Recursion)
 * 再帰とは自分自身を自分自身の中に持つような構造。
   * プログラミングでは、再帰的なデータ構造や、再帰呼出しなどがある。
@@ -222,7 +228,7 @@ def even(n: Int): Boolean = if (n = 0) {
 は、oddとevenを相互に呼び出し、自分自身の末尾で関数を呼び出す。
 
 * [スタックレスScala](http://halcat.org/scala/stackless/index.html)
-* Trampolineで末尾最適化をする。
+* Trampolineで末尾最適化をすることが可能。
   (TODO: Trampolineで末尾再帰の例を入れる)
 * なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書ける(はずだ)が、
   * 可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
@@ -246,11 +252,12 @@ res20: Int = 3
 * おなじみの無名関数。大体、無名関数かラムダ式でググったら出てくる。ラムダ式とはあんまり言わない(方がいい)(※個人の意見です)。
 * 第一級オブジェクトとしての関数(データとして扱う事が出来る関数): 関数を渡す、値として保持することができる。
 * 無名関数の式が評価されると、**関数オブジェクト**が生成される。
+  * 関数オブジェクトは、コンストラクタによって生成される他のJavaオブジェクトと同類のオブジェクト
+    (型となるクラスを持ち、インスタンスとして扱われるように)なる。
 * オブジェクトなのでデータを持たせる事ができる。後述のレキシカルスコープ参照。
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
-  * 関数のポインタと違い、データ(値)を保持することができる。
+  * 関数のポインタと違い、データ(値)を保持することができる。(データ保持に関してはクロージャを参照)
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
-  (TODO: 説明を書く)
 
 ## レキシカルスコープ(Lexical scope, 静的スコープ)
 * "Scope"とは範囲のこと。"Lexical"とはLiterallyくらいの意味で深い意味はない。
@@ -577,9 +584,29 @@ for {
 ## Scalaの3つのimplicit
 * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 * implicit conversion, implicit class, implicit parameterがある。
+* implicit: 暗黙の〜
+* implicit修飾子を付けて定義した場合、コンパイラが適宜、必要なメソッドや型を探索して自動的に適用してくれる。
 
 ### 暗黙の型変換(implicit conversion)
-(TODO: 暗黙の型変換が何であるかについて記述する)
+* 型変換(キャスト)する関数をimplicitに定義しておくことで自動的にキャストしてくれる。
+  * 以下が定義の例。
+```
+implicit def d2i(d: Double):Int = d.toInt
+```
+  * implicit定義前
+```
+scala> val x:Int = 3.14
+<console>:11: error: type mismatch;
+ found   : Double(3.14)
+ required: Int
+       val x:Int = 3.14
+                   ^
+```
+  * implicit定義後
+```
+scala> val x:Int = 3.14
+x: Int = 3
+```
 * 暗黙の型変換は推奨されていない/しない人が多い。
 * 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
   * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
@@ -587,18 +614,41 @@ for {
   * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
   * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
   * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
+* 暗黙の型変換、利用するメソッドが複数あると、どっちを使えばいいのか分からなくなるので、エラーが出る。
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
   (TODO: 説明を書く)
 * 継承せずに(?)既存の型を拡張する。
+* ちなみに、C#やTypeScriptにも同名の類似した機能がある。
+* 例えば、String型に空だったら、None、そうでなかったら、Someで値を包んだ関数を定義したい場合、以下のように拡張できる。
+```
+implicit class OptionString(str: String){
+  def opt(): Option[String] = if (str.isEmpty) None else Some(str)
+}
+```
+これは、次のように使える。
+```
+scala> "".opt
+res2: Option[String] = None
 
+scala> "abc".opt
+res3: Option[String] = Some(abc)
+```
+* レシーバにメソッドを
+
+* [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
 ### 暗黙のパラメータ(implicit parameter)
+*
   (TODO: 説明を書く)
 
 ## 型関連
 * 複雑な型を定義してもあんまり意味ないという側面はある。
 * 気を抜いているとAnyに推論されるらしい。
 * http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
+* Scalaの型推論は漸進的型付と呼ばれ、基本的に前から推論していく。
+  * (余談)HaskellやOCamlの型推論は、Hindley-Minlerと呼ばれる型システム(やその派生)により型を推論していく。
+    この方法は、最も一般的な型を自動的に導出していく手法で、通常の場合、いわゆる型注釈(型ヒント)に相当するものが不要。
+* 型注釈: 変数や引数などに対する型の指定。いわゆる、`val x: String = 〜`のコロンの後ろの型指定のこと。
 * 型パラメータ: Javaで言う所のジェネリクス。
   * `trait A[B] { def b():B; }`の`B`
   * 型パラメータで指定できる共変、反変、非変については、[型パラメータと変位指定 - ドワンゴの研修テキスト](https://dwango.github.io/scala_text/type-parameter.html) を参照。以下、自分用のメモ。
@@ -616,19 +666,17 @@ for {
   * 型パラメータが引数にとる。
   * Option[+A]という型コンストラクタに対して、Option[String]という型を定義する時などに使われる。
   * 他の関数型言語だとFunctorなどがよく出てくる。
-
 * 型クラス: "既存の型に後付けするタイプのインターフェース"(次の記事から引用)
    * [型クラスの雰囲気をつかんでScala標準ライブラリの型クラスを使ってみる回 - 水底](http://amaya382.hatenablog.jp/entry/2017/05/13/195913)
   * あるオブジェクトがどのような振る舞いをするかまとめた物。
   * 但し、Javaで言う所のinterfaceとは違い、後付で実装することができ、拡張に対して、開かれている。
   * https://togetter.com/li/1113557
   * 実装方法については、拡張メソッドを参照。
-
-### Any, AnyRef, AnyVal
-* Anyは、全ての型の親クラス。
-* AnyValは、定数系の型のすべての親クラス。
-* AnyRefは、参照型となる型のすべての親クラス。
-* [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
+* Any, AnyRef, AnyVal
+  * Anyは、全ての型の親クラス。
+  * AnyValは、定数系の型のすべての親クラス。
+  * AnyRefは、参照型となる型のすべての親クラス。
+  * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
 
 ### 構造的部分型
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
@@ -648,7 +696,7 @@ def func2(objX):
 func2(A())
 func2(B())
 ```
-となるような、一般的な`func2`を定義できる。`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
+となるような、一般的な`func2`を定義できる。Scalaでも、`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
 勿論、class Aやclass Bの定義を変更することなしに。
 注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
 例えば、idとnameを持つようなRow。
