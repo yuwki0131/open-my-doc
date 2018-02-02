@@ -602,6 +602,7 @@ for (int i = 0; i < n; i++){
 
 ```
 (0 to n).forEach { i =>
+  〜
 }
 ```
 と書ける。この時、`(0 to n)`は、0からnまでの数値が入ったリスト。
@@ -618,10 +619,11 @@ for (int i = 0; i < n; i++){
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 * 関数型プログラミングではリスト操作関数を多用することが多い。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
-
-### コレクションメソッド
-  (TODO: 説明を書く)
-* map, filter, foldあたりが王道。flatMap, flatten
+* 頭の中で抽象的なリストの形を変形させていくプロセスをメソッドチェーンでそのままコードに落とし込む(?)。
+* リストと同様にSetやHashmap、その他データ型でも明示的なループを書かずに組み合わせでコードを記述出来るような
+  コレクション関数が多数用意されている筈なので、随時調べた方がいい。
+  * 関数型言語にはデータ型に対する抽象化された関数がライブラリに大量に用意されているということがよくある。
+    * これの極端な例がScalaz。
 
 ## Option, Either, Future, 例外, for式
 * Option - nullableを型レベルで表現する。
@@ -657,7 +659,15 @@ catingとかいう魔境
   * try-catchの場合はNonFatalでキャッチする。
 
 ### for式
-* for式は、map/flatMapに変換される。
+* Scalaのfor式はJavaなどと同様に、foreach文の役割を持つが、for-yield式として使用することで、
+  map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
+  * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
+    このfor-yield風の構文の事だったりする(らしい)。。。
+  * (余談)Haskellだとdo構文でほぼ同様の構文を提供している。ちなみにHaskellではScalaのyieldに当たる部分はreturnと書く。
+* for式は、map/flatMap/fiterWith(filter)に変換される。
+  * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは一旦、for式の使用を検討したほうがいい。
+    * プログラムがネストしすぎるのは一般的に好ましくないため。
+  * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
 (TODO: for式の説明を書く)
 http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
 以下のfor式があった時、コンパイル時に次のように、map/flatMapに展開される。
