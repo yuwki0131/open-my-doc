@@ -25,7 +25,7 @@
 * Strategy
   * アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
   * [Strategy パターン - Wikipedia](https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)
-  * => Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
+  * Scalaだと切り替える為のインターフェースなどは不要、単に関数を受け渡すだけになる。
   * または型クラスを定義する。
 * Template Method
   * 上に同じ
@@ -423,6 +423,8 @@ scala> Seq(1, 2, 3).map(add2)
 res4: Seq[Int] = List(3, 4, 5)
 ```
 * 高階関数を使用することで、ほぼ無制限にプログラム中の任意のロジック(というか具体的なコード)を抽象化することができる。
+  * やり方は、抽象化したい部分を関数化し、差分だけそれぞれ別関数にして、抽象化した関数に差分の関数を渡すという書き方。
+  * コード全体の至る所で使用できて、DRYに書けるというメリットはあるが。
   * ただし、やり過ぎると原型を留めなくなるので注意が必要。
 * 部分適用/カリー化(Partial apply/curring)
   * 複数の引数を取る関数を一つの引数のみを取る関数に書き換えることをカリー化という。
@@ -480,7 +482,7 @@ multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$605/1525241
 scala> multiply20withComma(ls)
 res33: String = 400,600,800,1000
 ```
-composeだとわかりにくい? => そこでandThen
+composeだとわかりにくい? そんな時の為にandThenという関数が用意されている。
 
 * composeとandThenは順序が逆。
 composeの場合
@@ -585,7 +587,10 @@ x match {
   (TODO: 説明を書く)
 * ScalaだとSeqで書くのがマナーらしい。
 * 標準のArrayListとLinkedListがある。
-* 関数型のLinkedList(主に単方向連結リスト)は特殊な性質がある。
+* 関数型プログラミングにおけるLinkedList(主に単方向連結リスト)は重要な役割を持っている。
+  (が、Scalaの場合、色々調べてはみたものの、そんなに使われている様子はない)
+  * immutableなデータ型と、単方向連結リストは相性がいい。
+  * 再帰(やプログラムの証明)と、単方向連結リストは相性がいい。
 * 関数型言語でのループは主に、リストとリスト操作関数の組み合わせで記述する。
   * Javaだとforeach構文で書くべき所は、リスト操作関数の組み合わせになる。
 ```
@@ -601,14 +606,17 @@ for (int i = 0; i < n; i++){
 ```
 と書ける。この時、`(0 to n)`は、0からnまでの数値が入ったリスト。
 * 代表的なリスト操作関数
-  * map: 元のリストの各要素を別のデータや
+  * map: 元のリストの各要素を別のデータ構造に移し替える(入れ替える)場合や、リストの各要素を個々に処理する場合などに使える。
   * filter: 元のリストの各要素のうち、特定の要素だけを抜き出す。
   * fold: リストの各要素を集計する/まとめるような処理を書く場合に使用する合計値を出す場合。
-  * その他、sort、reverse、sum、min/max、take(先頭からn個取り出す)、
+  * その他、sort、reverse、sum、min/max、take(先頭からn個取り出す)、zip(複数のリストの各要素をペアにする)など色々あるため、
+    "scala seq"などでググると色々出てくる。
+  * ループで複雑な処理をしたい場合は、色々調べてみると、大抵の場合、丁度いい感じの関数が見つかることが多い。
+  * 昔流行った(?)、MapReduceは上記のmap関数とfold(他の関数型言語ではreduceとも呼ばれる)関数に由来している。
 * mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。
   * 前述のquicksortの例を参照。
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
-* 関数型プログラミングではリスト操作関数を多用することが多い。 => slickに繋がる
+* 関数型プログラミングではリスト操作関数を多用することが多い。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
 
 ### コレクションメソッド
@@ -731,7 +739,7 @@ f: (a: Int)(implicit b: Int)Int
 scala> f(1)
 res4: Int = 21
 ```
-* コンパイラが自動的に暗黙のパラメータを認識し、必要としている時
+* コンパイラが自動的に暗黙のパラメータを認識し、必要としている時に自動的にimplicitパラメータを探索する。
 * (多分)静的型付言語に動的スコープ(静的スコープの記述を参照)を導入したような物(?)
   * Implicit Parameters: Dynamic Scoping with Static Typesというタイトルの論文がある。
   * 関数を実行する場所やその瞬間によって値をコロコロ変えることが出来る。
@@ -834,7 +842,7 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 
 ### Scalaの3つのdependent * type
 http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
-* Scalaのdependent * type (関数型言語で言われる所の依存型とは違う(らしい))
+* Scalaのdependent type。(普通、関数型言語で言われる所の依存型とは違う)
 * path-dependent type
   * 生成された経路によって、同じpackageの同一オブジェクト(クラス)の型の場合でも、別々の型とみなされる。
   * [What is meant by Scala's path-dependent types? - StackOverFlow](https://stackoverflow.com/questions/2693067/what-is-meant-by-scalas-path-dependent-types)
@@ -849,6 +857,7 @@ http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
 
 ### Symbol
 * ScalaにもRubyと同じようなSymbolがある。先頭にquoteを付ける。
+  * PlayのTwirlテンプレートでタグの属性を設定する時などによく使われている。
 ```
 scala> 'sym
 'sym
