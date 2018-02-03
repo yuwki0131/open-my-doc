@@ -4,7 +4,9 @@
 
 2018/01/27版
 
-* Javaエンジニア用Scalaユーザ向け
+## このドキュメントについて
+* Javaエンジニア用Scalaユーザ向け。
+* Scala 2.1x.x系向け。
 * 同じ関数型言語でも結構言語によって慣習が違う。
   * (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
@@ -69,7 +71,7 @@
 
 ### 副作用が他の関数型言語以外の言語よりも少ない傾向にある
 * 副作用とは、数学には存在し得ない計算機のみがもつ特有な作用のこと。。。らしいです。
-  * 出典: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.79.733&rep=rep1&type=pdf
+  * 出典: [Notions of computation and monads](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.79.733&rep=rep1&type=pdf)
 * 副作用が割と少ないか少なくなるように意識した言語設計(変数の破壊的代入を前提としないような書き方)
 
 ## これから説明する内容
@@ -244,7 +246,6 @@ def even(n: Int): Boolean = if (n = 0) {
 
 * [スタックレスScala](http://halcat.org/scala/stackless/index.html)
 * Trampolineで末尾最適化をすることが可能。
-  (TODO: Trampolineで末尾再帰の例を入れる)
 * なので結局、原理主義的に再帰のみでゴリゴリimmutableなコードも書ける(はずだ)が、
   * 可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文なりfor文を使った方が現実的な場合もあるかも知れない。
   * 関数全体で見ると、参照透過な関数になっていればOKという考え方(もアリ)。
@@ -627,6 +628,11 @@ for (int i = 0; i < n; i++){
 
 ## Option, Either, Future, 例外, for式
 * Option - nullableを型レベルで表現する。
+  * Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
+  * [Optional(2018)年あけましておめでとうございます](https://moneyforward.com/engineers_blog/2018/01/05/optional2018/)
+    * まさに、2018年はOption元年と言った感じがある。(上記の言語はSwift)
+    * Option外し忘れには注意。
+      Scalaの場合は、`Some(2018)年あけましておめでとうございます`になる。
   * Optionは値がnullableな場合に使用する。未定義処理や、想定外の値を返す時にnullを返していたようなケース。
   * head, getは使わない。
     * headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
@@ -634,29 +640,67 @@ for (int i = 0; i < n; i++){
     * 値が存在しないケースというのは、通常、想定範囲内のケースであるため、nullやempty時に例外が投げられるのは好ましくない。
   * Int型などでも意味のないマジックナンバーを埋め込む必要がなくなる。
   * 基本的にはnull(or empty)チェック専用の構文だと思っている。(※個人の意見です。)
-  (TODO: 説明を書く)
+  * Java製のライブラリなどでnullableが怪しいやつはとりあえずOptionで囲っておくと、nullはNoneになる。
+```
+scala> Option(null)
+res6: Option[Null] = None
+```
+  * 以下にOption型の使い方が色々載っている。
+    * [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
+  * catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
+    * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
+```
+scala> catching(classOf[NumberFormatException]) opt "foo".toInt
+res7: Option[Int] = None
+```
 
-* https://dwango.github.io/scala_text/error-handling.html
-
-https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms
-http://yuroyoro.hatenablog.com/entry/20100719/1279519961
-catingとかいう魔境
-
-* Either - エラーの制御をする
-  (TODO: 説明を書く)
-  Rightは、Leftは、
-  * PlayframeworkだとActionFunctionなどで使用される。
+* Either - エラーを戻り値で表現する。
+  * 処理が正常に終了した時、正常系の値が入っている時にRightでラップする。: `Right(値)`
+  * 処理が正常に終了しなかった場合、異常系の値が入っている場合やエラーメッセージが入っている場合にLeftでラップする。
+    : `Left(異常な値やエラーメッセージなど)`
+  * Either型で値を返す事で、戻り値からその後続の処理において、
+    正常系の処理をすればいいのか、エラー系の処理をすればいいのか、パターンマッチで対応できる。
+  * PlayframeworkだとActionFunction(アクション合成)などで使用される。
   * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
+  (TODO: 説明を書く)
+
+* 例外(Exception)
+  * Javaと違い、Scala非チェック例外。
+    * 非チェック例外: 関数にExceptionクラスを列挙する必要が無くなるが、関数呼び出し時にはどの例外が返ってくるか分からなくなる。
+    * 非チェック例外なので、呼び出し元(を書く人)は呼び出し先が例外を投げてくるのか、
+      その場合はどのような挙動にすべきか、考慮しなくなりがち。
+  * try-catchでキャッチする場合は、NonFatalでキャッチする。
+    * NonFatalはパターンマッチで例外をキャッチする時に、致命的なエラーでないエラーのみをキャッチする。
+    * [Scala 2.10.0 Try ＆ NonFatal](http://d.hatena.ne.jp/Kazuhira/20130124/1359036747)
+  * 例外の扱い方色々
+    * [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
+  * 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
+    * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
+      例外以外にも、例えば、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
+  * Eitherとかとの使い分け。(※以下、個人の主観です。)
+    * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
+      それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
+    * ただ、簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
+    * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
+    * リカバリーの処理が必須なら、Option/Eitherで返される方が楽。
+    * 特にユーザの入力系は例外
+  * [エラー処理 - ドワンゴの研修資料から](https://dwango.github.io/scala_text/error-handling.html)
+  * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
+    * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
+    * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
+例えば以下がダメな例。
+```
+try {
+  Future { throw new RuntimeException("未来のエラー")
+} catch {
+  case e => println("未来のエラーを事前に防ぎました！")
+}
+```
 
 * Future(Success/Failure) - 非同期プログラミング
   (TODO: 説明を書く)
   * 例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
   * JavaScriptで言う所のコールバック関数
-
-* 例外
-  (TODO: 例外の説明を書く)
-  * Javaと違い、非チェック例外。
-  * try-catchの場合はNonFatalでキャッチする。
 
 ### for式
 * Scalaのfor式はJavaなどと同様に、foreach文の役割を持つが、for-yield式として使用することで、
@@ -678,6 +722,9 @@ for {
 } yeild f(a, b)
 ```
 * mapがネストした場合、非常にコードが読みづらくなるため、for式で書けるなら、for式で書いた方が無難。
+
+* Try型を使うことで例外もfor-yield形式で書ける。
+https://www.slideshare.net/TakashiKawachi/scala-16023052
 
 ## Scalaの3つのimplicit
 * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
@@ -715,9 +762,10 @@ x: Int = 3
 * 暗黙の型変換、利用するメソッドが複数あると、どっちを使えばいいのか分からなくなるので、エラーが出る。
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
-  (TODO: 説明を書く)
-* 継承せずに(?)既存の型を拡張する。
-* ちなみに、C#やTypeScriptにも同名の類似した機能がある。
+* 継承せずに(?)既存の型(aka. クラス)を拡張する。
+  * pimp my libraryパターンと言われる。
+  * ちなみに、C#やTypeScriptにも同名の類似した機能がある。
+  * この辺の解説はドワンゴの研修資料に書いてあるのでそっちを参照。
 * 例えば、String型に空だったら、None、そうでなかったら、Someで値を包んだ関数を定義したい場合、以下のように拡張できる。
 ```
 implicit class OptionString(str: String){
@@ -733,8 +781,6 @@ scala> "abc".opt
 res3: Option[String] = Some(abc)
 ```
 * レシーバにメソッドを生やす事ができるのが特徴。
-* implicit classを使用することで、型クラスを構成することが可能になる。
-  * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
 
 ### 暗黙のパラメータ(implicit parameter)
 * 暗黙に受け渡しされる引数のこと。implicit修飾子により定義された変数を暗黙的にimplicit修飾子が付けられた引数に代入する。
@@ -771,11 +817,9 @@ res4: Int = 21
 scala> f(1)(30)
 res5: Int = 31
 ```
+* implicit parameterを使用することで、型クラスを構成することが可能になる。(←ここが重要)後述の型クラス参照。
 
-## 型関連
-* 複雑な型を定義してもあんまり意味ないという側面はある。
-* 気を抜いているとAnyに推論されるらしい。
-* http://keens.github.io/slide/DOT_dottynitsuiteshirabetemita/
+## Scalaと型
 * Scalaの型推論は漸進的型付と呼ばれ、基本的に前から推論していく。
   * (余談)HaskellやOCamlの型推論は、Hindley-Minlerと呼ばれる型システム(やその派生)により型を推論していく。
     この方法は、最も一般的な型を自動的に導出していく手法で、通常の場合、いわゆる型注釈(型ヒント)に相当するものが不要。
@@ -802,12 +846,28 @@ res5: Int = 31
   * あるオブジェクトがどのような振る舞いをするかまとめた物。
   * 但し、Javaで言う所のinterfaceとは違い、後付で実装することができ、拡張に対して、開かれている。
   * https://togetter.com/li/1113557
-  * 実装方法については、拡張メソッドを参照。
+  * implicit parameterに関する分かりやすい説明と実装方法は、
+    * [前述のドワンゴの研修資料](https://dwango.github.io/scala_text/implicit.html)
+  * 大雑把に言うと。
+    1. 振る舞いをまとめたtrait Aを作る。
+    2. traitの実装を作る。この時、implicitに定義する。
+    3. Aで使っている関数を使ったコードBを実装する。
+    4. 以降、Bに型ごとに機能を追加したい場合は、trait Aの実装を追加することで、コードBの機能が様々な型で使えるようになる。
+    * しかし、上記のような言い方をすると結局Javaのインターフェースと一緒じゃんって言われる。。。
+  * Scalazに型クラスを使用したコードが大量に載っている。
+  * 以下参考文献
+    * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
+    * [Type Classes as Objects and Implicits](http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf)
 * Any, AnyRef, AnyVal
   * Anyは、全ての型の親クラス。
   * AnyValは、定数系の型のすべての親クラス。
   * AnyRefは、参照型となる型のすべての親クラス。
   * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
+  * 気を抜いているとAnyに推論される。
+```
+scala> val x = if (2 < 1) 1 else "a"
+x: Any = a
+```
 
 ### 構造的部分型
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
@@ -863,6 +923,17 @@ http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
     * "The DOT calculus proposes a new type-theoretic foundation for languages like Scala."
   * Dotty向けの型システム。Scala3以降の話なので今回は言及しない。
 
+## その他関数型プログラミングでよくやる習慣みたいなもの
+
+### 雑なローカル変数
+* 割とローカル変数の名前の付け方は雑
+  * 関数名だと、f, g, h, ....
+  * インデックスだと、i, j, k, m, n, ...
+  * リストは、ls, lst, xs, ys, zs, ...
+    * 特に、リストの先頭をx、後続のリストをxsなどという書き方をする習慣がある。
+    * 例えば、`case x::xs => ...` のような書き方
+  * 型パラメータは、大文字始まりで、A, B, C, ...
+
 ## 余談
 
 ### Symbol
@@ -890,9 +961,9 @@ Scalaの新しいコンパイラ。
 * [SCALA CHEATSHEET SCALACHEAT](https://docs.scala-lang.org/cheatsheets/index.html)
 
 ## やらない関数型言語まわりのトピック
-* 評価戦略
+* 評価戦略/遅延評価
 * DSL(ドメイン特化言語)
-* 継続(continuation)
+* 継続/限定継続(continuation)
 * プログラムの融合変換(program fusion, deforestation)
 * なんとかモルフィズム(正確にはRecursion Schemeという。catamorphism, anamorphism, hylomorphism ...)
 * モナド、コモナド(特に普段は意識する必要はない)
