@@ -500,9 +500,8 @@ res34: String = 400,600,800,1000
 * Playのアクション合成(action composition)などでも類似の概念が登場する。
 
 ## 部分関数(Partial function)
-  (TODO: 説明を書く)
-http://tanakh.jp/posts/2011-12-25-partial-function-considered-harmful.html
-http://yuroyoro.hatenablog.com/entry/20100705/1278328898
+* ある特定の引数に対してのみ値を返す関数。
+* [ScalaのPartialFunctionが便利ですよ](http://yuroyoro.hatenablog.com/entry/20100705/1278328898)
 
 ## 名前渡し(Call-by-name)
 * 遅延評価の一種で、意味合いとしては、処理の実行を遅らせる為に使用する手法。関数呼び出し時の引数の値の渡し方の一種。
@@ -520,14 +519,14 @@ http://yuroyoro.hatenablog.com/entry/20100705/1278328898
   * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
 * 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
   * [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
-* case classには、`final`を付けること推奨。
+* case classには、`final`を付けることされている。
   * なぜ、final case classを付けないと行けないのかは以下を参照。
     * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 * Option型の例
   (TODO: 説明を書く)
 
 ## パターンマッチ
-* [Scalaのパターンマッチ - Qiita ](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
+* [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
 * Scalaでは、リテラル(定数)、型によるマッチ、正規表現、構造に関するマッチなどが可能。
 * データ構造(リストやタプル、case classなど)を構造的に分解して変数に代入できる。
 * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
@@ -573,15 +572,28 @@ x match {
 }
 ```
 
-## リスト
+## リスト構造
+* **関数型プログラミングといえばリスト**(要出典)
+  * リストに何でもデータを保存したがる言語もあるくらい頻繁に用いられるほか、
+    大抵の関数型プログラミング言語にはリストを操作するための関数群が大量に用意されている事が多い。
+  * 関数型プログラミングにおける単方向連結リストは重要な役割を持っている。
+    (が、Scalaの場合、色々調べてはみたものの、そんなに使われている様子はない)
+    * immutableなデータ型と、単方向連結リストは相性がいい。
+    * 再帰(やプログラムの証明)と、単方向連結リストは相性がいい。
+    * 関数型プログラミングでよく使われる単方向連結リスト。
+      * consとnil(もしくはempty listなど)によって構成される。
+      * consは先頭の要素に対する参照を一つ持ち、後続のリストに対する参照を持つ。
+        * 後続のリストが存在しない場合は、空リストを参照する。
+      * cons(1, cons(2, cons(3, nil)))のようにリストを構成する。
+* Scalaのリスト
+  * Traversable <- Seq <- IndexedSeq, LinearSeqの順で継承されている。
+    * Scalaの場合、IndexedSeqの方がパフォーマンス上、好ましい場合もありうるため、リストを使う時はSeqの方が一般的に使われる。
+  * リスト系のコレクションのヒエラルキー
+    * [MUTABLE AND IMMUTABLE COLLECTIONS](https://docs.scala-lang.org/overviews/collections/overview.html)
   (TODO: 説明を書く)
-* ScalaだとSeqで書くのがマナーらしい。
-* 標準のArrayListとLinkedListがある。
-* 関数型プログラミングにおけるLinkedList(主に単方向連結リスト)は重要な役割を持っている。
-  (が、Scalaの場合、色々調べてはみたものの、そんなに使われている様子はない)
-  * immutableなデータ型と、単方向連結リストは相性がいい。
-  * 再帰(やプログラムの証明)と、単方向連結リストは相性がいい。
+
 * 関数型言語でのループは主に、リストとリスト操作関数の組み合わせで記述する。
+  * 大抵のループ処理はリスト系の関数の組み合わせだけで書けてしまう事が殆ど。(要出典)
   * Javaだとforeach構文で書くべき所は、リスト操作関数の組み合わせになる。
 ```
 for (int i = 0; i < n; i++){
