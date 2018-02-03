@@ -355,30 +355,19 @@ res18: Int = 2
 ```
 
 * 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数のような物も(機能的には)作れる。
-
 * ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
   * このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
   * (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
-
 * クロージャにより変数はそのスコープの外を出ても有効である場合がある。
   つまり、クロージャにより、ローカル変数は、関数本体が終了しても生き残る。
   変数が生存している(有効である)期間のことを**エクステント**という。
-
 * クロージャとは逆に、関数内に自由変数を含まないような関数のことを**コンビネータ**という。
   ただし、Scalaだと、パーサコンビネータ以外ではコンビネータという言い方はあまりされない。
-
 * クロージャを使うことで計算を遅延(将来に実行)させることが可能になる。典型的な使用例がFutureによるコールバック。
   * `dao.findById(id)`がFutureを返す時、mapに渡された`row =>`以降は、Futureの結果が返ってくるまで実行されない。
 ```
 dao.findById(id).map { row => row.name }
 ```
-(TODO: 👇)
-val x = 1
-locally {
-  import p.X.x
-  x
-}
-
 * クロージャのみでリスト構造(データ構造)を作ることが可能。
   * ルール: データ構造やクラスは使わない。
   * 関数型プログラミングにおける大道芸の一つ。
@@ -626,7 +615,7 @@ for (int i = 0; i < n; i++){
   * 関数型言語にはデータ型に対する抽象化された関数がライブラリに大量に用意されているということがよくある。
     * これの極端な例がScalaz。
 
-## Option, Either, Future, 例外, for式
+## 例外の扱い方(Option, Either, Exception)
 * Option - nullableを型レベルで表現する。
   * Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
   * [Optional(2018)年あけましておめでとうございます](https://moneyforward.com/engineers_blog/2018/01/05/optional2018/)
@@ -697,12 +686,12 @@ try {
 }
 ```
 
-* Future(Success/Failure) - 非同期プログラミング
+## Future(Success/Failure) - 非同期プログラミング
   (TODO: 説明を書く)
   * 例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
   * JavaScriptで言う所のコールバック関数
 
-### for式
+## for式
 * Scalaのfor式はJavaなどと同様に、foreach文の役割を持つが、for-yield式として使用することで、
   map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
   * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
@@ -845,7 +834,7 @@ res5: Int = 31
    * [型クラスの雰囲気をつかんでScala標準ライブラリの型クラスを使ってみる回 - 水底](http://amaya382.hatenablog.jp/entry/2017/05/13/195913)
   * あるオブジェクトがどのような振る舞いをするかまとめた物。
   * 但し、Javaで言う所のinterfaceとは違い、後付で実装することができ、拡張に対して、開かれている。
-  * https://togetter.com/li/1113557
+    * [型クラスに関するここ数日の議論 - togetter](https://togetter.com/li/1113557)
   * implicit parameterに関する分かりやすい説明と実装方法は、
     * [前述のドワンゴの研修資料](https://dwango.github.io/scala_text/implicit.html)
   * 大雑把に言うと。
@@ -869,7 +858,7 @@ scala> val x = if (2 < 1) 1 else "a"
 x: Any = a
 ```
 
-### 構造的部分型
+### 構造的部分型(Structural subtyping)
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
 ```
 class A:
@@ -911,7 +900,7 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 * これ以外だとローンパターンなど。
 
 ### Scalaの3つのdependent * type
-http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/
+* [Dependent Types in Scala](http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/)
 * Scalaのdependent type。(普通、関数型言語で言われる所の依存型とは違う)
 * path-dependent type
   * 生成された経路によって、同じpackageの同一オブジェクト(クラス)の型の場合でも、別々の型とみなされる。
