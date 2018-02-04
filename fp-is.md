@@ -83,7 +83,7 @@
 
 * replの紹介
 * 関数型プログラミングなので、当然関数の使い方をメインに説明します。
-  * (再帰、無名関数、静的スコープ、高階関数、合成関数、名前渡し)
+  * (再帰、無名関数、静的スコープ、高階関数、合成関数)
 * 関数型プログラミングで頻繁に用いられるデータ型である代数的データ型
 * 業務でよく使われるOption/Either/Future及びfor式について
 * Scalaは静的型付言語なので、型の話をします。
@@ -132,7 +132,7 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
   * オブジェクト指向において、メッセージを受け取るオブジェクトの事をレシーバという。
   * あるオブジェクトのメソッドを呼び出す時、そのオブジェクトに対しメッセージ送るとみなす為、レシーバと呼ばれる。
     * [オブジェクト指向プログラミング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0)
-  * value.methodA()のvalueの事。
+  * `value.methodA()`の`value`の事。
 
 ## 再帰(Recursion)
 * 再帰とは自分自身を自分自身の中に持つような構造。
@@ -353,7 +353,6 @@ res17: Int = 1
 scala> f("ac")
 res18: Int = 2
 ```
-
 * 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数のような物も(機能的には)作れる。
 * ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
   * このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
@@ -503,27 +502,52 @@ res34: String = 400,600,800,1000
 * ある特定の引数に対してのみ値を返す関数。
 * [ScalaのPartialFunctionが便利ですよ](http://yuroyoro.hatenablog.com/entry/20100705/1278328898)
 
-## 名前渡し(Call-by-name)
-* 遅延評価の一種で、意味合いとしては、処理の実行を遅らせる為に使用する手法。関数呼び出し時の引数の値の渡し方の一種。
-  * (余談)値の渡し方にはいくつか種類があり、call-by-nameの他にcall-by-value、call-by-reference、call-by-needなどがある。
-  * (余談)Haskellなどの遅延評価は「必要渡し」(call-by-need)と呼ばれ、引数の値を計算せずに関数を実行する。
-    関数の実行途中で引数の値が必要になった時に初めて、引数の値を計算する処理を始める。
-    例えば、f(g(1), h(2))のような関数呼び出しがあった場合、
-    Javaなどでは、g(1) → h(2) → f(g(1)の結果, h(2)の結果)という順で関数が呼び出されるが、
-    Haskellでは、fを実行 → g(1)やh(2)の結果が必要になれば、適宜実行 → fの処理が終了という流れになる。
-  (TODO: 説明を書く)
-
 ## 代数的データ型(Algebraic data type)
-  (TODO: 説明を書く)
+* 端的に言うと、以下のようなデータ定義の仕方。
+```
+sealed trait Alphabet
+case object Alpha extends Alphabet
+case class Beta(name: String) extends Alphabet
+case class Gamma(name: String, n: Int) extends Alphabet
+```
+* 引数の戻り値などの型や処理結果のパターンや、Seq型で表現できないようなリスト構造、木構造、
+  その他必要に応じてポリモーフィックに変化するデータ型の表現を表す際に使用する。
+* 代数的データ型を返す関数の型は継承元のtraitで、条件に応じて、様々なtraitの型のインスタンスを返す。
+```
+def func(n: Int): Alphabet = if (n < 10) Alpha else if (n < 30) Beta("aaa") else Gamma("bbb", n)
+```
+* 以下のようにパターンマッチで各データパターンごとに分解することが出来る。
+```
+xxx.func(x) match {
+  case Alpha => 〜 ...
+  case Beta(name) => 〜 (この中では変数nameが使える) ...
+  case Gamma(name, n) => 〜 ...
+}
+```
+* 普段よく使っている代数的データ型の一つがOption型
+  * [scala/src/library/scala/Option.scala](https://github.com/scala/scala/blob/2.13.x/src/library/scala/Option.scala)
+```
+sealed abstract class Option[+A] extends Product with Serializable
+case object None extends Option[Nothing]
+final case class Some[+A](value: A) extends Option[A]
+```
+* 代数的データ型は。。。
+  * ライブラリで定義されているもの以外にも自分で必要に応じて定義できる。
+  * パターンマッチで各パターンごとに分解でき、case classの各変数を分解、束縛することが可能。
+  * 各型ごとにポリモーフィックにマッチを書ける。
+  * 引数を取らない型はobjectで、引数を取る型はcase classで記述する。
+  * 再帰的に定義(再帰のセクションの木構造の箇所参照)したり、他の代数的データ型を引数にとることも可能。
+  * 割と他の関数型言語だと定番の書き方。
+    * 参考: [代数的データ型とパターンマッチによる言語比較](https://qiita.com/xmeta/items/91dfb24fa87c3a9f5993)
+    * (余談)代数的データ型を一般化したGADT(Generalized Algebraic Data Type)というのもある。
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
-  * データに実装が付随しがちなオブジェクト指向プログラミングとは少し違う。。。
-* 再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
-  * [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html) を参照。
-* case classには、`final`を付けることされている。
-  * なぜ、final case classを付けないと行けないのかは以下を参照。
+  * 分離されたデータ型が代数的データ型。
+  * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
+* 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
+  * 参照: [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
+* (余談)一応、case classには、`final`を付けた方がいい。以下を参照。
+  * なぜ、final case classを付けないと行けないのかは
     * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
-* Option型の例
-  (TODO: 説明を書く)
 
 ## パターンマッチ
 * [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
@@ -570,6 +594,12 @@ x match {
  case Some(x) => "fugafuga"
  case None => "piyopiyo"
 }
+```
+* 1caseに複数パターンのマッチも可能。
+```
+n match {
+  case 1 | 2 | 3 => "hogehoge"
+  case _ => "hoge"
 ```
 
 ## リスト構造
@@ -656,6 +686,10 @@ res7: Option[Int] = None
 ```
 
 * Either - エラーを戻り値で表現する。
+```
+scala> def f(n: Int): Either[String, Int] = if (n < 0) Left("wrong n value") else Right(n)
+f: (n: Int)Either[String,Int]
+```
   * 処理が正常に終了した時、正常系の値が入っている時にRightでラップする。: `Right(値)`
   * 処理が正常に終了しなかった場合、異常系の値が入っている場合やエラーメッセージが入っている場合にLeftでラップする。
     : `Left(異常な値やエラーメッセージなど)`
@@ -663,8 +697,13 @@ res7: Option[Int] = None
     正常系の処理をすればいいのか、エラー系の処理をすればいいのか、パターンマッチで対応できる。
   * PlayframeworkだとActionFunction(アクション合成)などで使用される。
   * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
-  (TODO: 説明を書く)
-
+  * (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
+    2つの型パラメータを持つ場合、常に書けるらしい。
+```
+scala> val x: Int Either String = Left(1)
+x: Either[Int,String] = Left(1)
+```
+    (TODO: 説明を書く。)
 * 例外(Exception)
   * Javaと違い、Scala非チェック例外。
     * 非チェック例外: 関数にExceptionクラスを列挙する必要が無くなるが、関数呼び出し時にはどの例外が返ってくるか分からなくなる。
@@ -822,7 +861,7 @@ res5: Int = 31
 
 ## Scalaと型
 * Scalaの型推論は漸進的型付と呼ばれ、基本的に前から推論していく。
-  * (余談)HaskellやOCamlの型推論は、Hindley-Minlerと呼ばれる型システム(やその派生)により型を推論していく。
+  * (余談)HaskellやOCamlの型推論は、Hindley-Minlerと呼ばれる推論方式。
     この方法は、最も一般的な型を自動的に導出していく手法で、通常の場合、いわゆる型注釈(型ヒント)に相当するものが不要。
 * 型注釈: 変数や引数などに対する型の指定。いわゆる、`val x: String = 〜`のコロンの後ろの型指定のこと。
 * 型パラメータ: Javaで言う所のジェネリクス。
@@ -962,7 +1001,7 @@ Scalaの新しいコンパイラ。
 * [SCALA CHEATSHEET SCALACHEAT](https://docs.scala-lang.org/cheatsheets/index.html)
 
 ## やらない関数型言語まわりのトピック
-* 評価戦略/遅延評価
+* 名前渡し(Call-by-name)、評価戦略/遅延評価
 * DSL(ドメイン特化言語)
 * 継続/限定継続(continuation)
 * プログラムの融合変換(program fusion, deforestation)
