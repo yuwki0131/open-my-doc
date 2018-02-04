@@ -511,7 +511,7 @@ case class Beta(name: String) extends Alphabet
 case class Gamma(name: String, n: Int) extends Alphabet
 ```
 * 引数の戻り値などの型や処理結果のパターンや、Seq型で表現できないようなリスト構造、木構造、
-  その他必要に応じてポリモーフィックに変化するデータ型の表現を表す際に使用する。
+  その他必要に応じてポリモーフィックに変化するデータ型を表す際に使用する。
 * 代数的データ型を返す関数の型は継承元のtraitで、条件に応じて、様々なtraitの型のインスタンスを返す。
 ```
 def func(n: Int): Alphabet = if (n < 10) Alpha else if (n < 30) Beta("aaa") else Gamma("bbb", n)
@@ -690,12 +690,12 @@ res7: Option[Int] = None
 scala> def f(n: Int): Either[String, Int] = if (n < 0) Left("wrong n value") else Right(n)
 f: (n: Int)Either[String,Int]
 ```
-  * 処理が正常に終了した時、正常系の値が入っている時にRightでラップする。: `Right(値)`
-  * 処理が正常に終了しなかった場合、異常系の値が入っている場合やエラーメッセージが入っている場合にLeftでラップする。
-    : `Left(異常な値やエラーメッセージなど)`
-  * Either型で値を返す事で、戻り値からその後続の処理において、
-    正常系の処理をすればいいのか、エラー系の処理をすればいいのか、パターンマッチで対応できる。
-  * PlayframeworkだとActionFunction(アクション合成)などで使用される。
+  * 正常/エラーを戻り値で表す。
+    * 正常系の値が入っている時(正常に処理が終了した時)にRightでラップ。: `Right(値)`
+    * 異常系の値が入っている、または、エラーメッセージ等の場合にLeftでラップ。 : `Left(異常な値やエラーメッセージなど)`
+  * Either型で値を返す事で、戻り値からその後続の処理において、正常系、エラー系、どちらの処理をすればいいのか、
+    型で表現でき、パターンマッチで対応できる。
+  * PlayframeworkだとActionFunction(アクション合成)などで使用されている。
   * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
   * (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
     2つの型パラメータを持つ場合、常に書けるらしい。
@@ -703,7 +703,7 @@ f: (n: Int)Either[String,Int]
 scala> val x: Int Either String = Left(1)
 x: Either[Int,String] = Left(1)
 ```
-    (TODO: 説明を書く。)
+
 * 例外(Exception)
   * Javaと違い、Scala非チェック例外。
     * 非チェック例外: 関数にExceptionクラスを列挙する必要が無くなるが、関数呼び出し時にはどの例外が返ってくるか分からなくなる。
