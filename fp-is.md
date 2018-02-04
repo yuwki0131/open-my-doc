@@ -658,76 +658,77 @@ for (int i = 0; i < n; i++){
     * これの極端な例がScalaz。
 
 ## 例外の扱い方(Option, Either, Exception)
-* Option - nullableを型レベルで表現する。
-  * Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
-  * [Optional(2018)年あけましておめでとうございます](https://moneyforward.com/engineers_blog/2018/01/05/optional2018/)
-    * まさに、2018年はOption元年と言った感じがある。(上記の言語はSwift)
-    * Option外し忘れには注意。
-      Scalaの場合は、`Some(2018)年あけましておめでとうございます`になる。
-  * Optionは値がnullableな場合に使用する。未定義処理や、想定外の値を返す時にnullを返していたようなケース。
-  * head, getは使わない。
-    * headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
-    * headやgetで値が存在しない場合、例外が投げられるため。
-    * 値が存在しないケースというのは、通常、想定範囲内のケースであるため、nullやempty時に例外が投げられるのは好ましくない。
+### Option - nullableを型レベルで表現する。
+* Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
+* [Optional(2018)年あけましておめでとうございます](https://moneyforward.com/engineers_blog/2018/01/05/optional2018/)
+  * まさに、2018年はOption元年と言った感じがある。(上記の言語はSwift)
+  * Option外し忘れには注意。
+    Scalaの場合は、`Some(2018)年あけましておめでとうございます`になる。
+* Optionは値がnullableな場合に使用する。未定義処理や、想定外の値を返す時にnullを返していたようなケース。
+* head, getは使わない。
+  * headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
+  * headやgetで値が存在しない場合、例外が投げられるため。
+  * 値が存在しないケースというのは、通常、想定範囲内のケースであるため、nullやempty時に例外が投げられるのは好ましくない。
+* 基本的にはnull(or empty)チェック専用の構文だと思っている。(※個人の意見です。)
+* メリット
   * Int型などでも意味のないマジックナンバーを埋め込む必要がなくなる。
-  * 基本的にはnull(or empty)チェック専用の構文だと思っている。(※個人の意見です。)
   * Java製のライブラリなどでnullableが怪しいやつはとりあえずOptionで囲っておくと、nullはNoneになる。
 ```
 scala> Option(null)
 res6: Option[Null] = None
 ```
-  * 以下にOption型の使い方が色々載っている。
-    * [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
-  * catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
-    * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
+* 以下にOption型の使い方が色々載っている。
+  * [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
+* catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
+  * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
 ```
 scala> catching(classOf[NumberFormatException]) opt "foo".toInt
 res7: Option[Int] = None
 ```
 
-* Either - エラーを戻り値で表現する。
+### Either - エラーを戻り値で表現する。
 ```
 scala> def f(n: Int): Either[String, Int] = if (n < 0) Left("wrong n value") else Right(n)
 f: (n: Int)Either[String,Int]
 ```
-  * 正常/エラーを戻り値で表す。
-    * 正常系の値が入っている時(正常に処理が終了した時)にRightでラップ。: `Right(値)`
-    * 異常系の値が入っている、または、エラーメッセージ等の場合にLeftでラップ。 : `Left(異常な値やエラーメッセージなど)`
-  * Either型で値を返す事で、戻り値からその後続の処理において、正常系、エラー系、どちらの処理をすればいいのか、
-    型で表現でき、パターンマッチで対応できる。
-  * PlayframeworkだとActionFunction(アクション合成)などで使用されている。
-  * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
-  * (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
-    2つの型パラメータを持つ場合、常に書けるらしい。
+* 正常/エラーを戻り値で表す。
+  * 正常系の値が入っている時(正常に処理が終了した時)にRightでラップ。: `Right(値)`
+  * 異常系の値が入っている、または、エラーメッセージ等の場合にLeftでラップ。 : `Left(異常な値やエラーメッセージなど)`
+* Either型で値を返す事で、戻り値からその後続の処理において、正常系、エラー系、どちらの処理をすればいいのか、
+  型で表現でき、パターンマッチで対応できる。
+* PlayframeworkだとActionFunction(アクション合成)などで使用されている。
+* Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
+* (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
+  2つの型パラメータを持つ場合、常に書けるらしい。
 ```
 scala> val x: Int Either String = Left(1)
 x: Either[Int,String] = Left(1)
 ```
 
-* 例外(Exception)
-  * Javaと違い、Scala非チェック例外。
-    * 非チェック例外: 関数にExceptionクラスを列挙する必要が無くなるが、関数呼び出し時にはどの例外が返ってくるか分からなくなる。
-    * 非チェック例外なので、呼び出し元(を書く人)は呼び出し先が例外を投げてくるのか、
-      その場合はどのような挙動にすべきか、考慮しなくなりがち。
-  * try-catchでキャッチする場合は、NonFatalでキャッチする。
-    * NonFatalはパターンマッチで例外をキャッチする時に、致命的なエラーでないエラーのみをキャッチする。
-    * [Scala 2.10.0 Try ＆ NonFatal](http://d.hatena.ne.jp/Kazuhira/20130124/1359036747)
-  * 例外の扱い方色々
-    * [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
-  * 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
-    * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
-      例外以外にも、例えば、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
-  * Eitherとかとの使い分け。(※以下、個人の主観です。)
-    * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
-      それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
-    * ただ、簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
-    * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
-    * リカバリーの処理が必須なら、Option/Eitherで返される方が楽。
-    * 特にユーザの入力系は例外
-  * [エラー処理 - ドワンゴの研修資料から](https://dwango.github.io/scala_text/error-handling.html)
-  * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
-    * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
-    * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
+### 例外(Exception)
+* Javaと違い、Scala非チェック例外。
+  * 非チェック例外: 関数にExceptionクラスを列挙する必要が無くなるが、関数呼び出し時にはどの例外が返ってくるか分からなくなる。
+  * 非チェック例外なので、呼び出し元(を書く人)は呼び出し先が例外を投げてくるのか、
+    その場合はどのような挙動にすべきか、考慮しなくなりがち。
+* try-catchでキャッチする場合は、NonFatalでキャッチする。
+  * NonFatalはパターンマッチで例外をキャッチする時に、致命的なエラーでないエラーのみをキャッチする。
+  * [Scala 2.10.0 Try ＆ NonFatal](http://d.hatena.ne.jp/Kazuhira/20130124/1359036747)
+* 例外の扱い方色々
+  * [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
+* 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
+  * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
+    例外以外にも、例えば、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
+* Eitherとかとの使い分け。(※以下、個人の主観です。)
+  * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
+    それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
+  * ただ、簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
+  * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
+  * リカバリーの処理が必須なら、Option/Eitherで返される方が楽。
+  * 特にユーザの入力系は例外
+* [エラー処理 - ドワンゴの研修資料から](https://dwango.github.io/scala_text/error-handling.html)
+* 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
+  * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
+  * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
 例えば以下がダメな例。
 ```
 try {
