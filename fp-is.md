@@ -2,11 +2,11 @@
 
 **編集途中のドキュメント**
 
-2018/01/27版
+2018/02/04版
 
 ## このドキュメントについて
 * Javaエンジニア用Scalaユーザ向け。
-* Scala 2.1x.x系向け。
+* Scala 2.13.x系向け。
 * 同じ関数型言語でも結構言語によって慣習が違う。
   * (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
@@ -65,9 +65,9 @@
     * 但し、Javaは破壊的な変更をしていないことの保証のサポートが弱い(finalを使えばその限りではない)
     * Scalaではimmutableなデータ型やTuple、case classなどを使っている限りでは変更されていないことを保証する仕組みが多数
 * オブジェクトが破壊されないことの保証
-  * 一つはval(Javaで言うところのfinalを付ける)によるデータ型
+  * 一つはval(Javaで言うところのfinalを付ける)によるデータ。
   * またははimmutableな標準型、immutableなhashmap、list、etc...
-  * 最後の一つはTupleによるプログラミング、否、case classによるデータ定義
+  * 最後の一つはTupleによるプログラミング、case classによるデータ定義。
 
 ### 副作用が他の関数型言語以外の言語よりも少ない傾向にある
 * 副作用とは、数学には存在し得ない計算機のみがもつ特有な作用のこと。。。らしいです。
@@ -85,9 +85,9 @@
 * 関数型プログラミングなので、当然関数の使い方をメインに説明します。
   * (再帰、無名関数、静的スコープ、高階関数、合成関数)
 * 関数型プログラミングで頻繁に用いられるデータ型である代数的データ型
-* 業務でよく使われるOption/Either/Future及びfor式について
+* 業務でよく使われるOption/Either/Exception、及びfor式について
 * Scalaは静的型付言語なので、型の話をします。
-* Scalaの余談
+* Scalaについて調べていたら発見した余談。
 * 一番最後に、今回は詳細は話しませんが、関数型プログラミングまわりの技術について紹介します。
 
 ## (まずはじめに)replによるローカル実行テスト
@@ -104,10 +104,7 @@ sbt console
 ```
 scala> 1 + 1
 res0: Int = 2
-
-scala>
 ```
-
 型を調べたい時は、`:t`のコマンドを使う。
 ```
 scala> :t 1.0
@@ -157,12 +154,13 @@ def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
 }
 ```
-```
+これは普通の関数同様、以下のように実行する。
+```scala
 scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
 ```
   * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
-```
+```scala
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
 case class Node[A](left: Tree[A], right: Tree[A]) extends Tree[A]
@@ -173,7 +171,7 @@ def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
 }
 ```
 以下のように使用する。
-```
+```scala
 scala> val d = Node(Node(Leaf(10), Leaf(20)), Leaf(1))
 d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 
@@ -198,17 +196,19 @@ res44: String = ((a b) c)
     * 自分自身を再帰的に呼び出す際にその呼び出し以外の処理が残っていない形で自分自身を呼び出すような関数呼び出し形。
   * Scalaの再帰は末尾最適化をする場合としない(できない)場合。
     * 末尾再帰形式になっていない場合は、末尾最適化が行われない。
+
 例えば、次のような階乗を行う関数の場合。(10の階乗(fact(10))は、10! = 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10)
-```
+```scala
 def fact1(n: Int): Int = if (n < 1){
   1
 } else {
   n * fact1(n - 1)
 }
 ```
-    * 自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合
-      * 以下の関数では、計算結果を保持する変数(アキュームレータ)を一つ追加している。
-```
+次の例は、自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合。
+以下の関数では、計算結果を保持する変数(アキュームレータ)を一つ追加している。
+(末尾再帰に書き直す場合は、計算結果を保持する、いわゆる副作用的な代入の代わりとなる引数を用意することが多い。)
+```scala
 def fact2(n: Int, a: Int): Int = if (n < 1){
   a
 } else {
@@ -217,7 +217,7 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
 ```
 以下では、`fact2(10, 1)`の計算しか行っていないが、例えば、`fact1(10000)`と`fact2(10000, 1)`では、
 fact1の場合、StackOverFlowになってしまうが、fact2ではコンパイラの最適化(末尾再帰最適化)によりStackOverFlowにならない。
-```
+```scala
 scala> fact2(10, 1)
 res39: Int = 3628800
 ```
@@ -227,8 +227,9 @@ res39: Int = 3628800
         * 末尾再帰形式にするためには、whileループを無理矢理、再帰に書き換えるような勢いが大切。
         * 末尾再帰形式の引数はいわゆる「変化するmutableな変数」を表している。(引数で副作用(再代入)を引き回すスタイル)
     * Scalaでは相互再帰では末尾最適化をしない。
-      * 例えば以下のようなプログラム、
-```
+
+例えば以下のようなプログラム、
+```scala
 def odd(n: Int): Boolean = if (n = 1) {
   true
 } else {
@@ -255,7 +256,7 @@ def even(n: Int): Boolean = if (n = 0) {
     * コレクション関数に関しては後述。
 
 ## 無名関数(ラムダ抽象)
-```
+```scala
 scala> val f = ((a: Int) => a + 1)
 f: Int => Int = $$Lambda$4017/598382925@72f0dff7
 
@@ -284,23 +285,23 @@ res20: Int = 3
 * 変数の値を取り出す時、(Scalaの)レキシカルスコープでは、ネストした変数定義において最も内側で定義された変数を参照する。
 
 例えば、以下の２つの例。
-```
+```scala
 scala> {val a = 1; ((a:Int) => ((a:Int) => a)(3))(2) }
 res5: Int = 3
 ```
 または、
-```
+```scala
 scala> {val a = 1; {val a = 2; {val a = 3; a} } }
 res11: Int = 3
 ```
 この時、aは、最も内側にあるaは、ネストしている中で最も手前で定義された変数(引数)aの値を参照する。
 次の例では、最も内側のスコープを抜けているので上記とは別の値を見に行く。
-```
+```scala
 scala> {val a = 1; ((a:Int) => {((a:Int) => a)(3); a})(2) }
 res10: Int = 2
 ```
 または、
-```
+```scala
 scala> {val a = 1; {val a = 2; {val a = 3;} a} }
 res14: Int = 2
 ```
@@ -318,7 +319,7 @@ res14: Int = 2
 * プログラミング言語のClojureの事ではない。
 
 例えば以下では、関数オブジェクトがaseqという変数名が保持しているリストの参照を持つ。
-```
+```scala
 scala> val haveSeq = {val aseq = Seq(1, 2, 3, 4, 5); ((index: Int) => aseq(index)) }
 haveSeq: Int => Int = $$Lambda$4005/1227571506@23364fcf
 
@@ -334,7 +335,7 @@ res9: Int = 3
 * 上記のような書き方により、JavaやScalaで指定するprivateよりも更に細かいスコープ(変数の有効範囲)の制御が可能になる。
 
 例えば、以下のように2つの関数からのみ参照可能なHashmapを定義できる。
-```
+```scala
 scala> val (f, g) = { val hmap = Map("ab"-> 1, "ac" -> 2);
      | (((s: String) => hmap(s)), ((s: String) => hmap("a"++s))) }
 f: String => Int = $$Lambda$4011/179665104@2da7b9bf
@@ -364,14 +365,14 @@ res18: Int = 2
   ただし、Scalaだと、パーサコンビネータ以外ではコンビネータという言い方はあまりされない。
 * クロージャを使うことで計算を遅延(将来に実行)させることが可能になる。典型的な使用例がFutureによるコールバック。
   * `dao.findById(id)`がFutureを返す時、mapに渡された`row =>`以降は、Futureの結果が返ってくるまで実行されない。
-```
+```scala
 dao.findById(id).map { row => row.name }
 ```
 * クロージャのみでリスト構造(データ構造)を作ることが可能。
   * ルール: データ構造やクラスは使わない。
   * 関数型プログラミングにおける大道芸の一つ。
   * 例えば、単方向連結リスト(いわゆるLinkedList)は、以下のように簡単に実装することができる。
-```
+```scala
 scala> val cons = (x: Int, xs: Int => Any) => ((i: Int) => if (i == 0) x else xs(i - 1))
 cons: (Int, Int => Any) => Int => Any = $$Lambda$3648/212142471@1c3cc65d
 
@@ -398,13 +399,14 @@ consでリストを構築する。空リストはemptyFで表現する。
 * 関数を引数としたり、戻り値として使用する関数の事を高階関数という。
   * 関数に関数を渡す時は、無名関数として渡す(例えば、mapなど)こともできるし、定義された名前付きの関数を渡すこともできる。
     * 特に、無名関数を渡すパターンは、コレクション関数を使用する時によく使う。
+
 無名関数を他の関数に渡す例。
-```
+```scala
 scala> Seq(1, 2, 3).map(i => i + 2)
 res0: Seq[Int] = List(3, 4, 5)
 ```
 定義済みの他の関数に渡す例。
-```
+```scala
 scala> def add2(i: Int): Int = i + 2
 add2: (i: Int)Int
 
@@ -418,8 +420,9 @@ res4: Seq[Int] = List(3, 4, 5)
 * 部分適用/カリー化(Partial apply/curring)
   * 複数の引数を取る関数を一つの引数のみを取る関数に書き換えることをカリー化という。
   * 途中まで値を代入して、途中からの値を別の高階関数の中で代入させたい時などに使用する。
+
 以下が、カリー化の例。上はカリー化されていない関数。下が上の関数をカリー化した例。
-```
+```scala
 scala> def sum(a: Int, b: Int, c: Int): Int = a + b + c
 sum: (a: Int, b: Int, c: Int)Int
 
@@ -427,12 +430,12 @@ scala> def sum(a: Int)(b: Int)(c: Int): Int = a + b + c
 sum: (a: Int)(b: Int)(c: Int)Int
 ```
 次のようにして、途中までの値を入れておく。
-```
+```scala
 scala> sum(1)(2) _
 res1: Int => Int = $$Lambda$3054/194743804@57e5ed15
 ```
 そして、次のように使うことができる。
-```
+```scala
 scala> Seq(1, 2, 3).map(sum(1)(2))
 res3: Seq[Int] = List(4, 5, 6)
 ```
@@ -443,28 +446,29 @@ res3: Seq[Int] = List(4, 5, 6)
 ## 関数合成
 * 2つの関数を合成する。数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
 * 合成関数用の関数として、compose/andThenが用意されている。
-* 例えば以下の場合、
-```
+
+例えば以下の場合、
+```scala
 val withComma = ((ls: Seq[String]) => ls.mkString(","))
 val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
 val multiply20 = ((ls: Seq[Int]) => ls.map (_ * 20).map(_.toString))
 ```
 Stingのリストの要素を20倍してカンマ区切りの文字列にしたい。。。
-```
+```scala
 val ls = Seq(" 20", " 30 ", "40 ", "50")
 ```
 しかもなんか変な空白入ってる。。。
-```
+```scala
 scala> withComma(multiply20(trimString(ls)))
 res31: String = 400,600,800,1000
 ```
 括弧が多い。。。
-```
+```scala
 scala> (withComma compose multiply20 compose trimString)(ls)
 res32: String = 400,600,800,1000
 ```
 さらにこれを関数化したい。。。
-```
+```scala
 scala> val multiply20withComma = withComma compose multiply20 compose trimString
 multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$605/1525241607@1f18de49
 
@@ -475,17 +479,17 @@ composeだとわかりにくい? そんな時の為にandThenという関数が�
 
 * composeとandThenは順序が逆。
 composeの場合
-```
+```scala
 scala> (((s:String) => s.toInt) compose ((x:Int)=> x.toString))(20)
 res24: Int = 20
 ```
 andThenの場合
-```
+```scala
 scala> (((x:Int)=> x.toString) andThen ((s:String) => s.toInt))(20)
 res22: Int = 20
 ```
-* andThenを使って前述のコードを書き直す。
-```
+andThenを使って前述のコードを書き直す。
+```scala
 scala> val multiply20withComma = trimString andThen multiply20 andThen withComma
 multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$4021/295193997@7d9759a
 
@@ -496,7 +500,7 @@ res34: String = 400,600,800,1000
 
 * 使いすぎると分かりづらくなる事も多いが、Scalazだと頻繁に使われていたりする。
 * ライブラリやフレームワークなどのコードで時々登場する。
-* Playのアクション合成(action composition)などでも類似の概念が登場する。
+* Playframeworkのアクション合成(action composition)などでも類似の概念が登場する。
 
 ## 部分関数(Partial function)
 * ある特定の引数に対してのみ値を返す関数。
@@ -504,7 +508,7 @@ res34: String = 400,600,800,1000
 
 ## 代数的データ型(Algebraic data type)
 * 端的に言うと、以下のようなデータ定義の仕方。
-```
+```scala
 sealed trait Alphabet
 case object Alpha extends Alphabet
 case class Beta(name: String) extends Alphabet
@@ -513,11 +517,11 @@ case class Gamma(name: String, n: Int) extends Alphabet
 * 引数の戻り値などの型や処理結果のパターンや、Seq型で表現できないようなリスト構造、木構造、
   その他必要に応じてポリモーフィックに変化するデータ型を表す際に使用する。
 * 代数的データ型を返す関数の型は継承元のtraitで、条件に応じて、様々なtraitの型のインスタンスを返す。
-```
+```scala
 def func(n: Int): Alphabet = if (n < 10) Alpha else if (n < 30) Beta("aaa") else Gamma("bbb", n)
 ```
 * 以下のようにパターンマッチで各データパターンごとに分解することが出来る。
-```
+```scala
 xxx.func(x) match {
   case Alpha => 〜 ...
   case Beta(name) => 〜 (この中では変数nameが使える) ...
@@ -526,7 +530,7 @@ xxx.func(x) match {
 ```
 * 普段よく使っている代数的データ型の一つがOption型
   * [scala/src/library/scala/Option.scala](https://github.com/scala/scala/blob/2.13.x/src/library/scala/Option.scala)
-```
+```scala
 sealed abstract class Option[+A] extends Product with Serializable
 case object None extends Option[Nothing]
 final case class Some[+A](value: A) extends Option[A]
@@ -559,28 +563,29 @@ final case class Some[+A](value: A) extends Option[A]
   網羅的でない場合は警告がでる。(但し、エラーにはならない)
   **パターン漏れが防げるので積極的に活用していきたい。**
 * リストに対するパターンマッチ
-  * 例えば、以下のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
-```
+
+例えば、以下のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
+```scala
 if (ls.isEmpty) 1 else ls.head
 ```
 は、リスト`ls`についてのパターンマッチ、
-```
+```scala
 ls match { case Nil => 1; case x::xs => x }
 ```
 と書き直せる。コードが長くなった時に、else節で、ls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
 考慮する必要が無くなる。
 * Optionに対するパターンマッチ
   * 例えば、次のようなケースも、リストと同様に書き直せる。
-```
+```scala
 if (x.isEmpty) "hogehoge" else x.get.toString
 ```
 存在するパターンを以下のように、列挙する。
-```
+```scala
 x match { case None => "hogehoge"; case Some(x) => x.toString }
 ```
 * パターンマッチの場合、構造のチェックと同時に、データ型から値の取り出し、変数への束縛まで行う。
 * ただし、以下のような書き方をした場合、パターンマッチの本来の意味はなくなる(ただのif-else式と基本的に同じ意味しかなくなる)。
-```
+```scala
 x match {
  case _ if x.isEmpty => "hogehoge"
  case _ => x.get.toString
@@ -588,7 +593,7 @@ x match {
 ```
 * パターンマッチでのifによる条件追加は以下のようなケースだと有効。
   パターンマッチの基本的な機能である構造的な変数の束縛、パターンの列挙(とそのチェック)の両方を使用しているため。
-```
+```scala
 x match {
  case Some(x) if x == "a" => "hogehoge"
  case Some(x) => "fugafuga"
@@ -596,7 +601,7 @@ x match {
 }
 ```
 * 1caseに複数パターンのマッチも可能。
-```
+```scala
 n match {
   case 1 | 2 | 3 => "hogehoge"
   case _ => "hoge"
@@ -625,14 +630,14 @@ n match {
 * 関数型言語でのループは主に、リストとリスト操作関数の組み合わせで記述する。
   * 大抵のループ処理はリスト系の関数の組み合わせだけで書けてしまう事が殆ど。(要出典)
   * Javaだとforeach構文で書くべき所は、リスト操作関数の組み合わせになる。
-```
+```scala
 for (int i = 0; i < n; i++){
   〜
 }
 ```
 と書いていた箇所は、
 
-```
+```scala
 (0 to n).forEach { i =>
   〜
 }
@@ -658,6 +663,7 @@ for (int i = 0; i < n; i++){
     * これの極端な例がScalaz。
 
 ## 例外の扱い方(Option, Either, Exception)
+
 ### Option - nullableを型レベルで表現する。
 * Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
 * [Optional(2018)年あけましておめでとうございます](https://moneyforward.com/engineers_blog/2018/01/05/optional2018/)
@@ -673,7 +679,7 @@ for (int i = 0; i < n; i++){
 * メリット
   * Int型などでも意味のないマジックナンバーを埋め込む必要がなくなる。
   * Java製のライブラリなどでnullableが怪しいやつはとりあえずOptionで囲っておくと、nullはNoneになる。
-```
+```scala
 scala> Option(null)
 res6: Option[Null] = None
 ```
@@ -681,13 +687,13 @@ res6: Option[Null] = None
   * [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
 * catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
   * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
-```
+```scala
 scala> catching(classOf[NumberFormatException]) opt "foo".toInt
 res7: Option[Int] = None
 ```
 
 ### Either - エラーを戻り値で表現する。
-```
+```scala
 scala> def f(n: Int): Either[String, Int] = if (n < 0) Left("wrong n value") else Right(n)
 f: (n: Int)Either[String,Int]
 ```
@@ -696,11 +702,12 @@ f: (n: Int)Either[String,Int]
   * 異常系の値が入っている、または、エラーメッセージ等の場合にLeftでラップ。 : `Left(異常な値やエラーメッセージなど)`
 * Either型で値を返す事で、戻り値からその後続の処理において、正常系、エラー系、どちらの処理をすればいいのか、
   型で表現でき、パターンマッチで対応できる。
-* PlayframeworkだとActionFunction(アクション合成)などで使用されている。
+  * PlayframeworkだとActionFunction(アクション合成)などで使用されている。
 * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
 * (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
-  2つの型パラメータを持つ場合、常に書けるらしい。
-```
+
+2つの型パラメータを持つ場合、常に書けるらしい。
+```scala
 scala> val x: Int Either String = Left(1)
 x: Either[Int,String] = Left(1)
 ```
@@ -729,19 +736,15 @@ x: Either[Int,String] = Left(1)
 * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
   * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
   * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
+
 例えば以下がダメな例。
-```
+```scala
 try {
   Future { throw new RuntimeException("未来のエラー")
 } catch {
   case e => println("未来のエラーを事前に防ぎました！")
 }
 ```
-
-## Future(Success/Failure) - 非同期プログラミング
-  (TODO: 説明を書く)
-  * 例外投げても(多分)受け取ってくれないことで私の中で有名(誇張表現)。
-  * JavaScriptで言う所のコールバック関数
 
 ## for式
 * Scalaのfor式はJavaなどと同様に、foreach文の役割を持つが、for-yield式として使用することで、
@@ -753,10 +756,11 @@ try {
   * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは一旦、for式の使用を検討したほうがいい。
     * プログラムがネストしすぎるのは一般的に好ましくないため。
   * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
+
 (TODO: for式の説明を書く)
 http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
 以下のfor式があった時、コンパイル時に次のように、map/flatMapに展開される。
-```
+```scala
 for {
   a <- abcDao.find(id)
   b <- abcDao.find(a)
@@ -775,12 +779,13 @@ https://www.slideshare.net/TakashiKawachi/scala-16023052
 
 ### 暗黙の型変換(implicit conversion)
 * 型変換(キャスト)する関数をimplicitに定義しておくことで自動的にキャストしてくれる。
-  * 以下が定義の例。
-```
+
+以下が定義の例。
+```scala
 implicit def d2i(d: Double):Int = d.toInt
 ```
-  * implicit定義前
-```
+implicit定義前
+```scala
 scala> val x:Int = 3.14
 <console>:11: error: type mismatch;
  found   : Double(3.14)
@@ -788,8 +793,8 @@ scala> val x:Int = 3.14
        val x:Int = 3.14
                    ^
 ```
-  * implicit定義後
-```
+implicit定義後
+```scala
 scala> val x:Int = 3.14
 x: Int = 3
 ```
@@ -808,13 +813,13 @@ x: Int = 3
   * ちなみに、C#やTypeScriptにも同名の類似した機能がある。
   * この辺の解説はドワンゴの研修資料に書いてあるのでそっちを参照。
 * 例えば、String型に空だったら、None、そうでなかったら、Someで値を包んだ関数を定義したい場合、以下のように拡張できる。
-```
+```scala
 implicit class OptionString(str: String){
   def opt(): Option[String] = if (str.isEmpty) None else Some(str)
 }
 ```
 これは、次のように使える。
-```
+```scala
 scala> "".opt
 res2: Option[String] = None
 
@@ -826,7 +831,7 @@ res3: Option[String] = Some(abc)
 ### 暗黙のパラメータ(implicit parameter)
 * 暗黙に受け渡しされる引数のこと。implicit修飾子により定義された変数を暗黙的にimplicit修飾子が付けられた引数に代入する。
 例えば、以下。
-```
+```scala
 scala> implicit val x = 20
 x: Int = 20
 
@@ -840,6 +845,7 @@ res4: Int = 21
 * (多分)静的型付言語に動的スコープ(静的スコープの記述を参照)を導入したような物(?)
   * Implicit Parameters: Dynamic Scoping with Static Typesというタイトルの論文がある。
   * 関数を実行する場所やその瞬間によって値をコロコロ変えることが出来る。
+  * 暗黙のパラメータ自体は、Haskellの型クラスをエミュレートするために実装されたらしい。
 * 引数の数が大量にある、または、同じような引数を取る関数を大量に呼び出している時などに有効と思われる。
 * 割とホントに見えない所で代入が発生しているので、普段意識せずに使ってる人が多そうな機能の一つ。
   * 多分いちばん使われているのはFuture。
@@ -854,7 +860,7 @@ res4: Int = 21
     * 暗黙のパラメータによる複数の代入候補が存在する場合にもエラーが発生する。(一応優先順位はあるらしいが)
 * 暗黙のパラメータによる代入を許したくない場合は、明示的に引数を指定することでそれを回避できる。
 前述の例で言うと、次のように書けば、暗黙のパラメータは回避される。
-```
+```scala
 scala> f(1)(30)
 res5: Int = 31
 ```
@@ -905,14 +911,14 @@ res5: Int = 31
   * AnyRefは、参照型となる型のすべての親クラス。
   * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
   * 気を抜いているとAnyに推論される。
-```
+```scala
 scala> val x = if (2 < 1) 1 else "a"
 x: Any = a
 ```
 
 ### 構造的部分型(Structural subtyping)
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
-```
+```python
 class A:
     def func1:
         〜
@@ -932,17 +938,17 @@ func2(B())
 勿論、class Aやclass Bの定義を変更することなしに。
 注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
 例えば、idとnameを持つようなRow。
-```
+```scala
 case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
 ```
 このRowのリストから、idとnameのタプルのリストを抽出したい。。。
 以下のような関数を定義する。
-```
+```scala
 def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, String)] =
     rows.map { row => (row.id, row.name) }
 ```
 以下のように実行する。
-```
+```scala
 scala> val row = Seq(AbcRow(1, "a", "paramA", "paramB"), AbcRow(2, "b", "paramA", "paramB"), AbcRow(3, "c", "paramA", "paramB"));
 row: Seq[AbcRow] = List(AbcRow(1,a,paramA,paramB), AbcRow(2,b,paramA,paramB), AbcRow(3,c,paramA,paramB))
 scala> getIdName(row)
@@ -980,7 +986,7 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ### Symbol
 * ScalaにもRubyと同じようなSymbolがある。先頭にquoteを付ける。
   * PlayのTwirlテンプレートでタグの属性を設定する時などによく使われている。
-```
+```scala
 scala> 'sym
 'sym
 res2: Symbol = 'sym
@@ -1004,6 +1010,7 @@ Scalaの新しいコンパイラ。
 ## やらない関数型言語まわりのトピック
 * 名前渡し(Call-by-name)、評価戦略/遅延評価
 * DSL(ドメイン特化言語)
+* Future(※あんまり関数型プログラミング関係無い気もする)
 * 継続/限定継続(continuation)
 * プログラムの融合変換(program fusion, deforestation)
 * なんとかモルフィズム(正確にはRecursion Schemeという。catamorphism, anamorphism, hylomorphism ...)
