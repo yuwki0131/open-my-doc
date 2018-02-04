@@ -8,7 +8,7 @@
 * Javaエンジニア用Scalaユーザ向け。
 * Scala 2.13.x系向け。
 * 同じ関数型言語でも結構言語によって慣習が違う。
-  * (例えば、同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
+  * (同じオブジェクト指向でもJavaとObjective-CとSmalltalk、Python、JavaScriptではかなり雰囲気が違うのと同じ)
 * 関数型プログラミング一般の話をするのは難しい。
   * [Twitterより](https://twitter.com/esumii/status/638588331459153920)
   * Scala以外だと、Haskell, OCaml, StandardML, F#, Clean(ConcurrentClean), Erlang, Elixir, Scheme, Clojure他多数。
@@ -191,13 +191,13 @@ res44: String = ((a b) c)
     * ループ回数が多い場合(JVMの場合、1000〜数千回以上)の場合は、末尾再帰形式でループを記述しないと、StackOverFlowになる。
       * 個人的な経験則だと1000回未満のループだと、SOFにはならない事が多い。(勿論、実装による部分が大きい)
     * 大量にループを繰り返す場合は末尾再帰が必須となる。
-    * stackを消費しすぎないタイプのループの場合は、この限りではない。(例えば、消費したstackが戻される場合など)
+    * stackを消費しすぎないタイプのループの場合は、この限りではない。(関数呼び出しで消費したStackが戻される場合など。)
   * 末尾再帰形式は関数呼び出し時に、stackを必要としないような再帰呼出しの形式。
     * 自分自身を再帰的に呼び出す際にその呼び出し以外の処理が残っていない形で自分自身を呼び出すような関数呼び出し形。
   * Scalaの再帰は末尾最適化をする場合としない(できない)場合。
     * 末尾再帰形式になっていない場合は、末尾最適化が行われない。
 
-例えば、次のような階乗を行う関数の場合。(10の階乗(fact(10))は、10! = 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10)
+次のような階乗を行う関数の場合。(10の階乗(fact(10))は、10! = 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10)
 ```scala
 def fact1(n: Int): Int = if (n < 1){
   1
@@ -216,7 +216,7 @@ def fact2(n: Int, a: Int): Int = if (n < 1){
   fact2(n - 1, n * a)
 }
 ```
-以下では、`fact2(10, 1)`の計算しか行っていないが、例えば、`fact1(10000)`と`fact2(10000, 1)`では、
+以下のコードでは`fact2(10, 1)`の計算しか行っていないが、例えば、`fact1(10000)`と`fact2(10000, 1)`では、
 fact1の場合、StackOverFlowになってしまうが、fact2ではコンパイラの最適化(末尾再帰最適化)によりStackOverFlowにならない。
 ```scala
 scala> fact2(10, 1)
@@ -283,7 +283,7 @@ res20: Int = 3
 * Scalaの変数(valや引数)の有効範囲は、レキシカルスコーピングによって決定される。
 * 変数の値を取り出す時、(Scalaの)レキシカルスコープでは、ネストした変数定義において最も内側で定義された変数を参照する。
 
-例えば、以下の２つの例。
+以下の2つのコード。
 ```scala
 scala> {val a = 1; ((a:Int) => ((a:Int) => a)(3))(2) }
 res5: Int = 3
@@ -304,18 +304,20 @@ res10: Int = 2
 scala> {val a = 1; {val a = 2; {val a = 3;} a} }
 res14: Int = 2
 ```
-* レキシカルスコープの仕組み自体は、Scalaだけでなく、JavaScriptやTypeScript(たぶん)、Ruby(たぶん)、Pythonでも共通。
-* 但し、JavaScriptにはFunctionスコープというのがあるので注意。
-* 動的スコープを採用している言語はほとんどない。但し、implicit parameterは動的スコープ的な役割に近い。
-  現代で実用的な動的スコープがメインの言語はEmacs Lispくらい。。。
-* implicit parameterは、社内だとFutureのExecutionContextがよく使われる。
+* レキシカルスコープ自体は、モダンな言語では一般的な仕組み。
+  * Scalaだけでなく、JavaScriptやTypeScript(たぶん)、Ruby(たぶん)、Pythonでも共通。
+    * 但し、JavaScriptのvarではFunctionスコープというのがあるので注意。
+  * 動的スコープを採用している言語はほとんどない。現代で実用的な動的スコープがメインの言語はEmacs Lispくらい。。。
+    * 但し、implicit parameterは動的スコープ的な役割に近い。
+      implicit parameterは、社内だとFutureのExecutionContextがよく使われる。
 
 ## クロージャ(Closure)
-* レキシカルスコープにより、関数定義中にその関数のブロック内で定義されていない変数を持たせることができ、そのような変数を自由変数という。
 * 自由変数を含む(使用した)関数によって生成された関数オブジェクトの事をクロージャ(Closure)という。
+  * 自由変数: 関数定義中にその関数のブロック内で定義されていない変数のこと。
   * クロージャは、自由変数に束縛された値(の参照)をデータとして保持する。
   * ブロックから抜けだした関数オブジェクトは、レキシカルスコーピングによって保持した変数の参照を保持し続ける。
 * プログラミング言語のClojureの事ではない。
+  * レキシカルスコープ同様、モダンな言語ではクロージャを生成する事ができる。
 
 例えば以下では、関数オブジェクトがaseqという変数名が保持しているリストの参照を持つ。
 ```scala
@@ -353,13 +355,13 @@ res17: Int = 1
 scala> f("ac")
 res18: Int = 2
 ```
-* 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数のような物も(機能的には)作れる。
+* 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数も色々作れる。
 * ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
   * このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
   * (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
 * クロージャにより変数はそのスコープの外を出ても有効である場合がある。
-  つまり、クロージャにより、ローカル変数は、関数本体が終了しても生き残る。
-  変数が生存している(有効である)期間のことを**エクステント**という。
+  つまり、ローカル変数は、変数を定義した関数本体が終了しても生き残る。
+  * 変数が生存している(有効である)期間のことを**エクステント**という。
 * クロージャとは逆に、関数内に自由変数を含まないような関数のことを**コンビネータ**という。
   ただし、Scalaだと、パーサコンビネータ以外ではコンビネータという言い方はあまりされない。
 * クロージャを使うことで計算を遅延(将来に実行)させることが可能になる。典型的な使用例がFutureによるコールバック。
@@ -370,7 +372,8 @@ dao.findById(id).map { row => row.name }
 * クロージャのみでリスト構造(データ構造)を作ることが可能。
   * ルール: データ構造やクラスは使わない。
   * 関数型プログラミングにおける大道芸の一つ。
-  * 例えば、単方向連結リスト(いわゆるLinkedList)は、以下のように簡単に実装することができる。
+
+単方向連結リスト(いわゆるLinkedList)は、以下のように簡単に実装することができる。
 ```scala
 scala> val cons = (x: Int, xs: Int => Any) => ((i: Int) => if (i == 0) x else xs(i - 1))
 cons: (Int, Int => Any) => Int => Any = $$Lambda$3648/212142471@1c3cc65d
@@ -415,8 +418,8 @@ res4: Seq[Int] = List(3, 4, 5)
 * 高階関数を使用することで、ほぼ無制限にプログラム中の任意のロジック(というか具体的なコード)を抽象化することができる。
   * やり方は、抽象化したい部分を関数化し、差分だけそれぞれ別関数にして、抽象化した関数に差分の関数を渡すという書き方。
   * コード全体の至る所で使用できて、DRYに書けるというメリットはあるが。
-  * ただし、やり過ぎると原型を留めなくなるので注意が必要。
-* 部分適用/カリー化(Partial apply/curring)
+  * やり過ぎると原型を留めなくなるので注意が必要。
+* 部分適用/カリー化(Partial application / Curring)
   * 複数の引数を取る関数を一つの引数のみを取る関数に書き換えることをカリー化という。
   * 途中まで値を代入して、途中からの値を別の高階関数の中で代入させたい時などに使用する。
 
@@ -438,15 +441,15 @@ res1: Int => Int = $$Lambda$3054/194743804@57e5ed15
 scala> Seq(1, 2, 3).map(sum(1)(2))
 res3: Seq[Int] = List(4, 5, 6)
 ```
-  * 途中まで引数の値を適用し別の無名関数を生成する書き方を部分適用という。
-    * 部分適用とカリー化は間違えやすいことで有名。
-      * [カリー化 != 部分適用](http://kmizu.hatenablog.com/entry/20091216/1260969166)
+* 途中まで引数の値を適用し別の無名関数を生成する書き方を部分適用という。
+  * 部分適用とカリー化は間違えやすいことで有名。
+    * [カリー化 != 部分適用](http://kmizu.hatenablog.com/entry/20091216/1260969166)
 
 ## 関数合成
 * 2つの関数を合成する。数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
 * 合成関数用の関数として、compose/andThenが用意されている。
 
-例えば以下の場合、
+以下の場合、
 ```scala
 val withComma = ((ls: Seq[String]) => ls.mkString(","))
 val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
@@ -557,14 +560,14 @@ final case class Some[+A](value: A) extends Option[A]
 * [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
 * Scalaでは、リテラル(定数)、型によるマッチ、正規表現、構造に関するマッチなどが可能。
 * データ構造(リストやタプル、case classなど)を構造的に分解して変数に代入できる。
-* オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
+  * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
-* if-else式と比較して、データ構造に対する網羅的なマッチが可能。
-  網羅的でない場合は警告がでる。(但し、エラーにはならない)
+* if-else式とは違い、データ型に対する網羅的なマッチが可能になる。
+  網羅的でない場合は警告がでる。(但し、エラーにはならない。)
   **パターン漏れが防げるので積極的に活用していきたい。**
 * リストに対するパターンマッチ
 
-例えば、以下のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
+次のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
 ```scala
 if (ls.isEmpty) 1 else ls.head
 ```
@@ -650,7 +653,7 @@ for (int i = 0; i < n; i++){
   * その他、sort、reverse、sum、min/max、take(先頭からn個取り出す)、zip(複数のリストの各要素をペアにする)など色々あるため、
     "scala seq"などでググると色々出てくる。
   * ループで複雑な処理をしたい場合は、色々調べてみると、大抵の場合、丁度いい感じの関数が見つかることが多い。
-  * 昔流行った(?)、MapReduceは上記のmap関数とfold(他の関数型言語ではreduceとも呼ばれる)関数に由来している。
+* 昔流行った(?)、MapReduceは上記のmap関数とfold(他の関数型言語ではreduceとも呼ばれる)関数に由来している。
 * mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。
   * 前述のquicksortの例を参照。
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
@@ -799,13 +802,12 @@ scala> val x:Int = 3.14
 x: Int = 3
 ```
 * 暗黙の型変換は推奨されていない/しない人が多い。
-* 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
-  * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
-* implicit conversionに対する否定的なコメントは以下を参照。
-  * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
-  * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
-  * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
-* 暗黙の型変換、利用するメソッドが複数あると、どっちを使えばいいのか分からなくなるので、エラーが出る。
+  * 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
+    * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
+  * implicit conversionに対する否定的なコメントは以下を参照。
+    * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
+    * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
+    * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
 * 継承せずに(?)既存の型(aka. クラス)を拡張する。
@@ -830,7 +832,8 @@ res3: Option[String] = Some(abc)
 
 ### 暗黙のパラメータ(implicit parameter)
 * 暗黙に受け渡しされる引数のこと。implicit修飾子により定義された変数を暗黙的にimplicit修飾子が付けられた引数に代入する。
-例えば、以下。
+
+次のコードでは、二番目の引数をimplicitとしている。
 ```scala
 scala> implicit val x = 20
 x: Int = 20
@@ -905,10 +908,8 @@ res5: Int = 31
   * 以下参考文献
     * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
     * [Type Classes as Objects and Implicits](http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf)
-* Any, AnyRef, AnyVal
-  * Anyは、全ての型の親クラス。
-  * AnyValは、定数系の型のすべての親クラス。
-  * AnyRefは、参照型となる型のすべての親クラス。
+* Any型
+  * Anyは、全ての型の親クラス。JavaのObject型に相当。
   * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
   * 気を抜いているとAnyに推論される。
 ```scala
@@ -942,7 +943,7 @@ func2(B())
 case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
 ```
 このRowのリストから、idとnameのタプルのリストを抽出したい。。。
-以下のような関数を定義する。
+この場合、次のような関数を定義できる。
 ```scala
 def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, String)] =
     rows.map { row => (row.id, row.name) }
@@ -978,7 +979,7 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
   * インデックスだと、i, j, k, m, n, ...
   * リストは、ls, lst, xs, ys, zs, ...
     * 特に、リストの先頭をx、後続のリストをxsなどという書き方をする習慣がある。
-    * 例えば、`case x::xs => ...` のような書き方
+    * 例えば、`case x::xs => ...` のような書き方をよくする。
   * 型パラメータは、大文字始まりで、A, B, C, ...
 
 ## 余談
