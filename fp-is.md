@@ -123,6 +123,7 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
   * [自由変数と束縛変数 - Wikipedia](https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0)
   * 特に、ローカルで定義され代入された変数は束縛変数、グローバル変数などローカルで定義されていない変数の事を自由変数と言ったりする。
     * (後述するレキシカルスコープ参照)
+  * 人によって「代入する」という人と「束縛する」という言い方をする人に別れる。
 * プログラムの実行、特にプログラム中の部分的な式を実行することを**評価(evaluate)**という。
 
 * (関数型プログラミング関係ない)オブジェクト指向用語:レシーバ
@@ -750,29 +751,119 @@ try {
 ```
 
 ## for式
-* Scalaのfor式はJavaなどと同様に、foreach文の役割を持つが、for-yield式として使用することで、
-  map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
-  * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
-    このfor-yield風の構文の事だったりする(らしい)。。。
-  * (余談)Haskellだとdo構文でほぼ同様の構文を提供している。ちなみにHaskellではScalaのyieldに当たる部分はreturnと書く。
-* for式は、map/flatMap/fiterWith(filter)に変換される。
-  * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは一旦、for式の使用を検討したほうがいい。
-    * プログラムがネストしすぎるのは一般的に好ましくないため。
-  * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
-
-(TODO: for式の説明を書く)
-http://scala-lang.org/files/archive/spec/2.12/06-expressions.html
-以下のfor式があった時、コンパイル時に次のように、map/flatMapに展開される。
 ```scala
 for {
   a <- abcDao.find(id)
   b <- abcDao.find(a)
 } yeild f(a, b)
 ```
-* mapがネストした場合、非常にコードが読みづらくなるため、for式で書けるなら、for式で書いた方が無難。
+* Scalaのfor文はJavaなどと同様に、foreach文の役割を持つ。
+* ただし、yield節を追加することで、for-yield式(for内包記法)となり、map/flatMap/filter(With)を使ったジェネレータ
+* map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
+  * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
+    このfor-yield風の構文の事だったりする(らしい)。。。
+  * (余談)Haskellだとdo構文でほぼ同様の構文を提供している。ちなみにHaskellではScalaのyieldに当たる部分はreturnと書く。
 
-* Try型を使うことで例外もfor-yield形式で書ける。
-https://www.slideshare.net/TakashiKawachi/scala-16023052
+* FutureやOption、Eitherなどでは、後続の処理を記述するために、オブジェクトの末尾にmap/flatMapを使用する。
+  しかし、このような書き方は、ネストが深くなると、可読性が落ち、括弧の対応関係を追いづらくなる。
+  また、どの結果がどの変数に代入されているかも読み取ることが難しくなる。
+
+例えば、以下のようなネスト。
+```scala
+abcDao.find(id)
+  .flatMap {
+    case a => abcDao.map(f(a))
+      .flatMap {
+        case b => abcDao.findByName(a)
+          .map { c =>　(a, c) } }.getOrElse( ... ) }
+```
+* for式を導入することで、変数束縛の対応関係が明確になり、また、括弧の数が減少し、処理の流れが明確になる。
+
+例えば、以下のようなネスト。
+```scala
+abcDao.find(id) // 戻り値はFuture[Option[String]]
+  .flatMap {
+    case a => a.map(f)  // aはOption[String]
+      .map {
+        case b => abcDao.findByName(b) // 戻り値は、Future[Option[String]]
+          .map { c =>　(a, c) } }.getOrElse( ... ) }
+```
+
+次のよに書き換えることで処理関係が明確になる。
+```scala
+for {
+  a <- abcDao.find(id)
+  b = a.map(f)
+  c <- abcDao.findByName(b)
+} yield (a, c)
+```
+
+* for式は、コンテクストとなる型(コンストラクタ)は必ず一つしか持てない。
+  Future用のfor式は、Future型専用、Option型のfor式は、Option型専用になる。
+* yieldの手前のfor式内で使える記法は、主に3つ。そして最後にyield節がくる。
+  * flatMap: `a <- b`
+    : for式と同じコンテクストの型(コンストラクタ)を持つ式(`b`)があり、その結果がfor式内でアンラップされた変数`a`に代入される。
+  * map: `a = b`
+    : for式が表しているコンテクストとは無関係な型を持つ`b`を変数`a`に代入する。
+  * filter(With): `if exp`
+    : ガード節。filterとも言う。`exp`がfalseだった場合、後続の処理を実行しない。(FutureだとFailureとなる)
+    * [Scala Future with filter in for comprehension](https://stackoverflow.com/questions/17869624/scala-future-with-filter-in-for-comprehension)
+  * yield(map)
+    : yield節の式の結果をfor式の型(コンストラクタ)でラップした結果を返す。
+* 関連したテクニック
+  * 式の実行結果が不要な場合は、次のようにアンダースコアを使う事で、余計な変数を避けることが出来る。
+
+```scala
+for {
+  _ <- abcDao.find(id)
+} yield ...
+```
+_を使うことで余計な束縛を回避している。
+
+  * for式中の=形式の束縛は、for式内でfor式のコンテクストとは無関係な処理を実行できる。
+
+次の書き方、
+```scala
+for {
+  b　= methodA(a)
+} yield ...
+```
+は、例えば、Futureがコンテクストの場合、以下の書き方と同じ。
+```scala
+for {
+  b　<- Future { methodA(a) }
+} yield ...
+```
+flatMapがmapになっていることが分かる。
+
+  * 複数のコンテクストを持つようなfor式(例えば、Future[Option[_]]をコンテクストに持つ)は、
+    生Scalaでは無理だが、flatMapなど型クラスを充実させることで実現可能。
+    * この類の実装をしているのはScalaz。
+    * 複数のコンテクストを組み合わせて新しいコンテクストを作ることも可能。
+      (モナドトランスフォーマーでググると出てくる)
+* for式はネストしたmap/flatMap/fiterWith(filter)に変換される。
+  * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは一旦、for式の使用を検討したほうがいい。
+    * プログラムがネストしすぎるのは可読性の観点から好ましくないため。
+  * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
+  * [For Comprehensions and For Loops](http://scala-lang.org/files/archive/spec/2.12/06-expressions.html)
+
+以下のfor式があった時、
+```scala
+for {
+  a <- abcDao.find(id)
+  b <- abcDao.find(a)
+} yeild f(a, b)
+```
+コンパイル時に次のように、map/flatMapに展開される。
+```scala
+abcDao.find(id)
+  .flatMap {
+    case a => abcDao.find(a)
+      .map { case b => f(a, b) } }
+```
+
+* (その他)Try型を使うことで例外もfor-yield形式で書ける。
+  * [Scalaでの例外 - SlideShare](https://www.slideshare.net/TakashiKawachi/scala-16023052)
 
 ## Scalaの3つのimplicit
 * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
