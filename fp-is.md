@@ -62,8 +62,8 @@
     * (参照透過性: 引数に同じ値を与えれば同じ戻り値を得ることができる関数を参照透過な関数という)
   * 入力に対して、想定した出力が得られれば、正しい関数であると言える。(プロパティベースのテスト(関数に対するユニットテスト))
   * (注)別に関数型プログラミングだからというわけではない。Javaなど他の言語でもある程度同じことが可能。
-    * 但し、Javaは破壊的な変更をしていないことの保証のサポートが弱い(finalを使えばその限りではない)
-    * Scalaではimmutableなデータ型やTuple、case classなどを使っている限りでは変更されていないことを保証する仕組みが多数
+    * 但し、Javaは破壊的な変更をしていないことの保証のサポートが弱い(finalを使えばその限りではないものの)。
+    * Scalaではimmutableなデータ型やTuple、case classなどを使っている限りでは変更されていないことが保証される。
 * オブジェクトが破壊されないことの保証
   * 一つはval(Javaで言うところのfinalを付ける)によるデータ。
   * またははimmutableな標準型、immutableなhashmap、list、etc...
@@ -126,7 +126,7 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
   * 人によって「代入する」という人と「束縛する」という言い方をする人に別れる。
 * プログラムの実行、特にプログラム中の部分的な式を実行することを**評価(evaluate)**という。
 
-* (関数型プログラミング関係ない)オブジェクト指向用語:レシーバ
+* (関数型プログラミング関係ない)オブジェクト指向用語: レシーバ
   * オブジェクト指向において、メッセージを受け取るオブジェクトの事をレシーバという。
   * あるオブジェクトのメソッドを呼び出す時、そのオブジェクトに対しメッセージ送るとみなす為、レシーバと呼ばれる。
     * [オブジェクト指向プログラミング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0)
@@ -362,8 +362,8 @@ res18: Int = 2
   * (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
 * クロージャにより変数はそのスコープの外を出ても有効である場合がある。
   つまり、ローカル変数は、変数を定義した関数本体が終了しても生き残る。
-  * 変数が生存している(有効である)期間のことを**エクステント**という。
-* クロージャとは逆に、関数内に自由変数を含まないような関数のことを**コンビネータ**という。
+  * 変数が生存している(有効である)期間のことを**エクステント(extent)**という。
+* クロージャとは逆に、関数内に自由変数を含まないような関数のことを**コンビネータ(combinator)**という。
   ただし、Scalaだと、パーサコンビネータ以外ではコンビネータという言い方はあまりされない。
 * クロージャを使うことで計算を遅延(将来に実行)させることが可能になる。典型的な使用例がFutureによるコールバック。
   * `dao.findById(id)`がFutureを返す時、mapに渡された`row =>`以降は、Futureの結果が返ってくるまで実行されない。
@@ -478,6 +478,7 @@ multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$605/1525241
 scala> multiply20withComma(ls)
 res33: String = 400,600,800,1000
 ```
+引数を定義して関数化すると、変数が増えて冗長になるので、関数を合成の場合は、`compose`のみで組み合わせを表現し関数を定義できる。
 composeだとわかりにくい? そんな時の為にandThenという関数が用意されている。
 
 * composeとandThenは順序が逆。
@@ -499,12 +500,12 @@ multiply20withComma: Seq[String] => String = scala.Function1$$Lambda$4021/295193
 scala> multiply20withComma(ls)
 res34: String = 400,600,800,1000
 ```
-処理の順番が明確になり、多少は分かりやすくなった。andThenは、fluent interfaceかも知れない。。。
+処理の順番が明確になり、分かりやすくなった。
 
 * ライブラリやフレームワークなどのコードで時々登場する。
   * 使いすぎると分かりづらくなる事も多いが、Scalazだと頻繁に使われていたりする。
   * Playframeworkのアクション合成(action composition)などでも類似の概念が登場する。
-* 上記のような変数の登場しない合成による関数定義の仕方を**ポイントフリースタイル**という。
+* 上記のような変数の登場しない合成による関数定義の仕方を**ポイントフリースタイル(point-free style)**という。
 
 ## 部分関数(Partial function)
 * ある特定の引数に対してのみ値を返す関数。
@@ -629,8 +630,6 @@ n match {
     * Scalaの場合、IndexedSeqの方がパフォーマンス上、好ましい場合もありうるため、リストを使う時はSeqの方が一般的に使われる。
   * リスト系のコレクションのヒエラルキー
     * [MUTABLE AND IMMUTABLE COLLECTIONS](https://docs.scala-lang.org/overviews/collections/overview.html)
-  (TODO: 説明を書く)
-
 * 関数型言語でのループは主に、リストとリスト操作関数の組み合わせで記述する。
   * 大抵のループ処理はリスト系の関数の組み合わせだけで書けてしまう事が殆ど。(要出典)
   * Javaだとforeach構文で書くべき所は、リスト操作関数の組み合わせになる。
@@ -659,8 +658,8 @@ for (int i = 0; i < n; i++){
   * 前述のquicksortの例を参照。
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 * 関数型プログラミングではリスト操作関数を多用される。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
-  * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。。。
-* 頭の中で抽象的なリストの形を変形させていくプロセスをメソッドチェーンでそのままコードに落とし込む(?)。
+  * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。
+* 頭の中で抽象的なリストの形を変形させていくプロセスをメソッドチェーンのコードに落とし込む。
 * リストと同様にSetやHashmap、その他データ型でも明示的なループを書かずに組み合わせでコードを記述出来るような
   コレクション関数が多数用意されている筈なので、随時調べた方がいい。
   * 関数型言語にはデータ型に対する抽象化された関数がライブラリに大量に用意されているということがよくある。
@@ -736,7 +735,7 @@ x: Either[Int,String] = Left(1)
   * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
   * リカバリーの処理が必須なら、Option/Eitherで返される方が楽。
   * 特にユーザの入力系は例外
-* [エラー処理 - ドワンゴの研修資料から](https://dwango.github.io/scala_text/error-handling.html)
+* [エラー処理 - dwango on GitHub](https://dwango.github.io/scala_text/error-handling.html)
 * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
   * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
   * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
@@ -758,12 +757,11 @@ for {
 } yeild f(a, b)
 ```
 * Scalaのfor文はJavaなどと同様に、foreach文の役割を持つ。
-* ただし、yield節を追加することで、for-yield式(for内包記法)となり、map/flatMap/filter(With)を使ったジェネレータ
+* ただし、yield節を追加することで、for-yield式(for内包記法)となり、map/flatMap/filter(With)を使ったジェネレータとなる。
 * map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
   * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
     このfor-yield風の構文の事だったりする(らしい)。。。
   * (余談)Haskellだとdo構文でほぼ同様の構文を提供している。ちなみにHaskellではScalaのyieldに当たる部分はreturnと書く。
-
 * FutureやOption、Eitherなどでは、後続の処理を記述するために、オブジェクトの末尾にmap/flatMapを使用する。
   しかし、このような書き方は、ネストが深くなると、可読性が落ち、括弧の対応関係を追いづらくなる。
   また、どの結果がどの変数に代入されているかも読み取ることが難しくなる。
@@ -778,8 +776,7 @@ abcDao.find(id) // 戻り値はFuture[Option[String]]
         case b => abcDao.findByName(b) // 戻り値は、Future[Option[String]]
           .map { c =>　(a, c) } }.getOrElse( ... ) }
 ```
-
-次のよに書き換えることで処理関係が明確になる。
+次のよに書き換えることで各関係が明確になる。
 ```scala
 for {
   a <- abcDao.find(id)
@@ -787,7 +784,6 @@ for {
   c <- abcDao.findByName(b)
 } yield (a, c)
 ```
-
 * for式は、コンテクストとなる型(コンストラクタ)は必ず一つしか持てない。
   Future用のfor式は、Future型専用、Option型のfor式は、Option型専用になる。
 * yieldの手前のfor式内で使える記法は、主に3つ。そして最後にyield節がくる。
@@ -797,7 +793,7 @@ for {
     : for式が表しているコンテクストとは無関係な型を持つ`b`を変数`a`に代入する。
   * filter(With): `if exp`
     : ガード節。filterとも言う。`exp`がfalseだった場合、後続の処理を実行しない。(FutureだとFailureとなる)
-    * [Scala Future with filter in for comprehension](https://stackoverflow.com/questions/17869624/scala-future-with-filter-in-for-comprehension)
+    * [Scala Future with filter in for comprehension - StackOverFlow](https://stackoverflow.com/questions/17869624/scala-future-with-filter-in-for-comprehension)
   * yield(map)
     : yield節の式の結果をfor式の型(コンストラクタ)でラップした結果を返す。
 * 関連したテクニック
@@ -851,7 +847,6 @@ abcDao.find(id)
     case a => abcDao.find(a)
       .map { case b => f(a, b) } }
 ```
-
 * (その他)Try型を使うことで例外もfor-yield形式で書ける。
   * [Scalaでの例外 - SlideShare](https://www.slideshare.net/TakashiKawachi/scala-16023052)
 
@@ -957,7 +952,7 @@ res5: Int = 31
 * 型注釈: 変数や引数などに対する型の指定。いわゆる、`val x: String = 〜`のコロンの後ろの型指定のこと。
 * 型パラメータ: Javaで言う所のジェネリクス。
   * `trait A[B] { def b():B; }`の`B`
-  * 型パラメータで指定できる共変、反変、非変については、[型パラメータと変位指定 - ドワンゴの研修テキスト](https://dwango.github.io/scala_text/type-parameter.html) を参照。以下、自分用のメモ。
+  * 型パラメータで指定できる共変、反変、非変については、[型パラメータと変位指定 - dwango on GitHub](https://dwango.github.io/scala_text/type-parameter.html) を参照。以下、自分用のメモ。
     * 共変(`[+B]`): A extends Bの時のみ、val a:G[B] = b:G[A]が可。
     * 反変(`[-B]`): A extends Bの時のみ、val a:G[A] = b:G[B]が可。
     * 非変(`[B]`): A = Bの時のみ、val a:G[A] = b:G[B]が可。
@@ -978,7 +973,7 @@ res5: Int = 31
   * 但し、Javaで言う所のinterfaceとは違い、後付で実装でき、拡張に対して開かれている。
     * [型クラスに関するここ数日の議論 - togetter](https://togetter.com/li/1113557)
   * implicit parameterに関する分かりやすい説明と実装方法は、
-    * [前述のドワンゴの研修資料](https://dwango.github.io/scala_text/implicit.html)
+    * [implicit - dwango on GitHub](https://dwango.github.io/scala_text/implicit.html)
   * 大雑把に言うと。
     1. 振る舞いをまとめたtrait Aを作る。
     2. traitの実装を作る。この時、implicitに定義する。
