@@ -761,7 +761,7 @@ x: Either[Int,String] = Left(1)
 * try-catchでキャッチする場合は、NonFatalでキャッチする。
   * NonFatalはパターンマッチで例外をキャッチする時に、致命的なエラーでないエラーのみをキャッチする。
   * [Scala 2.10.0 Try ＆ NonFatal](http://d.hatena.ne.jp/Kazuhira/20130124/1359036747)
-* 例外の扱い方色々
+* 例外の扱い方色々。
   * [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
 * 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
   * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
@@ -771,8 +771,11 @@ x: Either[Int,String] = Left(1)
     それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
   * ただ、簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
   * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
-  * リカバリーの処理が必須なら、Option/Eitherで返される方が楽。
-  * 特にユーザの入力系は例外
+  * リカバリーの処理が必須なら、Option/Eitherで返される方が簡単になる。
+    * 特にユーザの入力系はExceptionよりもOption/Eitherの方がその後の処理が継続しやすい。
+    * 例外による余計なジャンプが無くなるため、例外をcatchし損ねる事がなくなり、finally漏れによるバグが無くなる。
+      * 呼び出し元の関数 → 例外を想定していない関数 → 例外創出を前提とした関数の組み合わせで呼び出しが発生した時、
+        例外を想定していない関数内の処理で問題が発生するリスクが常に存在する。
 * [エラー処理 - dwango on GitHub](https://dwango.github.io/scala_text/error-handling.html)
 * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
   * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
@@ -1080,8 +1083,8 @@ scala> getIdName(row)
 res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ```
 * 条件を満たす型(データ型)を定義しておき、テンプレートを書く。
-* (余談)この辺の型の推論をOCamlだと自動でやってくれる。。。
-* これ以外だとローンパターンなど。
+* (余談)この辺の型の推論をOCamlだと自動でやってくれる。。。Scalaは割と自分で書かないといけないという面倒くささはある。
+* これ以外だとローンパターンなどでよくやる。
 
 ### Scalaの3つのdependent * type
 * [Dependent Types in Scala](http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/)
