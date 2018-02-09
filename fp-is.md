@@ -796,6 +796,7 @@ for {
 ```
 * Scalaのfor文はJavaなどと同様に、foreach文の役割を持つ。
 * ただし、yield節を追加することで、for-yield式(for内包記法)となり、map/flatMap/filter(With)を使ったジェネレータとなる。
+  * 基本的にはListのジェネレータを他のデータ型(OptionやFuture)向けに一般化したものとして考えるのが筋。
 * map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
   * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
     このfor-yield風の構文の事だったりする(らしい)。。。
@@ -823,7 +824,8 @@ for {
 } yield (a, c)
 ```
 * for式は、コンテクストとなる型(コンストラクタ)は必ず一つしか持てない。
-  Future用のfor式は、Future型専用、Option型のfor式は、Option型専用になる。
+  * Future用のfor式は、Future型専用、Option型のfor式は、Option型専用になる。
+  * Scalazのモナド変換子だと複数のコンテクストを合成した(複数のコンテクストを持つ)新たなのコンテクストを作ることもできるが。。。
 * yieldの手前のfor式内で使える記法は、主に3つ。そして最後にyield節がくる。
   * flatMap: `a <- b`
     : for式と同じコンテクストの型(コンストラクタ)を持つ式(`b`)があり、その結果がfor式内でアンラップされた変数`a`に代入される。
@@ -1032,6 +1034,12 @@ x: Any = a
 ```
 
 ### 構造的部分型(Structural subtyping)
+* 特定の性質を持った型を型パラメータとして定義(宣言)できる。
+  * 部分的な型を定義するという意味では、traitに近いが、traitとは違い型のインスタンスを使用する側が型を定義する。
+  * 動的型付け言語におけるDuck-typingの性質を静的型付言語で使用したい場合に使用できる。
+    * Duck-typing: もしもそれがアヒルのように歩き、アヒルのように鳴くのなら、それはアヒルである。
+    * [ダック・タイピング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
+  * 引数や変数などに必要な最も一般的な型を、必要な箇所で定義し、静的に型付する。
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
 ```python
 class A:
@@ -1050,8 +1058,8 @@ func2(A())
 func2(B())
 ```
 となるような、一般的な`func2`を定義できる。Scalaでも、`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
-勿論、class Aやclass Bの定義を変更することなしに。
-注意)(Java)interfaceだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
+勿論、class Aやclass Bの定義を変更することなしに。そして、関数`func1`を持つオブジェクトは知らされることなく常に増えていく。。。
+もちろん、(Javaの)interfaceや(Scalaの)traitだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
 例えば、idとnameを持つようなRow。
 ```scala
 case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
@@ -1062,6 +1070,8 @@ case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
 def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, String)] =
     rows.map { row => (row.id, row.name) }
 ```
+Long型のidとString型のnameを持つ最も一般的な型Rから、idとnameを抽出する。静的に型チェックをしつつも、
+Duck-typingの性質を引き継いでいる。
 以下のように実行する。
 ```scala
 scala> val row = Seq(AbcRow(1, "a", "paramA", "paramB"), AbcRow(2, "b", "paramA", "paramB"), AbcRow(3, "c", "paramA", "paramB"));
@@ -1070,6 +1080,7 @@ scala> getIdName(row)
 res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ```
 * 条件を満たす型(データ型)を定義しておき、テンプレートを書く。
+* (余談)この辺の型の推論をOCamlだと自動でやってくれる。。。
 * これ以外だとローンパターンなど。
 
 ### Scalaの3つのdependent * type
@@ -1124,7 +1135,7 @@ Scalaの新しいコンパイラ。
 
 ## やらない関数型言語まわりのトピック
 * 名前渡し(Call-by-name)、評価戦略/遅延評価
-* プロパティベースのテスト(テストケースによるテストではなく)
+* プロパティベースのテスト
 * DSL(ドメイン特化言語、OOPだけでなく関数型プログラミングでも割と使う)
 * Future(※あんまり関数型プログラミング関係無い気もする)
 * 継続/限定継続(continuation)
