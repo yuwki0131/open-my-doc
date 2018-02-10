@@ -48,7 +48,7 @@
 [デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
 
 * Null Object
-  * オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。(参照)
+  * オブジェクトはOption型で定義して、部分関数(Partial Function)を使う。
 * Balking
   * ガード節とも。これのScala版のいい方法がわからない。あえて言うなら、for-yield式がそれに相当。
 * Immutable object
@@ -70,7 +70,7 @@
   * 但し、Javaは破壊的な変更をしていないことの保証のサポートが手薄(finalを使えばその限りではないものの)。
   * Scalaではimmutableなデータ型(Tuple、case classなど)を使う限りでは不変であることが保証される。
    * valによる(Javaで言うところのfinalを付ける)変数。
-   * immutableな標準型、immutableなハッシュマップ、リスト、etc...
+   * immutableな標準型、immutableなHashmap、List、etc...
    * 最後の一つはTupleによるプログラミング、case classによるデータ定義。
 
 ### 副作用が他の関数型言語以外の言語よりも少ない傾向にある
@@ -133,7 +133,7 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
   * 「変数aに値を束縛する」という言い方をする(数理論理学の用語に由来。
     * [自由変数と束縛変数 - Wikipedia](https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0)
   * 特に、ローカルで定義され代入された変数は束縛変数、グローバル変数などローカルで定義されていない変数の事を自由変数と言ったりする。
-    * (後述するレキシカルスコープ参照)
+    (後述するレキシカルスコープ参照)
   * 人によって「代入する」という人と「束縛する」という言い方をする人に別れる(Scalaだと「代入」派が多い印象)。
 * **評価(evaluate)**: プログラムの実行、特にプログラム中の部分的な式を実行すること。
 
@@ -149,7 +149,6 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
   * [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
 * Scalaでのループはコレクション関数を使用が(多分)殆どなので、再帰呼出しはあまり使わないが、稀に使う。
   (コレクション関数は後述)
-* リスト(構造)についても使えるが、コレクション関数を使用すればいい場合が多い(要出典)ので殆ど使わないはず。
 * 木構造のような再帰的なデータ型がある場合や分割統治法を使ったアルゴリズムの場合は、使うとわかりやすいコードが書ける。
   * 分割統治法
     * 大きな問題を小さな部分問題に分割し、個々の小さな部分問題を解決しながら、
@@ -262,7 +261,7 @@ def even(n: Int): Boolean = if (n = 0) {
   * 可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文やfor文が現実的な選択肢かも知れない。
   * 関数を呼び出す側から見た時に、参照透過な関数になっていればOKという考え方(もアリ)。
   * だだし、関数型プログラミングでのループは再帰やfor/whileのような構文ではなく、
-    mapやfilterといったリスト(コレクション)関数を使うのが一般的。
+    mapやfilterといったコレクション関数を使うのが一般的。
     * 大半のループはコレクション関数(のメソッドチェーン)で記述した方が、可読性が高く、メンテナンスもしやすい簡潔なコードが書ける。
     * コレクション関数に関しては後述。
 
@@ -282,12 +281,11 @@ res20: Int = 3
 * 無名関数の式が評価されると、**関数オブジェクト**が生成される。
   * 関数オブジェクトは、コンストラクタによって生成される他のJavaオブジェクトと同様に扱えるオブジェクト
     (型となるクラスを持ち、インスタンスとして扱われるように)なる。
-* オブジェクトなのでデータを持たせる事ができる。後述のクロージャ参照。
+* オブジェクトなのでデータを持たせる事ができる。(後述のクロージャを参照)
 * C言語の関数のポインタと何が違うのか? / JavaのStrategyパターンと何が違うのか。
-  * 関数のポインタと違い、データ(値)を保持する。(データ保持に関してはクロージャを参照)
+  * 関数のポインタと違い、データ(値)を保持する。
   * JavaのStrategyパターンと違い、インターフェースを必要としない。
-* map/filter/reduce関数や、その他様々な高階関数に渡す時によく使用する。
-  * 高階関数については後述の高階関数を参照。
+* map/filter/reduce関数や、その他様々な高階関数に渡す時によく使用する。(後述の高階関数を参照)
 
 ## レキシカルスコープ(Lexical scope, 静的スコープ)
 * "Scope"とは範囲のこと。"Lexical"とはLiterallyくらいの意味で深い意味はない。
@@ -331,7 +329,7 @@ res14: Int = 2
 * プログラミング言語のClojureの事ではない。
   * レキシカルスコープ同様、モダンな言語ではクロージャを生成する事ができる。
 
-例えば以下では、関数オブジェクトがaseqという変数名が保持しているリストの参照を持つ。
+例えば以下では、関数オブジェクトがaseqという変数名が保持しているSeqの参照を持つ。
 ```scala
 scala> val haveSeq = {val aseq = Seq(1, 2, 3, 4, 5); ((index: Int) => aseq(index)) }
 haveSeq: Int => Int = $$Lambda$4005/1227571506@23364fcf
@@ -343,7 +341,7 @@ scala> haveSeq(2)
 res9: Int = 3
 ```
 一番外側で定義された変数haveSeqは、ブロック内部で生成された関数オブジェクト(クロージャ)を束縛している。
-この関数オブジェクトに引数を与える事で、aseqに束縛されたリスト(Seq)の値を見る事が可能になる。
+この関数オブジェクトに引数を与える事で、aseqに束縛されたSeqの値を見る事が可能になる。
 
 * 上記のような書き方により、JavaやScalaで指定するprivateよりも更に細かいスコープ(変数の有効範囲)の制御が可能になる。
 
@@ -367,10 +365,10 @@ res17: Int = 1
 scala> f("ac")
 res18: Int = 2
 ```
-* 勿論、リストやハッシュマップだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数も色々作れる。
+* 勿論、ListやHashmapだけでなく、関数を保持する関数を作ったり、関数を保持する関数を保持する関数など色々作れる。
 * ただし、関数オブジェクトを濫用し続けると、不用意に意図しないクロージャを生成してしまう事も考えられる。
-  * このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
-  * (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
+  このような場合、GCによって回収されない参照をいつまでも保持し続けることになってしまう。
+  (とは言え、普通に書いている限りだとこのようなバグは殆ど無いかも知れない)
 * クロージャにより変数はそのスコープの外を出ても有効である場合がある。
   つまり、ローカル変数は、変数を定義した関数本体が終了しても生き残る。
   * 変数が生存している(有効である)期間のことを**エクステント(extent)**という。
@@ -493,7 +491,7 @@ val withComma = ((ls: Seq[String]) => ls.mkString(","))
 val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
 val multiply20 = ((ls: Seq[Int]) => ls.map (_ * 20).map(_.toString))
 ```
-Stingのリストの要素を20倍してカンマ区切りの文字列にしたい。。。
+StingのSeqの要素を20倍してカンマ区切りの文字列にしたい。。。
 ```scala
 val ls = Seq(" 20", " 30 ", "40 ", "50")
 ```
@@ -592,40 +590,49 @@ final case class Some[+A](value: A) extends Option[A]
   * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
 * 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
   * 参照: [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
-* (余談)一応、case classには、`final`を付けた方がいい。以下を参照。
-  * なぜ、final case classを付けないと行けないのかは
-    * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
+* (余談)一応、case classには、`final`を付けた方がいい。(以下を参照)
+  * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 
 ## パターンマッチ
 * [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
 * Scalaでは、リテラル(定数)、型によるマッチ、正規表現、構造に関するマッチなどが可能。
-* データ構造(リストやタプル、case classなど)を構造的に分解して変数に代入できる。
+* データ型のインスタンス(ListやTuple、Case classなど)を構造的に分解して変数に代入できる。
   * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
 * if-else式とは違い、データ型に対する網羅的なマッチが可能になる。
   網羅的でない場合は警告がでる。(但し、エラーにはならない。)
   **パターン漏れが防げるので積極的に活用していきたい。**
-* リストに対するパターンマッチ
 
+### Listに対するパターンマッチ
 次のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
 ```scala
 if (ls.isEmpty) 1 else ls.head
 ```
 は、リスト`ls`についてのパターンマッチ、
 ```scala
-ls match { case Nil => 1; case x::xs => x }
+ls match {
+  case Nil => 1
+  case x::xs => x
+}
 ```
-と書き直せる。コードが長くなった時に、else節で、ls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
+と書き直せる。例えば、else節でls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
 考慮する必要が無くなる。
-* Optionに対するパターンマッチ
-  * 例えば、次のようなケースも、リストと同様に書き直せる。
+
+### Optionに対するパターンマッチ
+次のようなケースも、リスト同様に書き直せる。
 ```scala
 if (x.isEmpty) "hogehoge" else x.get.toString
 ```
-存在するパターンを以下のように、列挙する。
+存在するSome/Noneパターンを以下のように列挙する。
 ```scala
-x match { case None => "hogehoge"; case Some(x) => x.toString }
+x match {
+  case Some(x) => x.toString
+  case None => "hogehoge"
+}
 ```
+Either(Right/Left)やTry(Success/Failure)の場合も同様にして、分解できる。
+
+### パターンマッチに条件を追加
 * パターンマッチの場合、構造のチェックと同時に、データ型から値の取り出し、変数への束縛まで行う。
 * ただし、以下のような書き方をした場合、パターンマッチの本来の意味はなくなる(ただのif-else式と基本的に同じ意味しかなくなる)。
 ```scala
@@ -648,6 +655,74 @@ x match {
 n match {
   case 1 | 2 | 3 => "hogehoge"
   case _ => "hoge"
+```
+
+### 代数的データ型とパターンマッチ
+* Javaのポリモーフィズムでは、処理が各クラスごと分散してしまうというデメリットがある。
+* 代数的データ型とパターンマッチでは、データ型はデータ型ごとに
+
+以下、[Compositeパターン - Wikipedia](https://ja.wikipedia.org/wiki/Composite_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3) から引用してきた例(長かったのでコードの一部を改変している)。
+```java
+interface FileInterface {
+	public void ls(int depth);
+	public List<FileInterface> getChildren();
+	public boolean add(FileInterface c);
+}
+class File implements FileInterface {
+	private String name;
+	public File(String name) { this.name = name; }
+	public void ls(int depth) {
+		System.out.println("depth(" + depth + ") file:" + this.name);
+	}
+	public List<FileInterface> getChildren() { return null; }
+	public boolean add(FileInterface c) { return false; }
+}
+class Folder implements FileInterface {
+	private String name;
+	private List<FileInterface> fileList = new ArrayList<FileInterface>();
+	public Folder(String name) { this.name = name; }
+	public void ls(int depth) {
+		System.out.println("depth(" + depth + ") folder:" + name);
+		for (FileInterface file : fileList) { file.ls(depth + 1); }
+	}
+	public List<FileInterface> getChildren() { return this.fileList; }
+	public boolean add(FileInterface c) { return this.fileList.add(c); }
+}
+```
+上記は代数的データ型とパターンマッチで以下のように書き直せる。
+まずは、代数的データ型は以下のように定義できる。
+```scala
+sealed trait FileInterface
+case class File(name: String) extends FileInterface
+case class Folder(name: String, f: scala.collection.mutable.ListBuffer[FileInterface]) extends FileInterface
+```
+次のようにデータを作る。
+```scala
+scala> val prj = Folder("crud-prj", ListBuffer(File("README.md"), File("build.sbt"), Folder("src", ListBuffer(File("Helloworld.scala"), File("XXXDao.scala"), File("ExampleController.scala")))))
+```
+ディレクトリ階層を表示するコードは以下のように記述できる。
+```scala
+def ls(files: FileInterface, depth: Int): Unit = files match {
+  case File(name) => println("depth(" + depth + ") file:" + name)
+  case Folder(name, children) => {
+    println("depth(" + depth + ") folder:" + name)
+    children.foreach{ child => ls(child, depth + 1) }
+  }
+}
+```
+ディレクトリに要素を追加するコードは以下。
+```scala
+def addMutable(files: FileInterface, element: FileInterface): Boolean = files match {
+  case File(name) => false
+  case Folder(name, children) => { children += element; true }
+}
+```
+(問題点)mutable?
+```scala
+def addImutable(files: FileInterface, element: FileInterface): FileInterface = files match {
+  case File(name) => files
+  case Folder(name, children) => { Folder(name, children.add(element)) }
+}
 ```
 
 ## リスト構造
@@ -692,13 +767,12 @@ for (int i = 0; i < n; i++){
     "scala seq"などでググると色々出てくる。
   * ループで複雑な処理をしたい場合は、色々調べてみると、大抵の場合、丁度いい感じの関数が見つかることが多い。
 * 昔流行った(?)、MapReduceは上記のmap関数とfold(他の関数型言語ではreduceとも呼ばれる)関数に由来している。
-* mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。
-  * 前述のquicksortの例を参照。
+* mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。(quicksortの例を参照)
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 * 関数型プログラミングではリスト操作関数を多用される。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。
 * 頭の中で抽象的なリストの形を変形させていくプロセスをメソッドチェーンのコードに落とし込む。
-* リストと同様にSetやHashmap、その他データ型でも明示的なループを書かずに組み合わせでコードを記述出来るような
+* Listと同様にSetやHashmap、その他データ型でも明示的なループを書かずに組み合わせでコードを記述出来るような
   コレクション関数が多数用意されている筈なので、随時調べた方がいい。
   * 関数型言語にはデータ型に対する抽象化された関数がライブラリに大量に用意されているということがよくある。
     * これの極端な例がScalaz。
@@ -929,11 +1003,11 @@ x: Int = 3
     * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
 
 ### 拡張メソッド(implicit class / 既存の型を拡張する)
-* 継承せずに(?)既存の型(aka. クラス)を拡張する。
+* 既存の型を拡張し、メソッドを追加する。(拡張メソッドについてはドワンゴの研修資料を参照)
   * pimp my libraryパターンと言われる。
   * ちなみに、C#やTypeScriptにも同名の類似した機能がある。
-  * この辺の解説はドワンゴの研修資料に書いてあるのでそっちを参照。
-* 例えば、String型に空だったら、None、そうでなかったら、Someで値を包んだ関数を定義したい場合、以下のように拡張できる。
+* レシーバにメソッドを生やす事ができるのが特徴。
+* 例えば、String型に、空文字ならNone、文字があればSomeで値を包む関数を定義したい場合、以下のように拡張できる。
 ```scala
 implicit class OptionString(str: String){
   def opt(): Option[String] = if (str.isEmpty) None else Some(str)
@@ -947,10 +1021,11 @@ res2: Option[String] = None
 scala> "abc".opt
 res3: Option[String] = Some(abc)
 ```
-* レシーバにメソッドを生やす事ができるのが特徴。
 
 ### 暗黙のパラメータ(implicit parameter)
-* 暗黙に受け渡しされる引数のこと。implicit修飾子により定義された変数を暗黙的にimplicit修飾子が付けられた引数に代入する。
+* 暗黙に受け渡しされる引数。
+* implicit修飾子により定義された変数を暗黙的にimplicit修飾子が付けられた引数に代入する。
+* 単に暗黙的に引数を補完するだけだが、暗黙のパラメータを応用することで型クラスを実装することができる。(型クラス参照)
 
 次のコードでは、二番目の引数をimplicitとしている。
 ```scala
@@ -986,7 +1061,7 @@ res4: Int = 21
 scala> f(1)(30)
 res5: Int = 31
 ```
-* implicit parameterを使用することで、型クラスを構成できる。(←ここが重要)後述の型クラス参照。
+* implicit parameterを使用することで、型クラスを構成できる。(←ここが重要)(後述の型クラス参照)
 
 ## Scalaと型
 * Scalaの型推論は漸進的型付と呼ばれ、基本的に前から推論していく。
@@ -1001,8 +1076,7 @@ res5: Int = 31
     * 非変(`[B]`): A = Bの時のみ、val a:G[A] = b:G[B]が可。
     * 上界(`[B <: A]`): BがAを継承の性質。
     * 下界(`[B >: A]`): BがAのスーパークラスである性質。
-  * 型パラメータに様々な制約を付ける事で、クラス、インターフェースなしにジェネリックな関数を定義できる。
-    * 構造的部分型を参照。
+  * 型パラメータに様々な制約を付ける事で、クラス、インターフェースなしにジェネリックな関数を定義できる。(構造的部分型を参照)
 * 型エイリアス: 型に別名を付けることができる。型定義の長さが絶望的に長くなった時に有効。
   * `type String3 = (String, String, String)`
 * 型コンストラクタ: 型を引数にとり別の型を生成する型。
