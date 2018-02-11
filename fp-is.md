@@ -65,9 +65,9 @@
     * 難しいことを考えなくて済む。
 * 関数は、入力と出力(引数と戻り値)のみを注目すればいい。
   * **参照透過性**: 引数に同じ値を与えれば同じ戻り値を得ることができる関数を参照透過な関数という。
-  * 入力に対して、想定した出力が得られれば、正しい関数であると言える。(プロパティベースのテスト(関数に対するユニットテスト))
+  * 入力に対して、想定した出力が得られれば、正しい関数であると言える。
 * (注)関数型言語のみがimmutableなコードを書ける訳ではない。他の言語でもある程度同じことが可能。
-  * 但し、Javaは破壊的な変更をしていないことの保証のサポートが手薄(finalを使えばその限りではないものの)。
+  * 但し、Javaは破壊的な変更をしていないことの保証のサポートが手薄。(finalを使えばその限りではないものの)
   * Scalaではimmutableなデータ型(Tuple、case classなど)を使う限りでは不変であることが保証される。
    * valによる(Javaで言うところのfinalを付ける)変数。
    * immutableな標準型、immutableなHashmap、List、etc...
@@ -589,7 +589,7 @@ final case class Some[+A](value: A) extends Option[A]
   * 分離されたデータ型が代数的データ型。
   * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
 * 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
-  * 参照: [具象不変コレクションクラス](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
+  * 参照: [具象不変コレクションクラス | Scala Documentation](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
 * (余談)一応、case classには、`final`を付けた方がいい。(以下を参照)
   * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 
@@ -724,6 +724,9 @@ def addImutable(files: FileInterface, element: FileInterface): FileInterface = f
   case Folder(name, children) => { Folder(name, children.add(element)) }
 }
 ```
+* (注意):ただし、よりScalaらしく実装するなら、
+  File/Folderのようなデータ構造は、Traversableトレイトの具象クラスとして実装するほうが多分正解。
+  * [Traversable トレイト | Scala Documentation](https://docs.scala-lang.org/ja/overviews/collections/trait-traversable.html)
 
 ## リスト構造
 * **関数型プログラミングといえばリスト**(要出典)
@@ -731,21 +734,19 @@ def addImutable(files: FileInterface, element: FileInterface): FileInterface = f
     大抵の関数型プログラミング言語にはリストを操作するための関数群が大量に用意されている事が多い。
   * 関数型プログラミングにおける単方向連結リストは重要な役割を持っている。
     (が、Scalaの場合、色々調べてはみたものの、そんなに使われている様子はない)
-    * immutableなデータ型と、単方向連結リストは相性がいい。
-    * 再帰(やプログラムの証明)と、単方向連結リストは相性がいい。
-    * 関数型プログラミングでよく使われる単方向連結リスト。
-      * consとnil(もしくはempty listなど)によって構成される。
-      * consは先頭の要素に対する参照を一つ持ち、後続のリストに対する参照を持つ。
-        * 後続のリストが存在しない場合は、空リストを参照する。
-      * cons(1, cons(2, cons(3, nil)))のようにリストを構成する。
+    * 再帰(やプログラムの証明)やimmutableなデータ型と、単方向連結リストは相性がいい。
+* 関数型プログラミングでよく使われる単方向連結リスト。
+  * consとnil(もしくはempty listなど)によって構成される。
+  * consは先頭の要素に対する参照を一つ持ち、後続のリストに対する参照を持つ。
+    * 後続のリストが存在しない場合は、空リストを参照する。
+  * cons(1, cons(2, cons(3, nil)))のようにリストを構成する。
 * Scalaのリスト
   * Traversable <- Seq <- IndexedSeq, LinearSeqの順で継承されている。
     * Scalaの場合、IndexedSeqの方がパフォーマンス上、好ましい場合もありうるため、リストを使う時はSeqの方が一般的に使われる。
-  * リスト系のコレクションのヒエラルキー
-    * [MUTABLE AND IMMUTABLE COLLECTIONS](https://docs.scala-lang.org/overviews/collections/overview.html)
+  * コレクションのヒエラルキー: [MUTABLE AND IMMUTABLE COLLECTIONS | Scala Documentation](https://docs.scala-lang.org/overviews/collections/overview.html)
 * 関数型言語でのループは主に、リストとリスト操作関数の組み合わせで記述する。
   * 大抵のループ処理はリスト系の関数の組み合わせだけで書けてしまう事が殆ど。(要出典)
-  * Javaだとforeach構文で書くべき所は、リスト操作関数の組み合わせになる。
+  * Javaだとfor構文で書くべき所は、リスト操作関数の組み合わせになる。
 ```scala
 for (int i = 0; i < n; i++){
   〜
@@ -754,7 +755,7 @@ for (int i = 0; i < n; i++){
 と書いていた箇所は、
 
 ```scala
-(0 to n).forEach { i =>
+(0 to n).foreach { i =>
   〜
 }
 ```
@@ -766,7 +767,7 @@ for (int i = 0; i < n; i++){
   * その他、sort、reverse、sum、min/max、take(先頭からn個取り出す)、zip(複数のリストの各要素をペアにする)など色々あるため、
     "scala seq"などでググると色々出てくる。
   * ループで複雑な処理をしたい場合は、色々調べてみると、大抵の場合、丁度いい感じの関数が見つかることが多い。
-* 昔流行った(?)、MapReduceは上記のmap関数とfold(他の関数型言語ではreduceとも呼ばれる)関数に由来している。
+* 昔流行った(?)、MapReduceは上記のmap関数とreduce(foldとほぼ同様の)関数に由来している。
 * mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。(quicksortの例を参照)
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 * 関数型プログラミングではリスト操作関数を多用される。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
@@ -835,8 +836,7 @@ x: Either[Int,String] = Left(1)
 * try-catchでキャッチする場合は、NonFatalでキャッチする。
   * NonFatalはパターンマッチで例外をキャッチする時に、致命的なエラーでないエラーのみをキャッチする。
   * [Scala 2.10.0 Try ＆ NonFatal](http://d.hatena.ne.jp/Kazuhira/20130124/1359036747)
-* 例外の扱い方色々。
-  * [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
+* 例外の扱い方色々: [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
 * 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
   * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
     例外以外にも、例えば、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
@@ -877,7 +877,6 @@ for {
 * map/flatMap/withFilter等が定義されたデータ型に対して、これらの関数を使用したコードの別の書き方を提供する。
   * よくTwitterなどでモナドがほしいという人がいるが、実は本当に求めているのは、モナドそのものではなく、
     このfor-yield風の構文の事だったりする(らしい)。。。
-  * (余談)Haskellだとdo構文でほぼ同様の構文を提供している。ちなみにHaskellではScalaのyieldに当たる部分はreturnと書く。
 * FutureやOption、Eitherなどでは、後続の処理を記述するために、オブジェクトの末尾にmap/flatMapを使用する。
   しかし、このような書き方は、ネストが深くなると、可読性が落ち、括弧の対応関係を追いづらくなる。
   また、どの結果がどの変数に代入されているかも読み取ることが難しくなる。
@@ -928,12 +927,14 @@ _を使うことで余計な束縛を回避している。
 次の書き方、
 ```scala
 for {
+  〜
   b　= methodA(a)
 } yield ...
 ```
 は、例えば、Futureがコンテクストの場合、以下の書き方と同じ。
 ```scala
 for {
+  〜
   b　<- Future { methodA(a) }
 } yield ...
 ```
@@ -996,7 +997,7 @@ x: Int = 3
 ```
 * 暗黙の型変換は推奨されていない/しない人が多い。
   * 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
-    * [TOUR OF SCALA IMPLICIT CONVERSIONS](https://docs.scala-lang.org/tour/implicit-conversions.html)
+    * [TOUR OF SCALA IMPLICIT CONVERSIONS | Scala Documentation](https://docs.scala-lang.org/tour/implicit-conversions.html)
   * implicit conversionに対する否定的なコメントは以下を参照。
     * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
     * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
@@ -1065,7 +1066,7 @@ res5: Int = 31
 
 ## Scalaと型
 * Scalaの型推論は漸進的型付と呼ばれ、基本的に前から推論していく。
-  * (余談)HaskellやOCamlの型推論は、Hindley-Minlerと呼ばれる推論方式。
+  * (余談)HaskellやOCamlの型推論は、Hindley-Minler(の派生)と呼ばれる推論方式。
     この方法は、最も一般的な型を自動的に導出していく手法で、通常の場合、いわゆる型注釈(型ヒント)に相当するものが不要。
 * 型注釈: 変数や引数などに対する型の指定。いわゆる、`val x: String = 〜`のコロンの後ろの型指定のこと。
 * 型パラメータ: Javaで言う所のジェネリクス。
@@ -1208,7 +1209,7 @@ Scalaの新しいコンパイラ。
 * [Dottyによる変更点と使い方 - 水底](https://qiita.com/kmizu/items/10940b4c46876ae8a12d)
 
 ### 便利なチートシート
-* [SCALA CHEATSHEET SCALACHEAT](https://docs.scala-lang.org/cheatsheets/index.html)
+* [SCALA CHEATSHEET SCALACHEAT | Scala Documentation](https://docs.scala-lang.org/cheatsheets/index.html)
 
 ## やらない関数型言語まわりのトピック
 * 名前渡し(Call-by-name)、評価戦略/遅延評価
@@ -1234,7 +1235,7 @@ Scalaの新しいコンパイラ。
 * [Scalaに関して知っておくべきたった一つの重要な事](http://kmizu.hatenablog.com/entry/20120504/1336087466)
 * [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://xuwei-k.hatenablog.com/entry/20141207/1417940174)
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
-* [Scala COLLECTIONS 性能特性](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
+* [Scala COLLECTIONS 性能特性 | Scala Documentation](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
 
 ## 練習問題的なやつ
 * [S-99: Ninety-Nine Scala Problems](http://aperiodic.net/phil/scala/s-99/)
