@@ -147,9 +147,18 @@ res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrderin
 * 再帰とは自分自身を自分自身の中に持つような構造。
   * プログラミングでは、再帰的なデータ構造や、再帰呼出しなどがある。
   * [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
+* Scalaでの再帰呼出し。
+次のような階乗を行う関数の場合。(10の階乗(fact(10))は、10! = 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10)
+```scala
+def fact1(n: Int): Int = if (n < 1){
+  1
+} else {
+  n * fact1(n - 1)
+}
+```
 * Scalaでのループはコレクション関数を使用が(多分)殆どなので、再帰呼出しはあまり使わないが、稀に使う。
   (コレクション関数は後述)
-* 木構造のような再帰的なデータ型がある場合や分割統治法を使ったアルゴリズムの場合は、使うとわかりやすいコードが書ける。
+* 木構造のような再帰的なデータ型や、分割統治法を使ったアルゴリズムの場合は、使うとわかりやすいコードが書ける。
   * 分割統治法
     * 大きな問題を小さな部分問題に分割し、個々の小さな部分問題を解決しながら、
       その部分問題の解答結果のマージを繰り返し、最終的に元の問題を解くようなアルゴリズム。
@@ -165,17 +174,22 @@ def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case a::as => quicksort(as.filter(ord.lt(_, a))) ++ Seq(a) ++ quicksort(as.filter(ord.gteq(_, a)))
 }
 ```
-これは普通の関数同様、以下のように実行する。
+これは普通の関数同様に実行する。
 ```scala
 scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
 ```
-  * 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
+
+### 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
+木構造で、木の末尾を`Leaf`、枝を`Node`としてcase classで定義する。
 ```scala
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
 case class Node[A](left: Tree[A], right: Tree[A]) extends Tree[A]
-
+```
+木に対する走査の処理。
+具体的にどのように走査した結果を得るかは、抽象化する。`f: (A, A) => A`の箇所。
+```scala
 def sum[A](t: Tree[A], f: (A, A) => A): A = t match {
   case Leaf(a) => a
   case Node(l, r) => f(sum(l, f), sum(r, f))
@@ -188,13 +202,16 @@ d: Node[Int] = Node(Node(Leaf(10),Leaf(20)),Leaf(1))
 
 scala> sum(d, (a:Int, b:Int) => a + b)
 res36: Int = 31
-
+```
+以下は、String型で文字列を返す例。
+```scala
 scala> val e = Node(Node(Leaf("a"), Leaf("b")), Leaf("c"))
 e: Node[String] = Node(Node(Leaf(a),Leaf(b)),Leaf(c))
 
 scala> sum(e, (a: String, b: String) => "(" ++ a ++ " " ++ b ++ ")")
 res44: String = ((a b) c)
 ```
+
 ### 末尾最適化(Tail call optimization)
 * 関数型言語で行われるコンパイラの処理の一種。
 * 末尾再帰形式は関数呼び出し時に、stackを必要としないような再帰呼出しの形式。
@@ -216,8 +233,7 @@ def fact1(n: Int): Int = if (n < 1){
   n * fact1(n - 1)
 }
 ```
-次の例は、自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合。
-以下の関数では、計算結果を保持する変数(アキュームレータ)を一つ追加している。
+次の例は、自分自身を呼び出しのみ、かつ末尾再帰形式になっている場合。計算結果を保持する変数(アキュームレータ)を一つ追加している。
 末尾再帰に書き直す場合は、計算結果を保持する引数を用意し、そこに副作用の役割を担わせることも多い。
 これは「変化するmutableな変数」を表している。(引数で副作用(再代入)を引き回すスタイル)
 ```scala
@@ -329,7 +345,7 @@ res14: Int = 2
 * プログラミング言語のClojureの事ではない。
   * レキシカルスコープ同様、モダンな言語ではクロージャを生成する事ができる。
 
-例えば以下では、関数オブジェクトがaseqという変数名が保持しているSeqの参照を持つ。
+以下では、関数オブジェクトがaseqという変数名が保持しているSeqの参照を持つ。
 ```scala
 scala> val haveSeq = {val aseq = Seq(1, 2, 3, 4, 5); ((index: Int) => aseq(index)) }
 haveSeq: Int => Int = $$Lambda$4005/1227571506@23364fcf
@@ -345,7 +361,7 @@ res9: Int = 3
 
 * 上記のような書き方により、JavaやScalaで指定するprivateよりも更に細かいスコープ(変数の有効範囲)の制御が可能になる。
 
-例えば、以下のように2つの関数からのみ参照可能なHashmapを定義できる。
+次のように2つの関数からのみ参照可能なHashmapを定義できる。
 ```scala
 scala> val (f, g) = { val hmap = Map("ab"-> 1, "ac" -> 2);
      | (((s: String) => hmap(s)), ((s: String) => hmap("a"++s))) }
@@ -409,7 +425,7 @@ b
   * ルール: データ構造やクラスは使わない。
   * 関数型プログラミングにおける大道芸の一つ。
 
-単方向連結リスト(いわゆるLinkedList)は、以下のように簡単に実装できる。
+単方向連結リスト(いわゆるLinkedList)の実装。
 ```scala
 scala> val cons = (x: Int, xs: Int => Any) => ((i: Int) => if (i == 0) x else xs(i - 1))
 cons: (Int, Int => Any) => Int => Any = $$Lambda$3648/212142471@1c3cc65d
@@ -435,15 +451,15 @@ consでリストを構築する。空リストはemptyFで表現する。
 ## 高階関数(High-order function)
 * 関数オブジェクトは値として他の関数に渡したり、関数を受け取る、変数に束縛するなど、Javaオブジェクトのような扱いが可能。
 * 関数を引数としたり、戻り値として使用する関数の事を高階関数という。
-  * 関数に関数を渡す時は、無名関数として渡す(例えば、mapなど)こともできるし、定義された名前付きの関数を渡すこともできる。
+  * 関数に関数を渡す時は、無名関数として渡す(mapなど)こともできるし、定義された名前付きの関数を渡すこともできる。
     * 特に、無名関数を渡すパターンは、コレクション関数を使用する時によく使う。
 
-無名関数を他の関数に渡す例。
+無名関数を他の関数に渡す。
 ```scala
 scala> Seq(1, 2, 3).map(i => i + 2)
 res0: Seq[Int] = List(3, 4, 5)
 ```
-定義済みの他の関数に渡す例。
+定義済みの他の関数に渡す。
 ```scala
 scala> def add2(i: Int): Int = i + 2
 add2: (i: Int)Int
@@ -459,7 +475,7 @@ res4: Seq[Int] = List(3, 4, 5)
   * 複数の引数を取る関数を一つの引数のみを取る関数に書き換えることをカリー化という。
   * 途中まで値を代入して、途中からの値を別の高階関数の中で代入させたい時などに使用する。
 
-以下が、カリー化の例。上はカリー化されていない関数。下が上の関数をカリー化した例。
+以下がカリー化の例。上はカリー化されていない関数。下が上の関数をカリー化した関数。
 ```scala
 scala> def sum(a: Int, b: Int, c: Int): Int = a + b + c
 sum: (a: Int, b: Int, c: Int)Int
@@ -485,7 +501,7 @@ res3: Seq[Int] = List(4, 5, 6)
 * 2つの関数を合成する。数学の合成関数と考え方は同じ。: f(g(x)) = (f . g)(x)
 * 合成関数用の関数として、compose/andThenが用意されている。
 
-以下の場合、
+次の場合、
 ```scala
 val withComma = ((ls: Seq[String]) => ls.mkString(","))
 val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
@@ -590,8 +606,7 @@ final case class Some[+A](value: A) extends Option[A]
   * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
 * 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
   * 参照: [具象不変コレクションクラス | Scala Documentation](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
-* (余談)一応、case classには、`final`を付けた方がいい。(以下を参照)
-  * [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
+* (余談)一応、case classには、`final`を付けた方がいい: [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 
 ## パターンマッチ
 * [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
@@ -615,7 +630,7 @@ ls match {
   case x::xs => x
 }
 ```
-と書き直せる。例えば、else節でls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
+と書き直せる。else節でls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
 考慮する必要が無くなる。
 
 ### Optionに対するパターンマッチ
@@ -623,7 +638,7 @@ ls match {
 ```scala
 if (x.isEmpty) "hogehoge" else x.get.toString
 ```
-存在するSome/Noneパターンを以下のように列挙する。
+存在するSome/Noneパターンを列挙する。
 ```scala
 x match {
   case Some(x) => x.toString
@@ -659,9 +674,9 @@ n match {
 
 ### 代数的データ型とパターンマッチ
 * Javaのポリモーフィズムでは、処理が各クラスごと分散してしまうというデメリットがある。
-* 代数的データ型とパターンマッチでは、データ型はデータ型ごとに
+* 代数的データ型とパターンマッチでは、データ型はデータ型ごとに定義し、ポリモーフィックな処理はパターンマッチで一箇所に記述させる。
 
-以下、[Compositeパターン - Wikipedia](https://ja.wikipedia.org/wiki/Composite_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3) から引用してきた例(長かったのでコードの一部を改変している)。
+[Compositeパターン - Wikipedia](https://ja.wikipedia.org/wiki/Composite_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3) から引用してきた例(長かったのでコードの一部を改変している)。
 ```java
 interface FileInterface {
 	public void ls(int depth);
@@ -689,8 +704,8 @@ class Folder implements FileInterface {
 	public boolean add(FileInterface c) { return this.fileList.add(c); }
 }
 ```
-上記は代数的データ型とパターンマッチで以下のように書き直せる。
-まずは、代数的データ型は以下のように定義できる。
+上記は代数的データ型とパターンマッチで書き直せる。
+代数的データ型は以下のように定義できる。
 ```scala
 sealed trait FileInterface
 case class File(name: String) extends FileInterface
@@ -700,7 +715,7 @@ case class Folder(name: String, f: scala.collection.mutable.ListBuffer[FileInter
 ```scala
 scala> val prj = Folder("crud-prj", ListBuffer(File("README.md"), File("build.sbt"), Folder("src", ListBuffer(File("Helloworld.scala"), File("XXXDao.scala"), File("ExampleController.scala")))))
 ```
-ディレクトリ階層を表示するコードは以下のように記述できる。
+ディレクトリ階層を表示する関数。
 ```scala
 def ls(files: FileInterface, depth: Int): Unit = files match {
   case File(name) => println("depth(" + depth + ") file:" + name)
@@ -710,7 +725,7 @@ def ls(files: FileInterface, depth: Int): Unit = files match {
   }
 }
 ```
-ディレクトリに要素を追加するコードは以下。
+ディレクトリに要素を追加する関数。
 ```scala
 def addMutable(files: FileInterface, element: FileInterface): Boolean = files match {
   case File(name) => false
@@ -768,7 +783,7 @@ for (int i = 0; i < n; i++){
     "scala seq"などでググると色々出てくる。
   * ループで複雑な処理をしたい場合は、色々調べてみると、大抵の場合、丁度いい感じの関数が見つかることが多い。
 * 昔流行った(?)、MapReduceは上記のmap関数とreduce(foldとほぼ同様の)関数に由来している。
-* mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。(quicksortの例を参照)
+* mapやfilter、foldで綺麗に書けない場合は、Scalaのリストのパターンマッチと再帰で書くやり方もある。(quicksortを参照)
 * [ScalaのSeqリファレンス - Qiita](https://qiita.com/f81@github/items/75c616a527cf5c039676)
 * 関数型プログラミングではリスト操作関数を多用される。この考え方をSQLに持ち込もうと考えるとSlickに繋がる(多分)。
   * SQLもまた宣言型言語なので、map/filterなどの組み合わせはSQLに変換しやすいのかもしれない。
@@ -799,8 +814,7 @@ for (int i = 0; i < n; i++){
 scala> Option(null)
 res6: Option[Null] = None
 ```
-* 以下にOption型の使い方が色々載っている。
-  * [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
+* Option型の使い方が色々: [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
 * catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
   * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
 ```scala
@@ -839,7 +853,7 @@ x: Either[Int,String] = Left(1)
 * 例外の扱い方色々: [scala.util.control.Exception._を使ったサンプル集](http://seratch.hatenablog.jp/entry/20111126/1322309305)
 * 例外を投げるとその関数は全域関数でなくなる。いわゆる純粋な関数でなくなる。
   * ※全ての引数のパターンに対して戻り値が定まっている関数のことを全域関数という。
-    例外以外にも、例えば、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
+    例外以外にも、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
 * Eitherとかとの使い分け。(※以下、個人の主観です。)
   * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
     それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
@@ -855,7 +869,7 @@ x: Either[Int,String] = Left(1)
   * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
   * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
 
-例えば以下がダメな例。
+ダメな例。
 ```scala
 try {
   Future { throw new RuntimeException("未来のエラー")
@@ -882,7 +896,7 @@ for {
   また、どの結果がどの変数に代入されているかも読み取ることが難しくなる。
 * for式を導入することで、変数束縛の対応関係が明確になり、また、括弧の数が減少し、処理の流れが明確になる。
 
-例えば、以下のようなネスト。
+例えば、このネスト。
 ```scala
 abcDao.find(id) // 戻り値はFuture[Option[String]]
   .flatMap {
@@ -891,7 +905,7 @@ abcDao.find(id) // 戻り値はFuture[Option[String]]
         case b => abcDao.findByName(b) // 戻り値は、Future[Option[String]]
           .map { c =>　(a, c) } }.getOrElse( ... ) }
 ```
-次のよに書き換えることで各関係が明確になる。
+for式で書き換えることで各関係が明確になる。
 ```scala
 for {
   a <- abcDao.find(id)
@@ -931,7 +945,7 @@ for {
   b　= methodA(a)
 } yield ...
 ```
-は、例えば、Futureがコンテクストの場合、以下の書き方と同じ。
+は、Futureがコンテクストの場合、以下の書き方と同じ。
 ```scala
 for {
   〜
@@ -951,7 +965,7 @@ flatMapがmapになっていることが分かる。
   * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
   * [For Comprehensions and For Loops](http://scala-lang.org/files/archive/spec/2.12/06-expressions.html)
 
-以下のfor式があった時、
+for式がある時、
 ```scala
 for {
   a <- abcDao.find(id)
@@ -977,11 +991,11 @@ abcDao.find(id)
 ### 暗黙の型変換(implicit conversion)
 * 型変換(キャスト)する関数をimplicitに定義しておくことで自動的にキャストしてくれる。
 
-以下が定義の例。
+暗黙の型変換の定義。
 ```scala
 implicit def d2i(d: Double):Int = d.toInt
 ```
-implicit定義前
+implicit定義前。
 ```scala
 scala> val x:Int = 3.14
 <console>:11: error: type mismatch;
@@ -990,7 +1004,7 @@ scala> val x:Int = 3.14
        val x:Int = 3.14
                    ^
 ```
-implicit定義後
+implicit定義後。
 ```scala
 scala> val x:Int = 3.14
 x: Int = 3
@@ -998,7 +1012,7 @@ x: Int = 3
 * 暗黙の型変換は推奨されていない/しない人が多い。
   * 公式のドキュメントですら、"implicit conversions can have pitfalls"と書かれている。
     * [TOUR OF SCALA IMPLICIT CONVERSIONS | Scala Documentation](https://docs.scala-lang.org/tour/implicit-conversions.html)
-  * implicit conversionに対する否定的なコメントは以下を参照。
+  * implicit conversionに対する否定的なコメント。
     * [Scalaのimplicit conversionってなんだ？](http://blog.livedoor.jp/sylc/archives/1553449.html)
     * [Scalaでimplicits呼ぶなキャンペーン](http://kmizu.hatenablog.com/entry/2017/05/19/074149)
     * [Scala implicit修飾子 まとめ - Qiita](https://qiita.com/tagia0212/items/f70cf68e89e4367fcf2e)
@@ -1008,7 +1022,8 @@ x: Int = 3
   * pimp my libraryパターンと言われる。
   * ちなみに、C#やTypeScriptにも同名の類似した機能がある。
 * レシーバにメソッドを生やす事ができるのが特徴。
-* 例えば、String型に、空文字ならNone、文字があればSomeで値を包む関数を定義したい場合、以下のように拡張できる。
+
+String型に、空文字ならNone、文字があればSomeで値を包む関数を定義したい場合、以下のように拡張できる。
 ```scala
 implicit class OptionString(str: String){
   def opt(): Option[String] = if (str.isEmpty) None else Some(str)
@@ -1051,9 +1066,9 @@ res4: Int = 21
     implicitに代入されている。(試しにExecutionContextのimplicit修飾子を外してみると分かりやすいはず)
 * 暗黙のパラメータに関するエラー
   * 暗黙のパラメータを必要としているにもかかわらず、必要となるimplicitな変数が定義されていない場合はエラーが出る。
-    * あるクラスの関数を別のクラスの関数に移した時
-      (例えば、ControllerクラスのコードをServiceクラスに移した時など)、にこの手のエラーがよく発生する。
-    * この場合は、移植元のimplicitな変数と移植先のimplicitの変数の何が違うかを考えるといい。エラーメッセージもヒントになる。
+    * あるクラスの関数を別のクラスの関数に移した時(ControllerクラスのコードをServiceクラスに移した時)などに、
+      この手のエラーがよく発生する。
+    * 移植元のimplicitな変数と移植先のimplicitの変数の何が違うかを考えるといい。エラーメッセージもヒントになる。
   * 暗黙のパラメータの競合が発生した場合。
     * 暗黙のパラメータによる複数の代入候補が存在する場合にもエラーが発生する。(一応優先順位はあるらしいが)
 * 暗黙のパラメータによる代入を許したくない場合は、明示的に引数を指定することでそれを回避できる。
@@ -1099,7 +1114,7 @@ res5: Int = 31
     4. 以降、Bに型ごとに機能を追加したい場合は、trait Aの実装を追加することで、コードBの機能が様々な型で使えるようになる。
     * しかし、上記のような言い方をすると結局Javaのインターフェースと一緒じゃんって言われる。。。
   * Scalazに型クラスを使用したコードが大量に載っている。
-  * 以下参考文献
+  * 参考文献
     * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
     * [Type Classes as Objects and Implicits](http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf)
 * Any型
@@ -1118,7 +1133,7 @@ x: Any = a
     * Duck-typing: もしもそれがアヒルのように歩き、アヒルのように鳴くのなら、それはアヒルである。
     * [ダック・タイピング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
   * 引数や変数などに必要な最も一般的な型を、必要な箇所で定義し、静的に型付する。
-* 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくるので、例えば、
+* 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくる。
 ```python
 class A:
     def func1(self, i):
@@ -1138,6 +1153,7 @@ func2(B())
 となるような、一般的な`func2`を定義できる。Scalaでも、`func1`を持つようなオブジェクトを一般的に引き受けるような関数を定義したい。
 勿論、class Aやclass Bの定義を変更することなしに。そして、関数`func1`を持つオブジェクトは知らされることなく常に増えていく。。。
 もちろん、(Javaの)interfaceや(Scalaの)traitだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
+
 例えば、idとnameを持つようなRow。
 ```scala
 case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
@@ -1150,7 +1166,7 @@ def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, 
 ```
 Long型のidとString型のnameを持つ最も一般的な型Rから、idとnameを抽出する。静的に型チェックをしつつも、
 Duck-typingの性質を引き継いでいる。
-以下のように実行する。
+次のように実行する。
 ```scala
 scala> val row = Seq(AbcRow(1, "a", "paramA", "paramB"), AbcRow(2, "b", "paramA", "paramB"), AbcRow(3, "c", "paramA", "paramB"));
 row: Seq[AbcRow] = List(AbcRow(1,a,paramA,paramB), AbcRow(2,b,paramA,paramB), AbcRow(3,c,paramA,paramB))
