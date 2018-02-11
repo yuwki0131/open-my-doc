@@ -3,6 +3,7 @@
 2018/02/11版
 
 ## このドキュメントについて
+* Scalaの関数型プログラミング的な側面についてまとめた。
 * 関数型プログラミングなので、関数の使い方(概念、用語、テクニック): 再帰、無名関数、静的スコープ、クロージャ、高階関数、合成関数
 * 関数型プログラミングで頻繁に用いられるデータ型である代数的データ型の概念と使い方: 代数的データ型、パターンマッチ
 * 業務でよく使われるOption/Either/Exception、及びfor式について: 例外の使い方、for式
@@ -158,7 +159,7 @@ def even(n: Int): Boolean = if (n = 0) {
 この形式も同様に、関数呼び出し以外の処理は残っていないが、末尾最適化されない。
 
 * [スタックレスScala](http://halcat.org/scala/stackless/index.html)
-* 相互再帰や複雑な再帰呼出しは、Trampolineというテクニックで末尾最適化と同様のスタックを消費しない書き方が可能になる。
+* 相互再帰や複雑な再帰呼出しは、Trampolineという末尾最適化と同様のスタックを消費しない書き方がある。
 * 原理主義的に再帰のみでゴリゴリimmutableなコードも書けるが、
   * 可読性や後でメンテナンスすることを考えるなら、Scalaの場合はwhile文やfor文が現実的な選択肢かも知れない。
   * 関数を呼び出す側から見た時に、参照透過な関数になっていればOKという考え方(もアリ)。
@@ -243,7 +244,7 @@ scala> haveSeq(2)
 res9: Int = 3
 ```
 一番外側で定義された変数haveSeqは、ブロック内部で生成された関数オブジェクト(クロージャ)を束縛している。
-この関数オブジェクトに引数を与える事で、aseqに束縛されたSeqの値を見る事が可能になる。
+この関数オブジェクトに引数を与える事で、aseqに束縛されたSeqの値にアクセスできる。
 
 * 上記のような書き方により、JavaやScalaで指定するprivateよりも更に細かいスコープ(変数の有効範囲)の制御が可能になる。
 
@@ -276,7 +277,7 @@ res18: Int = 2
   * 変数が生存している(有効である)期間のことを**エクステント(extent)**という。
 * クロージャとは逆に、関数内に自由変数を含まないような関数のことを**コンビネータ(combinator)**という。
   ただし、Scalaだと、パーサコンビネータ以外ではコンビネータという言い方はあまりされない(みたい)。
-* クロージャを使うことで計算を遅延(将来に実行)させることが可能になる。典型的な使用例がFutureによるコールバック。
+* クロージャを使うことで計算を遅延(将来に実行)させられる。典型的な使用例がFutureによるコールバック。
   * 遅延させたい計算は常に無名関数のシンタックスで囲うことで遅延させる事が出来る。
 `dao.findById(id)`がFutureを返す時、mapに渡された`row =>`以降は、Futureの結果が返ってくるまで実行されない。
 ```scala
@@ -483,14 +484,14 @@ final case class Some[+A](value: A) extends Option[A]
   * パターンマッチで各パターン(データ型)ごとにマッチさせ、case classの各変数の分解と束縛(unapply)が可能。
   * 各型ごとにポリモーフィックにマッチを書ける。
   * 引数を取らない型はobjectで、引数を取る型はcase classで記述する。
-  * 再帰的に定義(再帰のセクションの木構造の箇所参照)したり、他の代数的データ型を引数にとることも可能。
+  * 再帰的に定義(再帰の木構造の箇所参照)したり、他の代数的データ型を引数にとることもできる。
   * 割と他の関数型言語だと定番の書き方。
     * 参考: [代数的データ型とパターンマッチによる言語比較](https://qiita.com/xmeta/items/91dfb24fa87c3a9f5993)
     * (余談)代数的データ型を一般化したGADT(Generalized Algebraic Data Type)というのもある。
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * 分離されたデータ型が代数的データ型。
   * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
-* 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもあります)
+* 代数的データ型は、再帰的(帰納的)に定義される有限のデータ構造(Streamなど無限のデータ構造というのもある)
   * 参照: [具象不変コレクションクラス | Scala Documentation](http://docs.scala-lang.org/ja/overviews/collections/concrete-immutable-collection-classes.html)
 * (余談)一応、case classには、`final`を付けた方がいい: [Should I use the final modifier when declaring case classes? - StackOverFlow](https://stackoverflow.com/questions/34561614/should-i-use-the-final-modifier-when-declaring-case-classes)
 
@@ -500,9 +501,10 @@ final case class Some[+A](value: A) extends Option[A]
 * データ型のインスタンス(ListやTuple、Case classなど)を構造的に分解して変数に代入できる。
   * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
-* if-else式とは違い、データ型に対する網羅的なマッチが可能になる。
+* if-else式とは違い、データ型に対する網羅的にパターンマッチを行う。
   網羅的でない場合は警告がでる。(但し、エラーにはならない。)
   **パターン漏れが防げるので積極的に活用していきたい。**
+* データ型に対する分岐か、それ以外かでif-elseとの使い分ける。
 
 ### Listに対するパターンマッチ
 次のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
@@ -516,8 +518,7 @@ ls match {
   case x::xs => x
 }
 ```
-と書き直せる。else節でls.headを使う時に、lsが空かどうかを手前の条件節でチェックしているかどうかを
-考慮する必要が無くなる。
+と書き直せる。else節でls.headを使う時に、lsを手前の条件節でチェックしているかどうかを考慮する必要が無くなる。
 
 ### Optionに対するパターンマッチ
 次のようなケースも、リスト同様に書き直せる。
@@ -566,7 +567,6 @@ n match {
 ```java
 interface FileInterface {
 	public void ls(int depth);
-	public List<FileInterface> getChildren();
 	public boolean add(FileInterface c);
 }
 class File implements FileInterface {
@@ -575,7 +575,6 @@ class File implements FileInterface {
 	public void ls(int depth) {
 		System.out.println("depth(" + depth + ") file:" + this.name);
 	}
-	public List<FileInterface> getChildren() { return null; }
 	public boolean add(FileInterface c) { return false; }
 }
 class Folder implements FileInterface {
@@ -586,7 +585,6 @@ class Folder implements FileInterface {
 		System.out.println("depth(" + depth + ") folder:" + name);
 		for (FileInterface file : fileList) { file.ls(depth + 1); }
 	}
-	public List<FileInterface> getChildren() { return this.fileList; }
 	public boolean add(FileInterface c) { return this.fileList.add(c); }
 }
 ```
@@ -758,13 +756,13 @@ x: Either[Int,String] = Left(1)
 ダメな例。
 ```scala
 try {
-  Future { throw new RuntimeException("未来のエラー")
+  Future { throw new RuntimeException("未来のエラー") }
 } catch {
   case e => println("未来のエラーを事前に防ぎました！")
 }
 ```
 
-## for式
+## for式/for内包記法(For comprehension)
 ```scala
 for {
   a <- abcDao.find(id)
@@ -1112,6 +1110,9 @@ Scalaの新しいコンパイラ。
 
 ### 便利なチートシート
 * [SCALA CHEATSHEET SCALACHEAT | Scala Documentation](https://docs.scala-lang.org/cheatsheets/index.html)
+
+### 用語集
+* [Glossary | Scala Documentation](https://docs.scala-lang.org/glossary/index.html)
 
 ## 関数型言語まわりのトピック
 上記で触れなかったとっピック。
