@@ -28,9 +28,8 @@ Scala用のpurely functional programmingのためのライブラリ
 
 [Scalazの使い方 - リクルートから](https://tech.recruit-mp.co.jp/server-side/post-2540/)
 
-
 ## Future/Either
-* [Future Either and monad transformers] (http://justinhj.github.io/2017/06/02/future-either-and-monad-transformers.html)
+* [Future Either and monad transformers](http://justinhj.github.io/2017/06/02/future-either-and-monad-transformers.html)
 
 ## Recursion Scheme
 * [slamdata/matryoshka: Generalized recursion schemes and traversals for Scala.](https://github.com/slamdata/matryoshka)
