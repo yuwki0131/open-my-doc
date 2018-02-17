@@ -20,11 +20,10 @@
 * ささいな条件文
 
 ## その他コーディング時の注意点
-* Futureで
-* Slickでは、OnComplete or recoverを必ず書く。
+* Future/Slickでは、例外処理は、OnComplete or recoverを必ず書く。
 
 https://qiita.com/kenfdev/items/139d170d5918c971e18b#implicits
-* Throwableじゃなくて NonFatalにすべき
+* Try-catchのcatch節は、Throwableじゃなくて NonFatalにすべき
 
 ## 上記以外に 追加した方が良さそうなコーディングルール
 

@@ -1,0 +1,39 @@
+[debug] [naha] 
+[debug] [naha] Initial source changes: 
+[debug] [naha] 	removed:Set()
+[debug] [naha] 	added: Set()
+[debug] [naha] 	modified: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[debug] [naha] Invalidated products: Set()
+[debug] [naha] External API changes: API Changes: Set()
+[debug] [naha] Modified binary dependencies: Set()
+[debug] [naha] Initial directly invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[debug] [naha] 
+[debug] [naha] Sources indirectly invalidated by:
+[debug] [naha] 	product: Set()
+[debug] [naha] 	binary dep: Set()
+[debug] [naha] 	external source: Set()
+[debug] All initially invalidated sources: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[debug] [naha] Initial set of included nodes: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[info] Compiling 1 Scala source to /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/classes...
+[debug] Getting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.4
+[debug] Getting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.4
+[debug] Running cached compiler 6fd7dd71, interfacing (CompilerInterface) with Scala compiler version 2.12.4
+[debug] Calling Scala compiler with arguments  (CompilerInterface):
+[debug] 	-bootclasspath
+[debug] 	/usr/lib/jvm/java-8-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-8-oracle/jre/classes:/home/yuwki0131/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.4.jar
+[debug] 	-classpath
+[debug] 	/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/target/scala-2.12/classes:/home/yuwki0131/.ivy2/cache/org.scalaz/scalaz-core_2.12/bundles/scalaz-core_2.12-7.2.17.jar:/home/yuwki0131/.ivy2/cache/org.scalaz/scalaz-effect_2.12/bundles/scalaz-effect_2.12-7.2.17.jar
+[debug] Scala compilation took 6.34044313 s
+[debug] [naha] Invalidating /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala...
+[debug] [naha] Invalidating (transitively) by inheritance from /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala...
+[debug] [naha] Initial set of included nodes: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[debug] [naha] Invalidated by transitive inheritance dependency: Set(/home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala)
+[debug] [naha] The /home/yuwki0131/Dropbox/gwork/open-my-doc/src/tryscalaz/src/main/scala/example/ex3.scala source file has the following regular definitions changed:
+[debug] [naha] 	validateAge, validateTel, validate, age, validateMail, <init>, apply, mail, copy, validateName.
+[debug] [naha] All member reference dependencies will be considered within this context.
+[debug] [naha] New invalidations:
+[debug] [naha] 	Set()
+[debug] [naha] Initial set of included nodes: Set()
+[debug] [naha] Previously invalidated, but (transitively) depend on new invalidations:
+[debug] [naha] 	Set()
+[debug] [naha] All newly invalidated sources after taking into account (previously) recompiled sources:Set()

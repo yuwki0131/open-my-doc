@@ -61,4 +61,4 @@
 * 今後のScala(version3, Dotty?)とそれに対応したSlickに期待したい。
 
 ## monadic joinの黄昏
-*
+* slickでtable同志のjoinをする時、

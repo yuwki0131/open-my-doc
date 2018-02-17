@@ -20,7 +20,6 @@
 の多くが不要になる。(語弊のある言い方をすれば)
 
 #### Gofのデザインパターン
-
 * Strategy
   * アプリケーションで使用するアルゴリズムやコードを動的に切り替える。
   * [Strategy パターン - Wikipedia](https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)
@@ -37,6 +36,14 @@
   * 上に同じ
 * Interpreter
   * 上に同じ
+* Iterator
+  * Scalaなら、Travasable
+* State
+  * 関数型プログラミングに反する。
+* Decorator
+  * map
+* Singleton
+  * オブジェクトは大体シングルトン
 
 #### Gofのデザインパターン以外
 [デザインパターン紹介(Gof以外のデザインパターン)](http://www.hyuki.com/dp/dpinfo.html#Balking)
