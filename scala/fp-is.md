@@ -611,17 +611,50 @@ def ls(files: FileInterface, depth: Int): Unit = files match {
 ```
 ディレクトリに要素を追加する関数。
 ```scala
-def addMutable(files: FileInterface, element: FileInterface): Boolean = files match {
+def add(files: FileInterface, element: FileInterface): Boolean = files match {
   case File(name) => false
   case Folder(name, children) => { children += element; true }
 }
 ```
-(問題点)mutable?
+Javaと同様の関数を書くならば、上記の書き方で問題ない。ところで、上記の関数は木構造をmutableに変更してしまう。
+一般に関数型プログラミングは副作用(データの破壊的な変更)を回避するため、その点において、上記の書き方は問題がある。
+そこで、immutableなadd関数を容易する必要がある。
+immutableな関数を容易し、rootから書き換える。例えば、次のような関数が考えられる。
 ```scala
-def addImutable(files: FileInterface, element: FileInterface): FileInterface = files match {
-  case File(name) => files
-  case Folder(name, children) => { Folder(name, children.add(element)) }
+def addI(files: FileInterface, elem: FileInterface, path: Seq[String]): FileInterface = (files, path) match {
+  case (Folder(name, children), Nil) =>
+    Folder(name, children :+ elem)
+  case (Folder(name, children), x::xs) =>
+    Folder(name, children.map {
+        case f @ Folder(name, c) if name == x => addI(f, elem, xs)
+        case a => a
+    } )
+  case _ => throw new RuntimeException("ファイルに要素を追加しようとしたのでエラー。")
 }
+```
+同様にcase classもimmutableにする
+```scala
+sealed trait FileInterface
+case class File(name: String) extends FileInterface
+case class Folder(name: String, f: Seq[FileInterface]) extends FileInterface
+```
+この関数をrootに対して適用する。次のようなコード。
+```scala
+val root =
+Folder("project", Seq(Folder("app", Seq(Folder("controller", Seq(File("HomeController.scala"),
+                                                                 File("ContentController.scala"))),
+                                        Folder("view",       Seq(File("hello.scala.html"))))),
+                      File("README.md")))
+```
+次のように実行する。
+```scala
+scala> addI(root, File("AnotherController.scala"), Seq("app", "controller"))
+res24: FileInterface =
+Folder(project, List(Folder(app, List(Folder(controller,List(File(HomeController.scala),
+                                                             File(ContentController.scala),
+                                                             File(AnotherController.scala))),
+                                      Folder(view, List(File(hello.scala.html))))),
+                     File(README.md)))
 ```
 * (注意):ただし、よりScalaらしく実装するなら、
   File/Folderのようなデータ構造は、Traversableトレイトの具象クラスとして実装するほうが多分正解。
