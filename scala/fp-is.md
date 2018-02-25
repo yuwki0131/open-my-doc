@@ -11,6 +11,7 @@
 * Scalaについて調べていたら発見した余談。
 * 内容が重複するため、以下に書いてある事に関しては基本的に記載していない。
   * [Scala研修テキスト - dwango on GitHub](https://dwango.github.io/scala_text/)
+* その他、関数型言語あるあると定番のネタについて記載している。
 
 **注意: 言語の性質を説明するために、普段のプログラミングでは使ってはいけない(使うとコードが複雑になる)テクニックも紹介しています。
 どの機能を使うべきか、内容をみて適宜判断してください。**
@@ -32,8 +33,11 @@
 
 ## 再帰(Recursion)
 * 再帰とは自分自身を自分自身の中に持つような構造。
-  * プログラミングでは、再帰的なデータ構造や、再帰呼出しなどがある。
   * [再帰 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%86%8D%E5%B8%B0)
+  * 関数型プログラミングでは、再帰的なデータ型と(関数の)再帰呼出しがよく使われる。
+
+### 再帰呼出し
+* 呼び出し元の関数が自分自身を呼び出すこと。
 * Scalaでの再帰呼出し。
 次のような階乗を行う関数の場合。(10の階乗(fact(10))は、10! = 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10)
 ```scala
@@ -44,17 +48,20 @@ def fact1(n: Int): Int = if (n < 1){
 }
 ```
 * Scalaでのループはコレクション関数を使用が(多分)殆どなので、再帰呼出しはあまり使わないが、稀に使う。
-  (コレクション関数は後述)
+* 再帰呼出しは(一般に)関数型プログラミングとの相性が良い。
+  * 変数に再代入しないため、変数を常にimmutableにしたままループが書ける。
+  * 再帰的なデータ型に対して、関数の再帰呼出しは相性が良い。(再帰的なデータ型を定義し、再帰呼出しで再帰的にトラバースできる)
+  * プログラムを帰納的(余帰納的)に定義できる。
 * 木構造のような再帰的なデータ型や、分割統治法を使ったアルゴリズムの場合は、使うとわかりやすいコードが書ける。
   * 分割統治法
     * 大きな問題を小さな部分問題に分割し、個々の小さな部分問題を解決しながら、
       その部分問題の解答結果のマージを繰り返し、最終的に元の問題を解くようなアルゴリズム。
     * [分割統治法 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%88%86%E5%89%B2%E7%B5%B1%E6%B2%BB%E6%B3%95)
-    * 次のQuicksortが典型例。
-  * Quicksort(あるいは、関数型プログラミングにおける偽のQuicksort)
+    * 次のクイックソートが典型例。
+  * クイックソート(あるいは、関数型プログラミングにおける偽のクイックソート)
     * Javaでクイックソート:
       [【Java】クイックソートのアルゴリズムのテスト - Qiita](https://qiita.com/gigegige/items/4817c27314a2393eb02d)
-    * 関数型プログラミングでは偽のクィックソートというのがある。
+    * Scalaで関数型プログラミングのスタイルのクイックソート
 ```scala
 def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
     case Nil => Nil
@@ -66,6 +73,7 @@ def quicksort[A](ls: Seq[A])(implicit ord: Ordering[A]): Seq[A] = ls match {
 scala> quicksort(List(5, 6, 7, 4, 3, 10, 2, 8, 0, 3))
 res38: Seq[Int] = List(0, 2, 3, 3, 4, 5, 6, 7, 8, 10)
 ```
+* 上記は偽のクイックソート(理由はググッて下さい)。
 
 ### 木構造のデータ型 + matchによるパターンマッチで再帰を使う例
 木構造で、木の末尾を`Leaf`、枝を`Node`としてcase classで定義する。
@@ -355,9 +363,10 @@ scala> Seq(1, 2, 3).map(add2)
 res4: Seq[Int] = List(3, 4, 5)
 ```
 * 高階関数を使用することで、ほぼ無制限にプログラム中の任意のロジック(具体的なコード)を抽象化できる。
+  * ちなみに、データ型や関数の定義などは抽象化できない。。。
   * 抽象化したい部分を関数化し、差分のみをそれぞれ別関数にして、抽象化した関数に差分の関数を渡すという方法。
   * コード全体の至る所で使用できて、DRYに書けるというメリットはあるが。
-  * やり過ぎると原型を留めなくなるので注意が必要。
+    やり過ぎると原型を留めなくなるので注意が必要。
 * 部分適用/カリー化(Partial application / Curring)
   * 複数の引数を取る関数を一つの引数のみを取る関数に書き換えることをカリー化という。
   * 途中まで値を代入して、途中からの値を別の高階関数の中で代入させたい時などに使用する。
@@ -391,9 +400,9 @@ res3: Seq[Int] = List(4, 5, 6)
 
 次の場合、
 ```scala
-val withComma = ((ls: Seq[String]) => ls.mkString(","))
-val trimString = ((ls: Seq[String]) => ls.map(_.trim.toInt))
-val multiply20 = ((ls: Seq[Int]) => ls.map (_ * 20).map(_.toString))
+def withComma(ls: Seq[String]) = ls.mkString(",")
+def trimString(ls: Seq[String]) = ls.map(_.trim.toInt)
+def multiply20(ls: Seq[Int]) = ls.map (_ * 20).map(_.toString)
 ```
 StingのSeqの要素を20倍してカンマ区切りの文字列にしたい。。。
 ```scala
@@ -459,11 +468,20 @@ case object Alpha extends Alphabet
 case class Beta(name: String) extends Alphabet
 case class Gamma(name: String, n: Int) extends Alphabet
 ```
-* 引数の戻り値などの型や処理結果のパターンや、Seq型で表現できないようなリスト構造、木構造、
+* 引数の戻り値型や処理結果のパターンや、Seq型で表現できないようなリスト構造、木構造、
   その他必要に応じてポリモーフィックに変化するデータ型を表す際に使用する。
+* ざっくり説明すると、代数的データ型とは、直積型による構造体と、コンストラクタと直和型によるポリモーフィズムを表した型。
+  * Scala風に言うと、複数のcase objectとcase classを単一のtraitでまとめたもの。
+  * 全てを使う必要はない。必要に応じて必要なオブジェクトを使う。
+* 代数的データ型は、コンストラクタと、直積型、直和型から構成される。
+  * 代数的("Algebraic")という単語は、直和型と直積型に由来している。
+    [Algebraic data type - HaskellWiki](https://wiki.haskell.org/Algebraic_data_type)
 * 代数的データ型を返す関数の型は継承元のtraitで、条件に応じて、様々なtraitの型のインスタンスを返す。
 ```scala
-def func(n: Int): Alphabet = if (n < 10) Alpha else if (n < 30) Beta("aaa") else Gamma("bbb", n)
+def func(n: Int): Alphabet =
+  if (n < 10) Alpha
+  else if (n < 30) Beta("aaa")
+  else Gamma("bbb", n)
 ```
 * 以下のようにパターンマッチで各データパターンごとに分解できる。
 ```scala
@@ -480,15 +498,9 @@ sealed abstract class Option[+A] extends Product with Serializable
 case object None extends Option[Nothing]
 final case class Some[+A](value: A) extends Option[A]
 ```
-* 代数的データ型は。。。
-  * ライブラリで定義されているもの以外にも自分で必要に応じて定義できる。
-  * パターンマッチで各パターン(データ型)ごとにマッチさせ、case classの各変数の分解と束縛(unapply)が可能。
-  * 各型ごとにポリモーフィックにマッチを書ける。
-  * 引数を取らない型はobjectで、引数を取る型はcase classで記述する。
-  * 再帰的に定義(再帰の木構造の箇所参照)したり、他の代数的データ型を引数にとることもできる。
-  * 割と他の関数型言語だと定番の書き方。
-    * 参考: [代数的データ型とパターンマッチによる言語比較](https://qiita.com/xmeta/items/91dfb24fa87c3a9f5993)
-    * (余談)代数的データ型を一般化したGADT(Generalized Algebraic Data Type)というのもある。
+* 割と他の関数型言語だと定番の書き方。
+  * 参考: [代数的データ型とパターンマッチによる言語比較](https://qiita.com/xmeta/items/91dfb24fa87c3a9f5993)
+  * (余談)代数的データ型を一般化したGADT(Generalized Algebraic Data Type)というのもある。
 * 関数型プログラミングだと実装とデータ型を分離する傾向がある。(要出典)
   * 分離されたデータ型が代数的データ型。
   * データ型(クラス)に実装が付随しているオブジェクト指向とは異なる。
@@ -498,14 +510,13 @@ final case class Some[+A](value: A) extends Option[A]
 
 ## パターンマッチ
 * [Scalaのパターンマッチ - Qiita](https://qiita.com/techno-tanoC/items/3dd3ed63d161c53f2d89)
-* Scalaでは、リテラル(定数)、型によるマッチ、正規表現、構造に関するマッチなどが可能。
+* Scalaでは、リテラル(定数)、正規表現、構造(タプル、case objectやcase classなど)、代数的データ型に関するマッチなどが可能。
 * データ型のインスタンス(ListやTuple、Case classなど)を構造的に分解して変数に代入できる。
   * オブジェクトにunapplyが定義されていれば、パターンマッチが可能。
   * [パターンマッチをもっと便利に-extractor(抽出子)による拡張](http://yuroyoro.hatenablog.com/entry/20100709/1278657400)
-* if-else式とは違い、データ型に対する網羅的にパターンマッチを行う。
-  網羅的でない場合は警告がでる。(但し、エラーにはならない。)
+* if-else式とは違い、データ型に対する網羅的にパターンマッチを行う。網羅的でない場合は警告がでる。(但し、エラーにはならない。)
   **パターン漏れが防げるので積極的に活用していきたい。**
-* データ型に対する分岐か、それ以外かでif-elseとの使い分ける。
+* データ型に対する分岐か、それ以外かでif-elseとの使い分けができる。
 
 ### Listに対するパターンマッチ
 次のコードはパターンマッチで書き換えた方が、ロジックがシンプルになる。
@@ -712,7 +723,7 @@ for (int i = 0; i < n; i++){
   * 関数型言語にはデータ型に対する抽象化された関数がライブラリに大量に用意されているということがよくある。
     * これの極端な例がScalaz。
 
-## 例外の扱い方(Option, Either, Exception)
+## 例外(Option, Either, Exception)
 
 ### Option - nullableを型レベルで表現する。
 * Option型では値が入っている時に、`Some(値)`、値がない時に`None`で表現する。
