@@ -1215,16 +1215,19 @@ Scalaの新しいコンパイラ。
   * catamorphism, anamorphism, hylomorphism ...など名前が付いている。
   * Recursion Schemeに基づくプログラムの融合変換などもある。
   * ScalaだとMatryoshkaというライブラリが有名。
-* モナド、コモナド
-  * 特に公式のドキュメントにも出てこないので、Scalaでは特に普段は意識する必要はない(と思われる)。
+* ファンクタ、アプリカティブファンクタ、モナド、コモナド
+  * 特に公式の用語集(以下)にも出てこないので、Scalaでは特に普段は意識する必要はない(と思われる)。
+    * [Glossary | Scala Documentation](https://docs.scala-lang.org/glossary/)
   * モナドはモナド則と呼ばれる関数の合成規則を持った型クラスの事。よく副作用を表現する時に使われる。(勿論、副作用以外も表すことができる)
-    (コモナドはその双対(圏論の用語なので詳しく知りたい場合はそちらを参照))
+    * モナド同様、ファンクタはファンクタ則を、アプリカティブファンクタはアプリカティブファンクタ則がある型クラスのこと。
+    * ファンクタ、アプリカティブファンクタ、モナドの順に制約(性質的な縛り)が強くなる。
+    * コモナドはその双対(圏論の用語なので詳しく知りたい場合はその辺りを参照)
   * 単に副作用を表現するだけでなく、自分でカスタマイズできる事から愛好者も多い(と思われる。特にHaskeller)。
   * ScalaだとScalazというライブラリでよく使われる。
 * モノイド(foldまわりでよく使われる二項演算の一般化)
   * モナド同様、ScalaだとScalazにモノイドの定義がある。
 * 抽象解釈(abstract interpretation、)
-  * プログラムの抽象的な実行のこと。静的解析の一種。
+  * プログラムの抽象的な実行のこと。静的型付けと同じ、静的解析の一種。
   * 似たようなものとしてSymbolic Execution(記号的実行)というのもある。
   * Scalaだと、[Jadom](https://github.com/jandom-devel/Jandom) というのがあるらしいが。。。
 * コンビネータロジック、ラムダ計算、圏論
@@ -1249,7 +1252,7 @@ Scalaの新しいコンパイラ。
 * [Scalaにおける細かい最適化のプラクティス](http://xuwei-k.hatenablog.com/entry/20130709/1373330529)
 * [Scala COLLECTIONS 性能特性 | Scala Documentation](http://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)
 
-## 練習問題的なやつ
+## 練習問題
 * [S-99: Ninety-Nine Scala Problems](http://aperiodic.net/phil/scala/s-99/)
 
 ## 読み物
