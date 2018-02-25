@@ -526,7 +526,7 @@ if (ls.isEmpty) 1 else ls.head
 は、リスト`ls`についてのパターンマッチ、
 ```scala
 ls match {
-  case Nil => 1
+p  case Nil => 1
   case x::xs => x
 }
 ```
@@ -545,6 +545,23 @@ x match {
 }
 ```
 Either(Right/Left)やTry(Success/Failure)の場合も同様にして、分解できる。
+
+### 代数的データ型に対するパターンマッチ
+以下のような代数的データ型に対するパターンマッチ。
+```scala
+sealed trait Alphabet
+case object Alpha extends Alphabet
+case class Beta(name: String) extends Alphabet
+case class Gamma(name: String, n: Int) extends Alphabet
+```
+次のように書く。書き方はOption等と同じ。
+```scala
+x match {
+  case Alpha => "A"
+  case Beta(name) => "B(" + name + ")"
+  case Gamma(name, n) => "C(" + name + ")"
+}
+```
 
 ### パターンマッチに条件を追加
 * パターンマッチの場合、構造のチェックと同時に、データ型から値の取り出し、変数への束縛まで行う。
@@ -732,18 +749,18 @@ for (int i = 0; i < n; i++){
   * Option外し忘れには注意。
     Scalaの場合は、`Some(2018)年あけましておめでとうございます`になる。
 * Optionは値がnullableな場合に使用する。未定義処理や、想定外の値を返す時にnullを返していたようなケース。
-* head, getは使わない。
-  * headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
-  * headやgetで値が存在しない場合、例外が投げられるため。
-  * 値が存在しないケースというのは、通常、想定範囲内のケースであるため、nullやempty時に例外が投げられるのは好ましくない。
 * 基本的にはnull(or empty)チェック専用の構文だと思っている。(※個人の意見です。)
 * メリット
-  * Int型などでも意味のないマジックナンバーを埋め込む必要がなくなる。
+  * データが存在しない場合に、意味のないマジックナンバーや空文字、空オブジェクトを埋め込む必要がなくなる。
   * Java製のライブラリなどでnullableが怪しいやつはとりあえずOptionで囲っておくと、nullはNoneになる。
 ```scala
 scala> Option(null)
 res6: Option[Null] = None
 ```
+* head, getは使わない。
+  * headOption, getOptionでnullableとなるようなケースは代わりの処理を用意する。
+  * headやgetで値が存在しない場合、例外が投げられるため。
+  * 値が存在しないケースというのは、通常、想定範囲内のケースであるため、nullやempty時に例外が投げられるのは好ましくない。
 * Option型の使い方が色々: [Scala best practice: How to use the Option/Some/None pattern](https://alvinalexander.com/scala/best-practice-option-some-none-pattern-scala-idioms)
 * catchingやallCatchで任意の例外クラスをOptionやEitherにラップしてくれる関数も用意されている。
   * 詳細は次の記事を参照: [Scalaでの例外処理 - Either,Option,util.control.Exception](http://yuroyoro.hatenablog.com/entry/20100719/1279519961)
@@ -764,9 +781,7 @@ f: (n: Int)Either[String,Int]
   型で表現でき、パターンマッチで対応できる。
   * PlayframeworkだとActionFunction(アクション合成)などで使用されている。
 * Right/Leftで表現しきれなくなった場合、3パターンの結果が返ってくる場合などは、代数的データ型で独自の型を定義した方がよさそう。
-* (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。
-
-2つの型パラメータを持つ場合、常に書けるらしい。
+* (余談)Scalaでは、デフォルトで`Either[A, B]`を`A Either B`と書くことができる。2つの型パラメータを持つ場合、常に書けるらしい。
 ```scala
 scala> val x: Int Either String = Left(1)
 x: Either[Int,String] = Left(1)
@@ -787,16 +802,18 @@ x: Either[Int,String] = Left(1)
 * Eitherとかとの使い分け。(※以下、個人の主観です。)
   * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
     それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
-  * ただ、簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
+  * Java風に簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
   * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
-  * リカバリーの処理が必須なら、Option/Eitherで返される方が簡単になる。
+    * 例外を投げる時は、finally系の処理がない事が前提。
+  * リカバリーの処理が必須なら、Option/Eitherで返される方が明示的になる。
+    * Future系のrecover関数とOption/Eitherどちらが書きやすさで選ぶ?
     * 特にユーザの入力系はExceptionよりもOption/Eitherの方がその後の処理が継続しやすい。
     * 例外による余計なジャンプが無くなるため、例外をcatchし損ねる事がなくなり、finally漏れによるバグが無くなる。
       * 呼び出し元の関数 → 例外を想定していない関数 → 例外創出を前提とした関数の組み合わせで呼び出しが発生した時、
         例外を想定していない関数内の処理で問題が発生するリスクが常に存在する。
 * [エラー処理 - dwango on GitHub](https://dwango.github.io/scala_text/error-handling.html)
 * 非同期プログラミング時(Futureを使っている場合など)に、例外の挙動はさらに複雑になる。
-  * onCompleteやrecover(recoverFrom)などの記述がないと、例外は基本的に握りつぶされる。
+  * onCompleteやrecover(recoverFrom)などの記述がないと、**例外は基本的に握りつぶされる**。
   * Futureの周りをtry-catchで囲っても意味はない。try-catchを抜けた後でFutureが別スレッドで実行される。
 
 ダメな例。
@@ -807,6 +824,7 @@ try {
   case e => println("未来のエラーを事前に防ぎました！")
 }
 ```
+* Scalaで例外を投げまくるコードを書く時は常に注意が必要。
 
 ## for式/for内包記法(For comprehension)
 ```scala
@@ -1057,11 +1075,12 @@ x: Any = a
 
 ### 構造的部分型(Structural subtyping)
 * 特定の性質を持った型を型パラメータとして定義(宣言)できる。
-  * 部分的な型を定義するという意味では、traitに近いが、traitとは違い型のインスタンスを使用する側が型を定義する。
+  * 部分的な型を定義するという意味では、traitに近いが、オブジェクトを使用する側でのみ必要な型を定義するという点が異なる。
+    (traitはあくまでクラスの性質を定義するものだが、構造的部分型は引数や変数に代入可能な一般的なオブジェクトの型を定義する。)
   * 動的型付け言語におけるDuck-typingの性質を静的型付言語で使用したい場合に使用できる。
     * Duck-typing: もしもそれがアヒルのように歩き、アヒルのように鳴くのなら、それはアヒルである。
     * [ダック・タイピング - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
-  * 引数や変数などに必要な最も一般的な型を、必要な箇所で定義し、静的に型付する。
+  * 引数や変数などに必要な最も一般的な型を必要な箇所で定義することで、静的に型付のままDuck-typing的な性質を実現する。
 * 動的型付け言語(Ruby, Pythonなど)は、名前でメソッドを引っ張ってくる。
 ```python
 class A:
@@ -1083,18 +1102,28 @@ func2(B())
 勿論、class Aやclass Bの定義を変更することなしに。そして、関数`func1`を持つオブジェクトは知らされることなく常に増えていく。。。
 もちろん、(Javaの)interfaceや(Scalaの)traitだとfunc2に与えられるオブジェクトのクラス全てにinterfaceを付けなければいけない。
 
-例えば、idとnameを持つようなRow。
+例えば、idとnameを持つようなRow型について考える。
 ```scala
 case class AbcRow(id: Long, name: String, paramA: String, paramB: String)
+case class DefRow(id: Long, name: String, idA: Int, flagB: Boolean)
+case class GhiRow(id: Long, name: String, id: Long)
+case class JklRow(id: Long, name: String, messageA: String)
 ```
-このRowのリストから、idとnameのタプルのリストを抽出したい。。。
+このRowのリスト(Seq[AbcRow]やSeq[DefRow]のようなオブジェクト)から、
+idとnameのタプルのリストを抽出する一般的な関数を定義したい。。。
 この場合、次のような関数を定義できる。
 ```scala
 def getIdName[R <: {val id: Long; val name: String;}](rows: Seq[R]): Seq[(Long, String)] =
     rows.map { row => (row.id, row.name) }
 ```
-Long型のidとString型のnameを持つ最も一般的な型Rから、idとnameを抽出する。静的に型チェックをしつつも、
-Duck-typingの性質を引き継いでいる。
+これは次のようにも書ける。
+```scala
+def getIdName(rows: Seq[{val id: Long; val name: String;}]): Seq[(Long, String)] =
+    rows.map { row => (row.id, row.name) }
+```
+Long型のidとString型のnameを持つ最も一般的な型を引数にもち、その型のインスタンスからidとnameを抽出する関数を定義できる。
+他の型(クラス)定義を書き換えること無く、アドホックに静的な型チェックを維持した関数を定義できる。
+(Duck-typingの性質を引き継げる。)
 次のように実行する。
 ```scala
 scala> val row = Seq(AbcRow(1, "a", "paramA", "paramB"), AbcRow(2, "b", "paramA", "paramB"), AbcRow(3, "c", "paramA", "paramB"));
@@ -1104,7 +1133,7 @@ res3: Seq[(Long, String)] = List((1,a), (2,b), (3,c))
 ```
 * 条件を満たす型(データ型)を定義しておき、テンプレートを書く。
 * (余談)この辺の型の推論をOCamlだと自動でやってくれる。。。Scalaは割と自分で書かないといけないという面倒くささはある。
-* これ以外だとローンパターンなどでよくやる。
+* 上記以外だとローンパターン(ローンパターン自体は、構造的部分型の特殊な利用パターンの一種)などで頻繁に使うことができる。
 
 ### Scalaの3つのdependent * type
 * [Dependent Types in Scala](http://wheaties.github.io/Presentations/Scala-Dep-Types/dependent-types.html#/)
@@ -1163,20 +1192,49 @@ Scalaの新しいコンパイラ。
 上記で触れなかったとっピック。
 
 * 名前渡し(Call-by-name)、評価戦略/遅延評価
+  * プログラムの実行順序のこと。
+  * Scalaでも例えばstream型だと、通常のリストとは異なる挙動を行う。
 * プロパティベースのテスト
-* DSL(ドメイン特化言語、OOPだけでなく関数型プログラミングでも割と使う)
+  * 特定のケースのみを対象としたテストケースではなく、関数の引数に対する戻り値の性質をテストする。
+  * 固有のテストケースを持たないと言う意味で従来の関数に対するユニットテストとは大きく異なる。(詳細は調べて！)
+* DSL(ドメイン特化言語(いわゆるデザインパターンの一種?)。OOPだけでなく関数型プログラミングでも割と使う)
 * Future(※あんまり関数型プログラミング関係無い気もする)
 * 継続/限定継続(continuation)
-* プログラムの融合変換(program fusion, deforestation)
-* なんとかモルフィズム(正確にはRecursion Schemeという。catamorphism, anamorphism, hylomorphism ...)
-* モナド、コモナド(特に普段は意識する必要はない)
-* モノイド
-* 抽象解釈(abstract interpretation)
+  * プログラムの実行時のある瞬間をとらえたオブジェクト。Javaなどの例外やC言語のsetjmp/longjmpを一般化したもの。
+  * 例外は呼び出し元に戻るタイプのジャンプであるのに対して、継続(の実行)は、呼び出し先に戻ることができる。
+    * 例外が積み上げたコールスタックを減らして呼び出し元の場所(catch節)に戻るのに対し、
+      継続は(必要に応じて)コールスタックを積み上げ(たり書き換えたりし)て元の場所に戻る事ができる。
+  * ただし、最近は(コンパイラやインタプリタの実装以外では)殆ど使われない。どちらかというと、プログラミング言語処理系の話題。
+  * 他の言語だと、Scchemeのcall/cc、Haskellの継続モナド、Rubyのなんか実装できてしまった継続が有名。
+  * 限定継続は継続のうち、継続の範囲(継続により移動できる範囲)を狭めた物。
+* プログラムの融合変換/プログラム運算(program fusion, deforestation, program caliculation)
+  * 関数型言語のプログラムは大抵式で表されるので、式を等式変形するような方法で別のプログラムに書き換える事ができる。
+  * Scalaだと、例えば、xxxlist.map(f).map(g)とxxxlist.map(f compose g)は同じ意味を持つ。
+* Recursion Scheme
+  * fold/unfold系関数の一般化
+  * catamorphism, anamorphism, hylomorphism ...
+  * Recursion Schemeに基づくプログラムの融合変換などもある。
+  * ScalaだとMatryoshkaというライブラリが有名。
+* モナド、コモナド
+  * 特に公式のドキュメントにも出てこないので、Scalaでは特に普段は意識する必要はない(と思われる)。
+  * モナドはモナド則と呼ばれる関数の合成規則を持った型クラスの事。よく副作用を表現する時に使われる。(勿論、副作用以外も表すことができる)
+    (コモナドはその双対(圏論の用語なので詳しく知りたい場合はそちらを参照))
+  * 単に副作用を表現するだけでなく、自分でカスタマイズできる事から愛好者も多い(特にHaskeller)。
+* モノイド(foldまわりでよく使われる二項演算の一般化)
+* 抽象解釈(abstract interpretation、プログラムの抽象的な実行のこと。静的解析の一種)
 * コンビネータロジック、ラムダ計算、圏論
+  * 関数型プログラミングの基礎理論となった概念。
+  * 特に無名関数はラムダ計算に、モナドや代数的データ型は圏論に由来する。
 * 証明、定理証明支援系
+  *
 * プログラム意味論
+  * 文字通りプログラムの意味の表現。雑に言うと、プログラムを数学的なオブジェクトで表すこと。
+  * 実用的なプログラミングではまず使わない。
 * 型システム
+  * この辺はどちらかというと研究分野に近いが、型推論のための推論規則など
 * 依存型(dependent type)
+  * 一般的なプログラムの型付けより詳細な型を付けることが出来る。例えば0以上のInt型など。
+  * ScalaだとStainlessというライブラリがある。
 
 ## 参考文献
 * [関数合成のススメ 〜 オブジェクト指向プログラマへ捧げる関数型言語への導入その1](http://yuroyoro.hatenablog.com/entry/20120203/1328248662)
