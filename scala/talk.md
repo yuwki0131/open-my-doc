@@ -130,3 +130,69 @@ Double
 scala> Ordering.getClass.getMethods.map(_.getName)
 res22: Array[String] = Array(Tuple3, Tuple2, Tuple4, Tuple5, comparatorToOrdering, ordered, Tuple9, Tuple8, Tuple7, Tuple6, Iterable, Option, by, fromLessThan, apply, wait, wait, wait, equals, toString, hashCode, getClass, notify, notifyAll)
 ```
+
+## ここでクイズ！
+
+```scala
+def func1(a: (String, String)): Int = {
+〜
+}
+```
+
+```scala
+def func1(a: Seq[Int]): Int = {
+〜
+}
+```
+この２つの関数を統合したい。。func1が呼ばれる時は常にSeq[Int]または(String, String)が与えられる。
+〜以降の処理は一緒。aの型に応じて処理を切り替える処理は用意されている。match/caseで引数aのパターンごとに処理するため。
+* 代数的データ型を使うのはなし
+* リフレクション、関数のオーバーロードもNG、Scalaの基本的な機能のみを使って処理を切り替える。
+* 型パラメータ(`def func1[A](a: A)`)みたいな書き方もなしで。Genericな処理は眼中にないので。
+* もちろんAnyもダメです。。。
+* ちなみにPythonやRuby(JavaScript他)だと、何も考えずに以下のように書いたら終わり。
+```scala
+def func1(a): Int = {
+〜
+}
+```
+
+## Answer
+```scala
+def func1(a: Option[(String, String)], b: Option[Seq[Int]]): Int = {
+〜
+}
+```
+だと思った? 残念さやかちゃんでした！
+* 上記の書き方の問題点として後続の切り替えするmatch-caseが上手く書けない。
+```scala
+(a, b) match {
+case (Some(a), _) => 〜
+case (_, Some(b)) => 〜
+case _ => 〜
+}
+```
+* パターンにマッチしない場合(`case _ => `)に、例外を投げるというのも考えられるが、その例外送出は本来必要ないはず。
+* もっと自然な書き方があるはず！
+* (String, String)型かSeq[Int]型か、どちらかの値のみを引数にとることが、型レベル(引数の型)で十分に表現されていない。
+  (関数のコードを読むまでわからない)
+
+## Answer
+```scala
+def func1(a: Eihter[(String, String), Seq[Int]]): Int = {
+〜
+}
+```
+Scala標準のEitherはRightとLeftに対して平等。
+ちなみに、Eitherは次のように書ける。
+```scala
+def func1(a: (String, String) Eihter Seq[Int]): Int = {
+〜
+}
+```
+* 3つ来たらどうなるんだという話はあるが、その時はEitherのネスト or 代数的データ型。
+* コンセプトとしてはScalaの型定義の柔軟性を意識してほしい。
+* Option以外の型もあるのでその辺りも考慮してほしい。
+  * Seq/Eihter/Success-Failure
+  * 代数的データ型
+* 基本的に動的型付き言語が手に入れている柔軟性(に近いこと)を静的型付き言語でも同様に実現できる機能が用意されている。
