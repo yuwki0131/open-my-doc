@@ -805,13 +805,14 @@ x: Either[Int,String] = Left(1)
     例外以外にも、特定の値を引数として渡した時に無限ループになるような関数も全域関数ではない。
 * Eitherとかとの使い分け。(※以下、個人の主観です。)
   * 他言語だと、Haskellは純粋な関数ではMaybe(Scalaで言う所のOption)、Eitherを使うようだが、
-    それ以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。
+    Haskell以外のそこまでこだわらない言語だと割とフランクに投げるイメージがある。EitherやOptionの方が好ましい程度。
   * Java風に簡単なチェックやバリデーションにまで、例外を投げられると辛い。(いちいちcatchしないといけなくなるので)
-  * 全てを放棄して、フレームワークに処理を任せる場合のみ例外を投げた方がいい気がする。
+  * 全てを放棄して、フレームワーク(Playframework)に処理を任せる場合のみ例外を投げた方がいい気がする。
     * 例外を投げる時は、finally系の処理がない事が前提。
+      必要な場合はtry-finallyを使う必要がある(FutureだとrecoverやonComplete)。
   * リカバリーの処理が必須なら、Option/Eitherで返される方が明示的になる。
-    * Future系のrecover関数とOption/Eitherどちらが書きやすさで選ぶ?
-    * 特にユーザの入力系はExceptionよりもOption/Eitherの方がその後の処理が継続しやすい。
+    * Future系のrecover関数とOption/Eitherどちらか、書きやすさで選ぶ?
+    * 特にユーザの入力系はExceptionよりもOption/Eitherの方がその後(失敗後)の処理が書きやすい。
     * 例外による余計なジャンプが無くなるため、例外をcatchし損ねる事がなくなり、finally漏れによるバグが無くなる。
       * 呼び出し元の関数 → 例外を想定していない関数 → 例外創出を前提とした関数の組み合わせで呼び出しが発生した時、
         例外を想定していない関数内の処理で問題が発生するリスクが常に存在する。
@@ -912,7 +913,7 @@ flatMapがmapになっていることが分かる。
     * 複数のコンテクストを組み合わせて新しいコンテクストを作ることも可能。
       (モナドトランスフォーマーでググると出てくる)
 * for式はネストしたmap/flatMap/fiterWith(filter)に変換される。
-  * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは一旦、for式の使用を検討したほうがいい。
+  * このため、mapが複雑にネストするケースやflatMapやfilterを多用するコードは、for式の使用を検討したほうがいい。
     * プログラムがネストしすぎるのは可読性の観点から好ましくないため。
   * 一般的には、map/flatMapなどのネストよりはコードが読みやすくなる(はず)。
   * [For Comprehensions and For Loops](http://scala-lang.org/files/archive/spec/2.12/06-expressions.html)
@@ -989,6 +990,8 @@ res2: Option[String] = None
 scala> "abc".opt
 res3: Option[String] = Some(abc)
 ```
+上記の場合、`OptionString`の名前自体には特に意味はない。`str: String`がレシーバを表している。
+よりGenericに書きたい場合は、型パラメータを入れられる。
 
 ### 暗黙のパラメータ(implicit parameter)
 * 暗黙に受け渡しされる引数。
