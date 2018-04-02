@@ -1,6 +1,4 @@
-# Scalaと関数型プログラミングとは まとめ
-
-2018/02/11版
+# Scalaと関数型プログラミング
 
 ## このドキュメントについて
 * Scalaの関数型プログラミング的な側面についてまとめた。
@@ -1054,31 +1052,57 @@ res5: Int = 31
   * 型パラメータが引数にとる。
   * Option[+A]という型コンストラクタに対して、Option[String]という型を定義する時などに使われる。
   * 他の関数型言語だとFunctorなどがよく出てくる。
-* 型クラス: "既存の型に後付けするタイプのインターフェース"(次の記事から引用)
-   * [型クラスの雰囲気をつかんでScala標準ライブラリの型クラスを使ってみる回 - 水底](http://amaya382.hatenablog.jp/entry/2017/05/13/195913)
-  * あるオブジェクトがどのような振る舞いをするかまとめた物。
-  * 但し、Javaで言う所のinterfaceとは違い、後付で実装でき、拡張に対して開かれている。
-    * [型クラスに関するここ数日の議論 - togetter](https://togetter.com/li/1113557)
-  * implicit parameterに関する分かりやすい説明と実装方法は、
-    * [implicit - dwango on GitHub](https://dwango.github.io/scala_text/implicit.html)
-  * 大雑把に言うと。
-    1. 振る舞いをまとめたtrait Aを作る。
-    2. traitの実装を作る。この時、implicitに定義する。
+
+### 型クラス
+* "既存の型に後付けするタイプのインターフェース"(参考文献から引用)
+* ある型がどのような振る舞いをするかまとめた物。
+  * 上記のような言い方をすると結局Javaのインターフェースと一緒じゃんって言われる。。。
+  * 型クラスの定義の流れ。
+    1. 振る舞いをまとめた`trait A[T]`を作る。(Tは型パラメータ。型クラスは必ず型パラメータを持つ)
+    2. `trait A[T]`(型クラス)のインスタンス(実装)X, Y, Zを作り、implicitに定義する。
     3. Aで使っている関数を使ったコードBを実装する。
-    4. 以降、Bに型ごとに機能を追加したい場合は、trait Aの実装を追加することで、コードBの機能が様々な型で使えるようになる。
-    * しかし、上記のような言い方をすると結局Javaのインターフェースと一緒じゃんって言われる。。。
-  * Scalazに型クラスを使用したコードが大量に載っている。
-  * 参考文献
-    * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
-    * [Type Classes as Objects and Implicits](http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf)
-* Any型
-  * Anyは、全ての型の親クラス。JavaのObject型に相当。
-  * [Scala Any](http://www.ne.jp/asahi/hishidama/home/tech/scala/any.html)
-  * 気を抜いているとAnyに推論される。
+       この時、`trait A[T]`のインスタンス(実装)X, Y, Zをimplicitに切り替える。
+    4. 以降、コードBに型ごとに機能を追加したい場合は、trait Aの実装を追加することで、コードBの機能が様々な型で使えるようになる。
+  * Javaで言うと、Interface(や抽象クラス)のインスタンスが暗黙に選択される(切り替えられる)イメージ。
+* 型クラスを使用したコード側で型クラス(の定義)に紐づく型クラスのインスタンス(実装)を切り替える。
+  * (Scalaの場合、)型クラスはimplicit(暗黙のパラメータ)で型クラスの実装を切り替える。
+  * 型で処理を切り替える所がポイント。
+
 ```scala
-scala> val x = if (2 < 1) 1 else "a"
-x: Any = a
+
+class Firefox {
+}
+
+class Chrome {
+}
+
+trait BrowserShows[A] {
+  def show: String
+}
+
+implicit val firefox = new BrowserShows[Firefox] {
+  def show: String = "Firefoxで表示"
+}
+
+implicit val chrome = new BrowserShows[Chrome] {
+  def show: String = "Chromeで表示"
+}
+
+def exec[B](browser: B)(implicit s: BrowserShows[B]): String = s.show
+
+def main(args: Array[String]): Unit = {
+  println(exec(new Chrome()))
+  println(exec(new Chrome()))
+  println(exec(new Firefox()))
+}
 ```
+
+* 参考文献
+  * [型クラスに関するここ数日の議論 - togetter](https://togetter.com/li/1113557)
+  * [型クラスの雰囲気をつかんでScala標準ライブラリの型クラスを使ってみる回 - 水底](http://amaya382.hatenablog.jp/entry/2017/05/13/195913)
+  * [implicit - dwango on GitHub](https://dwango.github.io/scala_text/implicit.html)
+  * [Scala の implicit parameter は型クラスの一種とはどういうことなのか](http://nekogata.hatenablog.com/entry/2014/06/30/062342)
+  * [Type Classes as Objects and Implicits](http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf)
 
 ### 構造的部分型(Structural subtyping)
 * 特定の性質を持った型を型パラメータとして定義(宣言)できる。
